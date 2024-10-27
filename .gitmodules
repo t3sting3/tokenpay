@@ -4,6 +4,3 @@
 [submodule "db4.8"]
 	path = db4.8
 	url = https://github.com/tokenpay/db4.8
-[submodule "tor"]
-	path = tor
-	url = https://gitlab.torproject.org/tpo/core/tor
