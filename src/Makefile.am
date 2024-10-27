@@ -108,7 +108,6 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 	../tor/src/lib/libtor-ctime.a \
 	../tor/src/trunnel/libor-trunnel.a \
     ../tor/src/common/libcurve25519_donna.a \
-	
 		     $(OPENSSL_LIBS) \
 		     $(LIBEVENT_LIBS) \
 		     $(LIBSECCOMP_LIBS) \
