@@ -5,6 +5,3 @@
 	path = db4.8
 	url = https://github.com/tokenpay/db4.8
 
-[submodule "tor"]
-	path = tor
-	url = https://github.com/t3sting3/tor2
