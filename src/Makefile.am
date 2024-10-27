@@ -105,7 +105,10 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 	../tor/src/lib/libtor-wallclock.a \
 	../tor/src/lib/libtor-err.a \
 	../tor/src/lib/libtor-intmath.a \
-	../tor/src/lib/libtor-ctime.a
+	../tor/src/lib/libtor-ctime.a \
+	../tor/src/trunnel/libor-trunnel.a \
+    ../tor/src/common/libcurve25519_donna.a \
+	
 		     $(OPENSSL_LIBS) \
 		     $(LIBEVENT_LIBS) \
 		     $(LIBSECCOMP_LIBS) \
@@ -118,6 +121,11 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 		     $(BOOST_FILESYSTEM_LIBS) \
 		     $(BOOST_PROGRAM_OPTIONS_LIBS) \
 		     $(BOOST_THREAD_LIBS)
+			 
+LIBED25519_REF10 = ../tor/src/ext/ed25519/ref10/libed25519_ref10.a
+LIBED25519_DONNA = ../tor/src/ext/ed25519/donna/libed25519_donna.a
+LIBKECCAK_TINY = ../tor/src/ext/keccak-tiny/libkeccak-tiny.a
+			 
 
 tokenpayd_CPPFLAGS = $(AM_CPPFLAGS) $(OPENSSL_CFLAGS) $(LIBEVENT_CFLAGS) \
 			$(LIBSECCOMP_CFLAGS) $(LIBCAP_CFLAGS) $(ZLIB_CFLAGS) $(ZSTD_CPPFLAGS) $(LZMA_CPPFLAGS) \
