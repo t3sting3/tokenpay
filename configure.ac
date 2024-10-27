@@ -40,7 +40,7 @@ AX_SUBDIRS_CONFIGURE([tor], [[--disable-unittests], [--disable-system-torrc], [-
 if test "x$build_windows" = "xyes" ; then
   AX_SUBDIRS_CONFIGURE([db4.8/build_unix], [[--disable-cryptography], [--disable-partition], [--disable-compression], [--disable-replication], [--enable-cxx], [--enable-static], [--disable-shared], [--enable-mingw], [CFLAGS=-fPIC -fstack-protector -O2 -D_FORTIFY_SOURCE=1], [CPPFLAGS=-fPIC -fstack-protector -O2 -D_FORTIFY_SOURCE=1]])
 else
-  AX_SUBDIRS_CONFIGURE([db4.8/build_unix], [[--disable-cryptography], [--disable-partition], [-Wno-error=implicit-function-declaration], [--disable-compression], [--disable-replication], [--enable-cxx], [--enable-static], [--disable-shared], [CFLAGS=-fPIC -fstack-protector -O2 -D_FORTIFY_SOURCE=1], [CPPFLAGS=-fPIC -fstack-protector -O2 -D_FORTIFY_SOURCE=1]])
+  AX_SUBDIRS_CONFIGURE([db4.8/build_unix], [[--disable-cryptography], [--disable-partition], [--disable-compression], [--disable-replication], [--enable-cxx], [--enable-static], [--disable-shared], [CFLAGS=-fPIC -fstack-protector -O2 -D_FORTIFY_SOURCE=1 -Wno-error=implicit-function-declaration], [CPPFLAGS=-fPIC -fstack-protector -O2 -D_FORTIFY_SOURCE=1]])
 fi
 PKG_CHECK_MODULES(ZLIB, [zlib], [], [AC_MSG_ERROR([zlib not found])])
 PKG_CHECK_MODULES(ZSTD, [libzstd], [], [AC_MSG_NOTICE([libzstd not found])])
