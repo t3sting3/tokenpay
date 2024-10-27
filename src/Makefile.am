@@ -84,7 +84,6 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 		     ../db4.8/build_unix/libdb_cxx.a \
 		     ../tor/src/lib/libtor-geoip.a \
 	../tor/src/lib/libtor-process.a \
-  ../tor/src/lib/libtor-buf.a \
 	../tor/src/lib/libtor-confmgt.a \
 	../tor/src/lib/libtor-pubsub.a \
 	../tor/src/lib/libtor-dispatch.a \
