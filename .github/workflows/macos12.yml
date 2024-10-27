@@ -1,0 +1,58 @@
+on:
+  push
+jobs:
+  macos12:
+    runs-on: macos-12
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: git config credential.helper
+        run: git config credential.helper
+        
+      - name: get previous xcode and switch to it
+        run: ls -la /Applications/Xcode* && sudo xcode-select -switch /Applications/Xcode_13.1.app
+        
+      - name: check gcc
+        run: llvm-gcc --version
+
+      - name: Brew install base dependencies
+        run: |
+          # A workaround for "The `brew link` step did not complete successfully" error.
+          brew install --quiet python@3 || brew link --overwrite python@3
+          brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
+      - name: download and untar boost and download patch
+        run: wget http://sourceforge.net/projects/boost/files/boost/1.67.0/boost_1_67_0.tar.gz && wget --no-verbose https://github.com/boostorg/atomic/commit/6e14ca24dab50ad4c1fa8c27c7dd6f1cb791b534.patch && tar -xzvf boost_1_67_0.tar.gz && cd boost_1_67_0 && cd tools/build/src/tools && rm -rf darwin.jam && wget https://raw.githubusercontent.com/t3sting3/boost167/refs/heads/main/darwin.jam
+        
+      - name: run patch
+        run: patch boost_1_67_0/boost/atomic/detail/ops_gcc_x86_dcas.hpp < 6e14ca24dab50ad4c1fa8c27c7dd6f1cb791b534.patch 
+        
+      - name: bootstrap boost
+        run: cd boost_1_67_0 && ./bootstrap.sh --with-toolset=darwin
+
+      - name: b2
+        run: cd boost_1_67_0 && ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin
+        
+      - name: Brew link dependencies
+        run: brew link qt@5 berkeley-db@4
+        
+      - name: which clang/xcode
+        run: clang --version
+
+      - name: Auto generate
+        run: ./autogen.sh
+
+      - name: configure
+        run: ./configure --disable-dependency-tracking --disable-werror --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+
+      - name: make
+        run: make -j4
+
+      - name: make .dmg
+        run: make deploy
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tpay-macos13
+          path: |
+            *.dmg
