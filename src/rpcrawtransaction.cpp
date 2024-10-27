@@ -556,6 +556,34 @@ Value signrawtransaction(const Array& params, bool fHelp)
     return result;
 }
 
+Value estimatesmartfee(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw runtime_error(
+        "estimatesmartfee <hex string>\n"
+        "Tells how much fee must be included for successfully broadcasting the given tx ");
+
+    RPCTypeCheck(params, list_of(str_type));
+
+    // parse hex string from parameter
+    vector<unsigned char> txData(ParseHex(params[0].get_str()));
+    CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION);
+    CTransaction tx;
+
+    // deserialize binary data stream
+    try {
+        ssData >> tx;
+    } catch (std::exception &e)
+    {
+        throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
+    }
+
+    Object obj;
+    obj.push_back(Pair("fee", tx.GetMinFee(1, GMF_SEND, ::GetSerializeSize(tx, SER_NETWORK, PROTOCOL_VERSION))));
+
+    return obj;
+}
+
 Value sendrawtransaction(const Array& params, bool fHelp)
 {
     if (fHelp || params.size() < 1 || params.size() > 1)

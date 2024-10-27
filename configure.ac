@@ -1,4 +1,4 @@
-AC_INIT([tokenpayd], [1.0.0])
+AC_INIT([tokenpayd],[1.0.0])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([foreign 1.13 subdir-objects -Wall -Werror -Wno-portability])
@@ -9,7 +9,7 @@ AC_PROG_MKDIR_P
 AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_OBJCXX
-AC_PROG_LIBTOOL
+LT_INIT
 AC_CANONICAL_HOST
 build_linux=no
 build_windows=no
@@ -47,7 +47,7 @@ PKG_CHECK_MODULES(ZSTD, [libzstd], [], [AC_MSG_NOTICE([libzstd not found])])
 PKG_CHECK_MODULES(LZMA, [liblzma], [], [AC_MSG_NOTICE([liblzma not found])])
 AC_CHECK_LIB([snappy], [main], , [AC_MSG_NOTICE([snappy not found])])
 AC_CHECK_LIB([pthread], [pthread_self], , [AC_MSG_ERROR([libpthread not found])])
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 # TODO investigate whether earlier Boost versions will still work.
 BOOST_REQUIRE([1.58])
 BOOST_SYSTEM([mt])

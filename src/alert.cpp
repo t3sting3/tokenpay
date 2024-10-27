@@ -8,12 +8,12 @@
 #include <boost/foreach.hpp>
 #include <map>
 
-#include "alert.h"
-#include "chainparams.h"
-#include "key.h"
-#include "net.h"
-#include "sync.h"
-#include "ui_interface.h"
+#include <alert.h>
+#include <chainparams.h>
+#include <key.h>
+#include <net.h>
+#include <sync.h>
+#include <ui_interface.h>
 
 
 std::map<uint256, CAlert> mapAlerts;
