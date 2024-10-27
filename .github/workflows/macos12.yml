@@ -36,9 +36,6 @@ jobs:
       - name: Brew link dependencies
         run: brew link qt@5
         
-      - name: get db bash script
-        run: wget https://raw.githubusercontent.com/willcl-ark/bitcoin/cbbb6bf5c649ae759def1c6eb5f2b46b41cb8900/contrib/install_db4.sh && chmod +x install_db4.sh && CFLAGS="-Wno-error=implicit-function-declaration" ./install_db4.sh .
-        
       - name: which clang/xcode
         run: clang --version
 
