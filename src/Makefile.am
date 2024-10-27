@@ -104,7 +104,6 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 	../tor/src/lib/libtor-malloc.a \
 	../tor/src/lib/libtor-wallclock.a \
 	../tor/src/lib/libtor-err.a \
-	../tor/src/lib/libtor-version.a \
 	../tor/src/lib/libtor-intmath.a \
 	../tor/src/lib/libtor-ctime.a
 		     $(OPENSSL_LIBS) \
