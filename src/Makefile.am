@@ -82,46 +82,46 @@ tokenpayd_SOURCES = $(common_SOURCES) \
 tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 		     ../leveldb/out-static/libleveldb.a \
 		     ../db4.8/build_unix/libdb_cxx.a \
-		     tor/src/core/libtor-app.a \
-    tor/src/lib/libtor-meminfo.a \
-    tor/src/lib/libtor-term.a \
-    tor/src/lib/libtor-osinfo.a \
-    tor/src/lib/libtor-geoip.a \
-    tor/src/lib/libtor-math.a \
-    tor/src/lib/libtor-tls.a \
-    tor/src/lib/libtor-process.a \
-    tor/src/lib/libtor-evloop.a \
-    tor/src/lib/libtor-thread.a \
-    tor/src/lib/libtor-compress.a \
+		     ../tor/src/core/libtor-app.a \
+    ../tor/src/lib/libtor-meminfo.a \
+    ../tor/src/lib/libtor-term.a \
+    ../tor/src/lib/libtor-osinfo.a \
+    ../tor/src/lib/libtor-geoip.a \
+    ../tor/src/lib/libtor-math.a \
+    ../tor/src/lib/libtor-tls.a \
+    ../tor/src/lib/libtor-process.a \
+    ../tor/src/lib/libtor-evloop.a \
+    ../tor/src/lib/libtor-thread.a \
+    ../tor/src/lib/libtor-compress.a \
     @LIBZSTD@ \
-    tor/src/lib/libtor-net.a \
-    tor/src/lib/libtor-buf.a \
-    tor/src/lib/libtor-time.a \
-    tor/src/lib/libtor-err.a \
-    tor/src/lib/libtor-log.a \
-    tor/src/lib/libtor-version.a \
-    tor/src/lib/libtor-pubsub.a \
-    tor/src/lib/libtor-dispatch.a \
-    tor/src/lib/libtor-confmgt.a \
-    tor/src/lib/libtor-container.a \
-    tor/src/lib/libtor-crypt-ops.a \
-    tor/src/lib/libtor-fs.a \
-    tor/src/lib/libtor-fdio.a \
-    tor/src/lib/libtor-sandbox.a \
-    tor/src/lib/libtor-memarea.a \
-    tor/src/lib/libtor-intmath.a \
-    tor/src/lib/libtor-encoding.a \
-    tor/src/lib/libtor-smartlist-core.a \
-    tor/src/lib/libtor-lock.a \
-    tor/src/lib/libtor-wallclock.a \
-    tor/src/lib/libtor-string.a \
-    tor/src/lib/libtor-malloc.a \
-	tor/src/lib/libtor-ctime.a \
-	tor/src/trunnel/libor-trunnel.a \
-	tor/src/lib/libcurve25519_donna.a \
-	tor/src/ext/ed25519/donna/libed25519_donna.a \
-	tor/src/ext/ed25519/ref10/libed25519_ref10.a \
-	tor/src/ext/keccak-tiny/libkeccak-tiny.a \
+    ../tor/src/lib/libtor-net.a \
+    ../tor/src/lib/libtor-buf.a \
+    ../tor/src/lib/libtor-time.a \
+    ../tor/src/lib/libtor-err.a \
+    ../tor/src/lib/libtor-log.a \
+    ../tor/src/lib/libtor-version.a \
+    ../tor/src/lib/libtor-pubsub.a \
+    ../tor/src/lib/libtor-dispatch.a \
+    ../tor/src/lib/libtor-confmgt.a \
+    ../tor/src/lib/libtor-container.a \
+    ../tor/src/lib/libtor-crypt-ops.a \
+    ../tor/src/lib/libtor-fs.a \
+    ../tor/src/lib/libtor-fdio.a \
+    ../tor/src/lib/libtor-sandbox.a \
+    ../tor/src/lib/libtor-memarea.a \
+    ../tor/src/lib/libtor-intmath.a \
+    ../tor/src/lib/libtor-encoding.a \
+    ../tor/src/lib/libtor-smartlist-core.a \
+    ../tor/src/lib/libtor-lock.a \
+    ../tor/src/lib/libtor-wallclock.a \
+    ../tor/src/lib/libtor-string.a \
+    ../tor/src/lib/libtor-malloc.a \
+	../tor/src/lib/libtor-ctime.a \
+	../tor/src/trunnel/libor-trunnel.a \
+	../tor/src/lib/libcurve25519_donna.a \
+	../tor/src/ext/ed25519/donna/libed25519_donna.a \
+	../tor/src/ext/ed25519/ref10/libed25519_ref10.a \
+	../tor/src/ext/keccak-tiny/libkeccak-tiny.a \
 		     $(OPENSSL_LIBS) \
 		     $(LIBEVENT_LIBS) \
 		     $(LIBSECCOMP_LIBS) \
