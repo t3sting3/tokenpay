@@ -93,7 +93,6 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
     ../tor/src/lib/libtor-evloop.a \
     ../tor/src/lib/libtor-thread.a \
     ../tor/src/lib/libtor-compress.a \
-    @LIBZSTD@ \
     ../tor/src/lib/libtor-net.a \
     ../tor/src/lib/libtor-buf.a \
     ../tor/src/lib/libtor-time.a \
