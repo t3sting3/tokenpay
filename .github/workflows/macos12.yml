@@ -46,7 +46,7 @@ jobs:
         run: ./autogen.sh
 
       - name: configure
-        run: ./configure -Wno-error=implicit-function-declaration --disable-dependency-tracking --disable-werror --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+        run: ./configure --disable-dependency-tracking --disable-werror --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
 
       - name: make
         run: make -j4
