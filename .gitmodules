@@ -1,9 +1,6 @@
 [submodule "leveldb"]
 	path = leveldb
 	url = https://github.com/tokenpay/leveldb
-[submodule "tor"]
-	path = tor
-	url = https://github.com/tokenpay/tor
 [submodule "db4.8"]
 	path = db4.8
 	url = https://github.com/tokenpay/db4.8
