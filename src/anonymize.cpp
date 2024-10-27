@@ -11,9 +11,6 @@
 #include <string>
 #include <cstring>
 
-extern const char tor_git_revision[];
-const char tor_git_revision[] = "";
-
 char const* anonymize_tor_data_directory(
 ) {
     static std::string const retrieved = (
