@@ -82,7 +82,7 @@ tokenpayd_SOURCES = $(common_SOURCES) \
 tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 		     ../leveldb/out-static/libleveldb.a \
 		     ../db4.8/build_unix/libdb_cxx.a \
-		     tor/src/lib/libtor-geoip.a \
+		     ../tor/src/lib/libtor-geoip.a \
 	../tor/src/lib/libtor-process.a \
   ../tor/src/lib/libtor-buf.a \
 	../tor/src/lib/libtor-confmgt.a \
