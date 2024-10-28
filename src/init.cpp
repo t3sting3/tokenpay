@@ -556,8 +556,10 @@ bool AppInit2(boost::thread_group& threadGroup)
     std::string strWalletFileName = GetArg("-wallet", "wallet.dat");
 
     // strWalletFileName must be a plain filename without a directory
-    if (strWalletFileName != fs::basename(strWalletFileName) + fs::extension(strWalletFileName))
+    if (strWalletFileName != fs::path(strWalletFileName).filename().stem().string() + 
+                         fs::path(strWalletFileName).filename().extension().string()) {
         return InitError(strprintf(_("Wallet %s resides outside data directory %s."), strWalletFileName.c_str(), strDataDir.c_str()));
+    }
 
     // Make sure only a single Bitcoin process is using the data directory.
     fs::path pathLockFile = GetDataDir() / ".lock";
