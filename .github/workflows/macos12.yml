@@ -17,10 +17,8 @@ jobs:
         run: llvm-gcc --version
 
       - name: Brew install base dependencies
-        run: |
-          # A workaround for "The `brew link` step did not complete successfully" error.
-          brew install --quiet python@3 || brew link --overwrite python@3
-          brew install --quiet automake miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
+        run: brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
+        
       - name: download and untar boost and download patch
         run: wget http://sourceforge.net/projects/boost/files/boost/1.67.0/boost_1_67_0.tar.gz && wget --no-verbose https://github.com/boostorg/atomic/commit/6e14ca24dab50ad4c1fa8c27c7dd6f1cb791b534.patch && tar -xzvf boost_1_67_0.tar.gz && cd boost_1_67_0 && cd tools/build/src/tools && rm -rf darwin.jam && wget https://raw.githubusercontent.com/t3sting3/boost167/refs/heads/main/darwin.jam
         
@@ -34,13 +32,7 @@ jobs:
         run: cd boost_1_67_0 && ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin
         
       - name: Brew link dependencies
-        run: brew link qt@5
-        
-      - name: install berkeley db 4.8
-        run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz 
-        
-      - name: build bdb4.8
-        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx && make && make install
+        run: brew link qt@5 berkeley-db@4
         
       - name: which clang/xcode
         run: clang --version
