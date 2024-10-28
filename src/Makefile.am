@@ -81,7 +81,7 @@ tokenpayd_SOURCES = $(common_SOURCES) \
 
 tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 		     ../leveldb/out-static/libleveldb.a \
-		     ../db4.8/build_unix/libdb_cxx.a \
+		     ../db-4.8.30.NC/build_unix/libdb_cxx.a \
 		     ../tor/src/core/libtor-app.a \
     ../tor/src/lib/libtor-meminfo.a \
     ../tor/src/lib/libtor-term.a \
@@ -138,7 +138,7 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 tokenpayd_CPPFLAGS = $(AM_CPPFLAGS) $(OPENSSL_CFLAGS) $(LIBEVENT_CFLAGS) \
 			$(LIBSECCOMP_CFLAGS) $(LIBCAP_CFLAGS) $(ZLIB_CFLAGS) $(ZSTD_CPPFLAGS) $(LZMA_CPPFLAGS) \
 			$(BOOST_CPPFLAGS) \
-			-I../leveldb/include -I../leveldb/helpers -I../db4.8/build_unix \
+			-I../leveldb/include -I../leveldb/helpers -I../db-4.8.30.NC/build_unix \
 			-D_FORTIFY_SOURCE=1 -DBOOST_THREAD_USE_LIB -DBOOST_SPIRIT_THREADSAFE \
 			-DBOOST_ASIO_ENABLE_OLD_SERVICES
 tokenpayd_CFLAGS = $(tokenpayd_CPPFLAGS) -std=c11
