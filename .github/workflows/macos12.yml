@@ -37,7 +37,10 @@ jobs:
         run: brew link qt@5
         
       - name: install berkeley db 4.8
-        run: mkdir db4.8 && wget https://raw.githubusercontent.com/bitcoin/bitcoin/refs/heads/24.x/contrib/install_db4.sh && chmod +x install_db4.sh && ./install_db4.sh /home/runner/work/tokenpay-linux/tokenpay-linux/db4.8
+        run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz 
+        
+      - name: build bdb4.8
+        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx && make && make install
         
       - name: which clang/xcode
         run: clang --version
