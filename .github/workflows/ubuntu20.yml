@@ -22,7 +22,7 @@ jobs:
         run: cd boost_1_62_0 && sudo ./b2 install
         
       - name: install berkeley db 4.8
-        run: wget https://raw.githubusercontent.com/bitcoin/bitcoin/refs/heads/24.x/contrib/install_db4.sh && chmod +x install_db4.sh && ./install_db4.sh ./install_db4.sh /home/runner/work/tokenpay-linux/tokenpay-linux/db4.8
+        run: wget https://raw.githubusercontent.com/bitcoin/bitcoin/refs/heads/24.x/contrib/install_db4.sh && chmod +x install_db4.sh && ./install_db4.sh /home/runner/work/tokenpay-linux/tokenpay-linux/db4.8
         
       - name: Install base dependencies
         run: sudo apt-get install build-essential libtool autotools-dev automake pkg-config zlib1g-dev libevent-dev bsdmainutils git libseccomp-dev libcap-dev libminiupnpc-dev libqt5gui5 libqt5core5a libqt5webkit5-dev libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
