@@ -20,7 +20,10 @@ jobs:
         run: brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
       
       - name: download and untar boost and download patch
-        run: wget http://sourceforge.net/projects/boost/files/boost/1.65.0/boost_1_65_0.tar.gz && tar -xzvf boost_1_65_0.tar.gz
+        run: wget https://github.com/t3sting3/boost165/archive/refs/tags/1.tar.gz && tar -xzvf 1.tar.gz
+        
+      - name: list files
+        run: ls -al
         
       - name: project-config jam
         run: |
@@ -28,9 +31,6 @@ jobs:
         
       - name: bootstrap boost
         run: cd boost_1_65_0 && ./bootstrap.sh --with-toolset=clang || true
-
-      - name: list files
-        run: ls -al
         
       - name: list inside boost
         run: cd boost_1_65_0 && ls -al
