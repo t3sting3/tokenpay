@@ -29,6 +29,12 @@ jobs:
         run: |
             echo 'using clang : : clang++-13 : <cxxflags>"-std=c++11 -stdlib=libc++ -Wno-deprecated-declarations" ;' >> project-config.jam
 
+      - name: list files
+        run: la -al
+        
+      - name: list inside boost
+        run: cd boost_1_65_0 && ls -al
+      
       - name: b2
         run: cd boost_1_65_0 && sudo ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
         
