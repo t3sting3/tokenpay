@@ -23,7 +23,7 @@ jobs:
         run: wget http://sourceforge.net/projects/boost/files/boost/1.65.0/boost_1_65_0.tar.gz && tar -xzvf boost_1_65_0.tar.gz && cd boost_1_65_0 && cd tools/build/src/tools && rm -rf darwin.jam && wget https://raw.githubusercontent.com/t3sting3/boost167/refs/heads/main/darwin.jam
         
       - name: bootstrap boost
-        run: cd boost_1_65_0 && ./bootstrap.sh --with-toolset=darwin
+        run: cd boost_1_65_0 && ./bootstrap.sh --with-toolset=gcc
 
       - name: b2
         run: cd boost_1_65_0 && sudo ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
