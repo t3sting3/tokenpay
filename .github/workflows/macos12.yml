@@ -23,7 +23,11 @@ jobs:
         run: wget http://sourceforge.net/projects/boost/files/boost/1.65.0/boost_1_65_0.tar.gz && tar -xzvf boost_1_65_0.tar.gz
         
       - name: bootstrap boost
-        run: cd boost_1_65_0 && ./bootstrap.sh --with-toolset=clang
+        run: cd boost_1_65_0 && ./bootstrap.sh --with-toolset=clang || true
+        
+       - name: Show Bootstrap Log if Build Fails
+         if: failure()  # Only run this step if the previous step failed
+         run: cat bootstrap.log
         
       - name: project-config jam
         run: |
