@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bootstrap-log
-          path: bootstrap.log
+          path: /home/runner/work/tokenpay-linux/tokenpay-linux/boost_1_65_0/bootstrap.log
 
       - uses: actions/upload-artifact@v4
         with:
