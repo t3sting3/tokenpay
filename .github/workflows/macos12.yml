@@ -19,24 +19,24 @@ jobs:
       - name: Brew install base dependencies
         run: brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
       
-      - name: download and untar boost and download patch
-        run: wget https://github.com/t3sting3/boost162/archive/refs/tags/1.tar.gz && tar -xzvf 1.tar.gz
+      - name: download and untar boost
+        run: wget https://sourceforge.net/projects/boost/files/boost/1.65.1/boost_1_65_1.tar.gz && tar -xzvf boost_1_65_1.tar.gz
         
       - name: list files
         run: ls -al
         
       - name: project-config jam
         run: |
-            cd boost162-1 && echo 'using clang : : clang++ : <cxxflags>"-std=c++11 -stdlib=libc++ -Wno-deprecated-declarations" ;' >> project-config.jam
+            cd boost_1_65_1 && echo 'using clang : : clang++ : <cxxflags>"-std=c++11 -stdlib=libc++ -Wno-deprecated-declarations" ;' >> project-config.jam
         
       - name: bootstrap boost
-        run: cd boost162-1 && ./bootstrap.sh --with-toolset=darwin || true
+        run: cd boost_1_65_1 && ./bootstrap.sh --with-toolset=darwin || true
         
       - name: list inside boost
-        run: cd boost162-1 && ls -al
+        run: cd boost1_65_1 && ls -al
       
       - name: b2
-        run: cd boost162-1 && sudo ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
+        run: cd boost1_65_1 && sudo ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
         
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
