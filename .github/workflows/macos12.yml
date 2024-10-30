@@ -61,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bootstrap.log
-          path: ./boost1_65_1/bootstrap.log
+          path: ./boost_1_65_1/bootstrap.log
 
       - uses: actions/upload-artifact@v4
         with:
