@@ -30,7 +30,7 @@ jobs:
             cd boost1651-1 && echo 'using clang : : clang++ : <cxxflags>"-std=c++11 -stdlib=libc++ -Wno-implicit-function-declaration -Wno-deprecated-declarations" ;' >> project-config.jam
         
       - name: bootstrap boost
-        run: cd boost_1651-1 && ./bootstrap.sh --with-toolset=darwin || true
+        run: cd boost1651-1 && ./bootstrap.sh
         
       - name: list inside boost
         run: cd boost1651-1 && ls -al
