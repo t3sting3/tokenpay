@@ -29,7 +29,7 @@ jobs:
         run: cd boost && ./bootstrap.sh
         
       - name: run b2
-        run: cd boost && ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
+        run: cd boost && ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test install
         
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
