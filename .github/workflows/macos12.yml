@@ -20,26 +20,16 @@ jobs:
         run: brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
       
       - name: download and untar boost
-        run: wget https://github.com/t3sting3/boost1651/archive/refs/tags/1.tar.gz && tar -xzvf 1.tar.gz
+        run: git clone --recursive https://github.com/boostorg/boost.git
         
-      - name: list files
-        run: ls -al
+      - name: checkout version
+        run: git checkout boost-1.65.1
         
-      - name: project-config jam
-        run: |
-            cd boost1651-1 && echo 'using clang : : clang++ : <cxxflags>"-std=c++11 -stdlib=libc++ -Wno-implicit-function-declaration -Wno-deprecated-declarations" ;' >> project-config.jam
+      - name: go into and run Bootstrap
+        run: ./bootstrap.sh
         
-      - name: make new builder
-        run: cd boost165-1\tools\build\src\engine && ./build.sh darwin
-      
-      - name: bootstrap boost
-        run: cd boost1651-1 && ./bootstrap.sh
-        
-      - name: list inside boost
-        run: cd boost1651-1 && ls -al
-      
-      - name: b2
-        run: cd boost1651-1 && sudo ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
+      - name: run b2
+        run: ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
         
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
