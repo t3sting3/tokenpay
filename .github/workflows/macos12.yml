@@ -20,7 +20,7 @@ jobs:
         run: brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
       
       - name: install boost
-        run: curl -L https://raw.githubusercontent.com/t3sting3/boost/refs/heads/main/boost1651.rb > boost1651.rb && brew install boost1651.rb
+        run: curl -L https://raw.githubusercontent.com/t3sting3/boost/refs/heads/main/boost1651.rb > boost1651.rb && brew install boost1651.rb --verbose --debug
 
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
