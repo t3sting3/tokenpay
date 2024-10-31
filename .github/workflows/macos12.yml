@@ -19,17 +19,17 @@ jobs:
       - name: Brew install base dependencies
         run: brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
       
-      - name: download and untar boost
+      - name: git clone boost
         run: git clone --recursive https://github.com/boostorg/boost.git
         
-      - name: checkout version
-        run: git checkout boost-1.65.1
+      - name: checkout boost version
+        run: cd boost && git checkout boost-1.65.1
         
       - name: go into and run Bootstrap
-        run: ./bootstrap.sh
+        run: cd boost && ./bootstrap.sh
         
       - name: run b2
-        run: ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
+        run: cd boost && ./b2 --with-system --with-filesystem --with-chrono --with-date_time --with-iostreams --with-program_options --with-thread --with-test cxxflags="-std=c++11 -Wno-deprecated-declarations" toolset=darwin install
         
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
@@ -54,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bootstrap.log
-          path: ./boost1651-1/bootstrap.log
+          path: ./boost/bootstrap.log
 
       - uses: actions/upload-artifact@v4
         with:
