@@ -1,5 +1,6 @@
 on:
   push
+
 jobs:
   macos12:
     runs-on: macos-12
@@ -9,45 +10,57 @@ jobs:
 
       - name: git config credential.helper
         run: git config credential.helper
-        
-      - name: get previous xcode and switch to it
+
+      - name: Get previous Xcode and switch to it
         run: ls -la /Applications/Xcode* && sudo xcode-select -switch /Applications/Xcode_13.1.app
-        
-      - name: check gcc
+
+      - name: Check GCC
         run: llvm-gcc --version
 
       - name: Brew install base dependencies
-        run: brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
-      
-      - name: install boost
-        run: curl -L https://raw.githubusercontent.com/t3sting3/boost/refs/heads/main/boost1651.rb > boost1651.rb && brew install boost1651.rb --verbose --debug
+        run: |
+          brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg
+          curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb
+          brew install protobuf261.rb
+          brew unlink openssl@3
+          brew link --overwrite openssl@1.1
 
-      - name: Brew link dependencies
-        run: brew link qt@5 berkeley-db@4
-        
-      - name: which clang/xcode
-        run: clang --version
+      - name: Install Boost 1.65.1
+        run: |
+          curl -L https://raw.githubusercontent.com/t3sting3/boost/refs/heads/main/boost1651.rb > boost1651.rb
+          brew install boost1651.rb --verbose || (
+            echo "Boost installation failed, displaying bootstrap.log"
+            cat ./boost/bootstrap.log || echo "No bootstrap.log found"
+            exit 1
+          )
 
-      - name: Auto generate
-        run: ./autogen.sh
-
-      - name: configure
-        run: ./configure --disable-dependency-tracking --disable-werror --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
-
-      - name: make
-        run: make -j4
-
-      - name: make .dmg
-        run: make deploy
-        
-      - name: Upload Bootstrap Log if Build Fails
+      - name: Upload Bootstrap Log if Boost Installation Fails
         if: failure()  # Only run this step if the previous step failed
         uses: actions/upload-artifact@v4
         with:
           name: bootstrap.log
           path: ./boost/bootstrap.log
 
-      - uses: actions/upload-artifact@v4
+      - name: Brew link dependencies
+        run: brew link qt@5 berkeley-db@4
+
+      - name: Which clang/Xcode
+        run: clang --version
+
+      - name: Auto generate
+        run: ./autogen.sh
+
+      - name: Configure
+        run: ./configure --disable-dependency-tracking --disable-werror --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+
+      - name: Make
+        run: make -j4
+
+      - name: Make .dmg
+        run: make deploy
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: tpay-macos13
           path: |
