@@ -29,6 +29,9 @@ jobs:
         run: |
             cd boost1651-1 && echo 'using clang : : clang++ : <cxxflags>"-std=c++11 -stdlib=libc++ -Wno-implicit-function-declaration -Wno-deprecated-declarations" ;' >> project-config.jam
         
+      - name: make new builder
+        run: cd boost165-1\tools\build\src\engine && ./build.sh darwin
+      
       - name: bootstrap boost
         run: cd boost1651-1 && ./bootstrap.sh
         
