@@ -20,7 +20,7 @@ jobs:
         run: brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb && brew unlink openssl@3 && brew link --overwrite openssl@1.1
       
       - name: git clone boost
-        run: git clone --recursive https://github.com/boostorg/boost.git
+        run: git clone --depth 1 --branch boost-1.65.1 https://github.com/boostorg/boost
         
       - name: checkout boost version
         run: cd boost && git checkout -f boost-1.65.1
