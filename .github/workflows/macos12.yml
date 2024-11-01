@@ -38,9 +38,16 @@ jobs:
         run: |
           cd /opt/local/var/macports/sources/local/devel/boost
           curl -O https://trac.macports.org/raw-attachment/ticket/50671/boost_1.65.1.tar.bz2
-          tar xf boost_1.65.1.tar.bz2  # Extracts the Portfile and files directory
-          sudo mv boost_1_65_1/Portfile ./Portfile  # Move the Portfile
-          sudo mv boost_1_65_1/files ./files        # Move the files directory
+          tar xf boost_1.65.1.tar.bz2
+          
+      - name: List Extracted Files for Debugging
+        run: |
+          ls -la /opt/local/var/macports/sources/local/devel/boost/boost_1_65_1
+
+      - name: Move Portfile and Files Directory
+        run: |
+          sudo mv boost_1_65_1/Portfile ./Portfile
+          sudo mv boost_1_65_1/files ./files
 
       - name: Update MacPorts to Include Local Repo
         run: |
