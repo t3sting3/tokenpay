@@ -68,8 +68,19 @@ jobs:
           ls /opt/local/var/macports/sources/local/devel/boost
           cat /opt/local/etc/macports/sources.conf
 
-      - name: Install Boost 1.65.1 with Local Portfile
-        run: sudo port install boost @1.65.1
+      - name: Create PortGroup directory if it doesn't exist
+        run: |
+          sudo mkdir -p /opt/local/var/macports/portgroups
+          echo '## This is a dummy PortGroup file to satisfy missing dependencies' | sudo tee /opt/local/var/macports/portgroups/compiler_blacklist_versions-1.0.tcl
+
+      - name: Check PortGroup file
+        run: |
+            echo "Contents of PortGroup directory:"
+            ls -l /opt/local/var/macports/portgroups/
+
+      - name: Install Boost
+        run: |
+        sudo port install boost @1.65.1
 
       - name: Verify Boost Installation
         run: port installed boost
