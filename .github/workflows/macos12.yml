@@ -43,7 +43,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: bootstrap.log
-          path: ${{ env.LOG_PATH }}*.log
+          path: |
+            /Users/runner/Library/Logs/Homebrew/boost1651/00.options.out
+            /Users/runner/Library/Logs/Homebrew/boost1651/01.bootstrap.sh
+            /Users/runner/Library/Logs/Homebrew/boost1651/01.bootstrap.sh.cc
 
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
