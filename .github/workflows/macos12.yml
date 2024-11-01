@@ -27,26 +27,33 @@ jobs:
           curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.gz
           tar xvf MacPorts-2.8.1.tar.gz
           cd MacPorts-2.8.1
-          ./configure --with-applications-dir=/Applications --prefix=/opt/local  # Fixed indentation here
+          ./configure --with-applications-dir=/Applications --prefix=/opt/local
           make
           sudo make install
           echo "MacPorts installed."
 
+      - name: Add MacPorts to PATH
+        run: echo 'export PATH=/opt/local/bin:/opt/local/sbin:$PATH' >> ~/.zshrc && source ~/.zshrc
+
+      - name: Verify MacPorts installation
+        run: port version
+
       - name: Configure MacPorts to use custom ports repository
         run: |
           sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
-          sudo portindex $(pwd)/macports-ports
+          cd macports-ports
+          sudo portindex
           echo "MacPorts configured with the custom ports."
 
-      - name: Install Boost 1.65.1
+      - name: Install Boost 1.65.1 with custom patches
         run: |
           sudo port selfupdate
+          cd macports-ports/devel/boost
           sudo port install boost @1.65.1
-          echo "Boost 1.65.1 installed from the custom repository."
+          echo "Boost 1.65.1 installed from the custom repository with patches."
 
       - name: Verify Boost installation
-        run: |
-          port installed boost
+        run: port installed boost
 
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
@@ -72,4 +79,3 @@ jobs:
           name: tpay-macos13
           path: |
             *.dmg
-
