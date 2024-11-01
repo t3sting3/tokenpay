@@ -18,7 +18,7 @@ jobs:
         run: llvm-gcc --version
 
       - name: Clone custom MacPorts repository
-         run: |
+        run: |
           git clone https://github.com/grimreaper/macports-ports.git
           echo "Custom MacPorts repository cloned."
 
