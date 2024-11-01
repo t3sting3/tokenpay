@@ -40,23 +40,18 @@ jobs:
           curl -O https://trac.macports.org/raw-attachment/ticket/50671/boost_1.65.1.tar.bz2
           tar xf boost_1.65.1.tar.bz2
 
-      - name: List Extracted Files for Debugging
-        run: |
-          ls -la /opt/local/var/macports/sources/local/devel/boost/boost
-
       - name: Move Portfile and Files Directory
         run: |
           sudo mv /opt/local/var/macports/sources/local/devel/boost/boost/Portfile /opt/local/var/macports/sources/local/devel/boost/Portfile
           sudo mv /opt/local/var/macports/sources/local/devel/boost/boost/files /opt/local/var/macports/sources/local/devel/boost/files
 
-      - name: Create Missing PortGroup Directory
+      - name: Create PortGroup Directory
         run: |
           sudo mkdir -p /opt/local/var/macports/portgroups
 
-      - name: Download Required PortGroup File
+      - name: Create Dummy PortGroup File
         run: |
-          curl -O https://raw.githubusercontent.com/macports/macports-ports/master/PortGroup/compiler_blacklist_versions-1.0.tcl
-          sudo mv compiler_blacklist_versions-1.0.tcl /opt/local/var/macports/portgroups/
+          echo '## This is a dummy PortGroup file to satisfy missing dependencies' | sudo tee /opt/local/var/macports/portgroups/compiler_blacklist_versions-1.0.tcl
 
       - name: Update MacPorts to Include Local Repo
         run: |
