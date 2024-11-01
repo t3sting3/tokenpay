@@ -17,7 +17,7 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
-      - name: Install MacPorts
+       - name: Install MacPorts
         run: |
           curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.bz2
           tar xf MacPorts-2.8.1.tar.bz2
@@ -38,9 +38,9 @@ jobs:
         run: |
           cd /opt/local/var/macports/sources/local/devel/boost
           curl -O https://trac.macports.org/raw-attachment/ticket/50671/boost_1.65.1.tar.bz2
-          tar xf boost_1.65.1.tar.bz2
-          sudo mv Portfile /opt/local/var/macports/sources/local/devel/boost/Portfile
-          sudo mv files /opt/local/var/macports/sources/local/devel/boost/files
+          tar xf boost_1.65.1.tar.bz2  # Extracts the Portfile and files directory
+          sudo mv boost_1_65_1/Portfile ./Portfile  # Move the Portfile
+          sudo mv boost_1_65_1/files ./files        # Move the files directory
 
       - name: Update MacPorts to Include Local Repo
         run: |
