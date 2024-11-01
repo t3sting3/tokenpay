@@ -19,8 +19,8 @@ jobs:
 
       - name: Clone custom MacPorts repository
         run: |
-          git clone https://github.com/grimreaper/macports-ports.git
-          echo "Custom MacPorts repository cloned."
+         git clone https://github.com/grimreaper/macports-ports.git
+         echo "Custom MacPorts repository cloned."
 
       - name: Install MacPorts
         run: |
