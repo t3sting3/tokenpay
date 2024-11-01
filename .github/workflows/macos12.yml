@@ -49,6 +49,10 @@ jobs:
           sudo mv /opt/local/var/macports/sources/local/devel/boost/boost/Portfile /opt/local/var/macports/sources/local/devel/boost/Portfile
           sudo mv /opt/local/var/macports/sources/local/devel/boost/boost/files /opt/local/var/macports/sources/local/devel/boost/files
 
+      - name: Create Missing PortGroup Directory
+        run: |
+          sudo mkdir -p /opt/local/var/macports/portgroups
+
       - name: Create Missing PortGroup File
         run: |
           echo '## This is a dummy PortGroup file to satisfy missing dependencies' | sudo tee /opt/local/var/macports/portgroups/compiler_blacklist_versions-1.0.tcl
