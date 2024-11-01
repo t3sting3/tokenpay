@@ -17,7 +17,7 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
-       - name: Install MacPorts
+      - name: Install MacPorts
         run: |
           curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.bz2
           tar xf MacPorts-2.8.1.tar.bz2
