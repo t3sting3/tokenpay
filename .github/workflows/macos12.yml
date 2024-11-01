@@ -43,7 +43,7 @@ jobs:
       - name: Move Portfile and Files Directory
         run: |
           sudo mv /opt/local/var/macports/sources/local/devel/boost/boost/Portfile /opt/local/var/macports/sources/local/devel/boost/Portfile
-          sudo mv /opt/local/var/macports/sources/local/devel/boost/boost/files /opt/local/var/macports/sources/local/devel/boost/files
+          sudo mv /opt/local/var/macports/sources/local/devel/boost/boost/files/* /opt/local/var/macports/sources/local/devel/boost/files/
 
       - name: Create PortGroup Directory
         run: |
