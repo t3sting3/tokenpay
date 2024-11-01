@@ -53,10 +53,10 @@ jobs:
         run: |
           sudo mkdir -p /opt/local/var/macports/portgroups
 
-      - name: Create Missing PortGroup File
+      - name: Download Required PortGroup File
         run: |
-          echo '## This is a dummy PortGroup file to satisfy missing dependencies' | sudo tee /opt/local/var/macports/portgroups/compiler_blacklist_versions-1.0.tcl
-          echo 'proc compiler_blacklist_versions { } { return { } }' | sudo tee -a /opt/local/var/macports/portgroups/compiler_blacklist_versions-1.0.tcl
+          curl -O https://raw.githubusercontent.com/macports/macports-ports/master/PortGroup/compiler_blacklist_versions-1.0.tcl
+          sudo mv compiler_blacklist_versions-1.0.tcl /opt/local/var/macports/portgroups/
 
       - name: Update MacPorts to Include Local Repo
         run: |
