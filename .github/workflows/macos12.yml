@@ -34,13 +34,13 @@ jobs:
           sudo mkdir -p /opt/local/var/macports/sources/local/devel/boost
           sudo chmod -R 777 /opt/local/var/macports/sources/local
 
-      - name: Fetch and Add Boost 1.65.1 Portfile
+      - name: Download and Extract Boost 1.65.1 Portfile and Patches
         run: |
           cd /opt/local/var/macports/sources/local/devel/boost
-          curl -O https://raw.githubusercontent.com/macports/macports-ports/d46a9b09f85db8b9531c9d83b9c858c2d28b7291/devel/boost/Portfile
-          # Modify the Portfile to use Boost 1.65.1
-          sudo sed -i '' 's/version 1.76_0/version 1.65.1/' Portfile
-          sudo sed -i '' 's/checksums .*/checksums rmd160 589494b8fcb8b3b64828be0e5b5fe4f9eafcd98f/' Portfile
+          curl -O https://trac.macports.org/raw-attachment/ticket/50671/boost_1.65.1.tar.bz2
+          tar xf boost_1.65.1.tar.bz2
+          sudo mv boost_1.65.1/* .
+          sudo rm -rf boost_1.65.1
 
       - name: Update MacPorts to Include Local Repo
         run: |
