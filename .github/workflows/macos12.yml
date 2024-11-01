@@ -25,12 +25,12 @@ jobs:
           ./configure --prefix=/opt/local
           make
           sudo make install
-          
-      - name: macports update
-        run: sudo port -v selfupdate
 
       - name: Add MacPorts to PATH
         run: echo "/opt/local/bin:/opt/local/sbin" >> $GITHUB_PATH
+        
+      - name: macports update
+        run: sudo port -v selfupdate
 
       - name: Create Local Ports Repository
         run: |
