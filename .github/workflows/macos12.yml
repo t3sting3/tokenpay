@@ -27,9 +27,11 @@ jobs:
           sudo make install
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 
+      - name: Add MacPorts to PATH
+        run: echo "/opt/local/bin:/opt/local/sbin" >> $GITHUB_PATH
+
       - name: Sync MacPorts and upgrade
-        run: |
-          sudo port -v selfupdate
+        run: sudo port -v selfupdate
 
       - name: Install Boost 1.65.1 with MacPorts
         run: |
