@@ -79,8 +79,7 @@ jobs:
             ls -l /opt/local/var/macports/portgroups/
 
       - name: Install Boost
-        run: |
-        sudo port install boost @1.65.1
+        run: sudo port install boost @1.65.1
 
       - name: Verify Boost Installation
         run: port installed boost
