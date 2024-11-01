@@ -32,18 +32,15 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      # Update PATH immediately after MacPorts installation
-      - name: Add MacPorts to PATH
+      - name: Configure PATH to include MacPorts (in-line)
         run: |
-          echo 'export PATH=/opt/local/bin:/opt/local/sbin:$PATH' >> ~/.bash_profile
-          source ~/.bash_profile
+          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           echo "PATH updated to include MacPorts."
-
-      - name: Verify MacPorts installation
-        run: port version
+          port version
 
       - name: Configure MacPorts to use custom ports repository
         run: |
+          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
           cd macports-ports
           sudo portindex
@@ -51,13 +48,16 @@ jobs:
 
       - name: Install Boost 1.65.1 with custom patches
         run: |
+          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           sudo port selfupdate
           cd macports-ports/devel/boost
           sudo port install boost @1.65.1
           echo "Boost 1.65.1 installed from the custom repository with patches."
 
       - name: Verify Boost installation
-        run: port installed boost
+        run: |
+          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+          port installed boost
 
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
