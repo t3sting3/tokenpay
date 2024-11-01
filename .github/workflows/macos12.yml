@@ -53,10 +53,20 @@ jobs:
         run: |
           echo '## This is a dummy PortGroup file to satisfy missing dependencies' | sudo tee /opt/local/var/macports/portgroups/compiler_blacklist_versions-1.0.tcl
 
+      - name: Verify PortGroup File
+        run: |
+          ls -l /opt/local/var/macports/portgroups
+          cat /opt/local/var/macports/portgroups/compiler_blacklist_versions-1.0.tcl
+
       - name: Update MacPorts to Include Local Repo
         run: |
           echo "file:///opt/local/var/macports/sources/local [nosync]" | sudo tee -a /opt/local/etc/macports/sources.conf
           sudo portindex /opt/local/var/macports/sources/local
+
+      - name: Verify Local Repository
+        run: |
+          ls /opt/local/var/macports/sources/local/devel/boost
+          cat /opt/local/etc/macports/sources.conf
 
       - name: Install Boost 1.65.1 with Local Portfile
         run: sudo port install boost @1.65.1
