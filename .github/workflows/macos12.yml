@@ -49,7 +49,6 @@ jobs:
       - name: Install Boost 1.65.1 with custom patches
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          sudo port selfupdate
           cd macports-ports/devel/boost
           sudo port install boost @1.65.1
           echo "Boost 1.65.1 installed from the custom repository with patches."
