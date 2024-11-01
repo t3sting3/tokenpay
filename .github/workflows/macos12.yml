@@ -31,18 +31,16 @@ jobs:
 
       - name: Create Local Ports Repository
         run: |
-          sudo mkdir -p /opt/local/var/macports/sources/local
-          cd /opt/local/var/macports/sources/local
-          sudo mkdir -p boost
-          sudo chmod -R 777 boost
+          sudo mkdir -p /opt/local/var/macports/sources/local/devel/boost
+          sudo chmod -R 777 /opt/local/var/macports/sources/local
 
       - name: Fetch and Add Boost 1.65.1 Portfile
         run: |
-          cd /opt/local/var/macports/sources/local/boost
+          cd /opt/local/var/macports/sources/local/devel/boost
           curl -O https://raw.githubusercontent.com/macports/macports-ports/d46a9b09f85db8b9531c9d83b9c858c2d28b7291/devel/boost/Portfile
           # Modify the Portfile to use Boost 1.65.1
-          sed -i '' 's/version 1.76_0/version 1.65.1/' Portfile
-          sed -i '' 's/checksums .*/checksums rmd160 589494b8fcb8b3b64828be0e5b5fe4f9eafcd98f/' Portfile
+          sudo sed -i '' 's/version 1.76_0/version 1.65.1/' Portfile
+          sudo sed -i '' 's/checksums .*/checksums rmd160 589494b8fcb8b3b64828be0e5b5fe4f9eafcd98f/' Portfile
 
       - name: Update MacPorts to Include Local Repo
         run: |
