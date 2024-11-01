@@ -17,25 +17,27 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
-      - name: Brew install base dependencies
+      - name: Install MacPorts
         run: |
-          brew install --quiet automake berkeley-db@4 miniupnpc qt@5 gperf qrencode librsvg
-          curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb
-          brew install protobuf261.rb
-          brew unlink openssl@3
-          brew link --overwrite openssl@1.1
-          
-      - name: Unlink any existing Boost version
-        run: |
-          if brew list | grep -q "^boost$"; then
-            brew unlink boost
-          fi
+          curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.bz2
+          tar xf MacPorts-2.8.1.tar.bz2
+          cd MacPorts-2.8.1
+          ./configure --prefix=/opt/local
+          make
+          sudo make install
+          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 
-      - name: Install Boost 1.65.1
-        id: boost_install
+      - name: Sync MacPorts and upgrade
         run: |
-          curl -L https://raw.githubusercontent.com/t3sting3/boost/refs/heads/main/boost1651.rb > boost1651.rb
-          brew install boost1651.rb
+          sudo port -v selfupdate
+
+      - name: Install Boost 1.65.1 with MacPorts
+        run: |
+          sudo port install boost @1.65.1
+
+      - name: Verify Boost Installation
+        run: |
+          port installed boost
 
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
