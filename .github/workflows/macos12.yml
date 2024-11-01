@@ -29,11 +29,7 @@ jobs:
         id: boost_install
         run: |
           curl -L https://raw.githubusercontent.com/t3sting3/boost/refs/heads/main/boost1651.rb > boost1651.rb
-          brew install boost1651.rb --verbose || (
-            echo "Boost installation failed, displaying bootstrap.log"
-            cat $(brew --prefix)/logs/boost1651/*.log || echo "No bootstrap log found"
-            exit 1
-          )
+          brew install boost1651.rb
 
       - name: Set log path for later use
         run: echo "LOG_PATH=$(brew --prefix)/logs/boost1651/" >> $GITHUB_ENV
