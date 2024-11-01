@@ -19,15 +19,15 @@ jobs:
 
       - name: Clone custom MacPorts repository
         run: |
-         git clone https://github.com/grimreaper/macports-ports.git
-         echo "Custom MacPorts repository cloned."
+          git clone https://github.com/grimreaper/macports-ports.git
+          echo "Custom MacPorts repository cloned."
 
       - name: Install MacPorts
         run: |
           curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.gz
           tar xvf MacPorts-2.8.1.tar.gz
           cd MacPorts-2.8.1
-         ./configure --with-applications-dir=/Applications --prefix=/opt/local
+          ./configure --with-applications-dir=/Applications --prefix=/opt/local  # Fixed indentation here
           make
           sudo make install
           echo "MacPorts installed."
@@ -72,3 +72,4 @@ jobs:
           name: tpay-macos13
           path: |
             *.dmg
+
