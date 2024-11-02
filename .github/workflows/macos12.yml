@@ -43,7 +43,7 @@ jobs:
           sudo portindex
           echo "MacPorts configured with the custom ports."
           
-      - name: Get previous Xcode and switch to it
+      - name: Get different Xcode and switch to it
         run: ls -la /Applications/Xcode* && sudo xcode-select -switch /Applications/Xcode_13.1.app
 
       - name: Install Boost 1.65.1 with custom patches
