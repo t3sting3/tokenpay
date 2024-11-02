@@ -63,9 +63,9 @@ jobs:
       - name: Install Boost 1.65.1 with custom patches
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          cd macports-ports/databases/db48
+          cd macports-ports/databases/db48 && ls
           sudo port -v install db48
-          cd macports-ports/devel/boost
+          cd macports-ports/devel/boost && ls
           sudo port install boost @1.65.1 +without-icu
           echo "Boost 1.65.1 installed from the custom repository with patches."
 
