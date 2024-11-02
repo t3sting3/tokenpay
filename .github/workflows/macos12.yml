@@ -19,7 +19,7 @@ jobs:
           git clone https://github.com/t3sting3/macports-ports.git
           echo "Custom MacPorts repository cloned."
 
-      - name: Install MacPorts
+      - name: Install MacPorts 2.8.1
         run: |
           curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.gz
           tar xvf MacPorts-2.8.1.tar.gz
