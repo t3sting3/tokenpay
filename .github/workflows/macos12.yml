@@ -43,14 +43,26 @@ jobs:
           sudo portindex
           echo "MacPorts configured with the custom ports."
           
-      - name: Get different Xcode and switch to it
-        run: ls -la /Applications/Xcode* && sudo xcode-select -switch /Applications/Xcode_13.1.app
+      - name: Install Java Developer Package
+        run: |
+          # Fetch list of software available for update
+          softwareupdate --list
+          softwareupdate --install 'Command Line Tools for Xcode-13.1'
+
+      - name: Verify Java Installation
+        run: |
+          /usr/libexec/java_home
+          java -version
+
+      - name: Set Xcode 13.1
+        run: sudo xcode-select -switch /Applications/Xcode_13.1.app
 
       - name: Install Boost 1.65.1 with custom patches
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           sudo port clean db48
           cd macports-ports/databases/db48
+          sudo port install 
           sudo port -v install db48 +java
           cd macports-ports/devel/boost
           sudo port install boost @1.65.1 +without-icu
