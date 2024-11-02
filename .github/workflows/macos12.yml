@@ -14,7 +14,7 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
-      - name: Clone custom MacPorts repository
+      - name: Clone custom our MacPorts repository
         run: |
           git clone https://github.com/t3sting3/macports-ports.git
           echo "Custom MacPorts repository cloned."
@@ -35,7 +35,7 @@ jobs:
           echo "PATH updated to include MacPorts."
           port version
 
-      - name: Configure MacPorts to use custom ports repository
+      - name: Configure MacPorts to use our custom ports repository
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
