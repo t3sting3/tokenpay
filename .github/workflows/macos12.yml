@@ -13,6 +13,9 @@ jobs:
 
       - name: Check GCC
         run: llvm-gcc --version
+        
+      - name: brew install java openjdk
+        run: brew install openjdk@21
 
       - name: Clone custom our MacPorts repository
         run: |
@@ -63,7 +66,7 @@ jobs:
           sudo port clean db48
           cd macports-ports/databases/db48
           sudo port install 
-          sudo port -v install db48 +java
+          sudo port -v install db48
           cd macports-ports/devel/boost
           sudo port install boost @1.65.1 +without-icu
           echo "Boost 1.65.1 installed from the custom repository with patches."
