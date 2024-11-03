@@ -33,14 +33,16 @@ jobs:
           make
           sudo make install
           echo "MacPorts installed."
-          
-      # Ensure the PATH is updated immediately after MacPorts installation
-      - name: Update PATH for MacPorts
-        run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          echo "PATH updated to include MacPorts."
-          port version
 
+      # Manually source MacPorts after installation to ensure it's available in the PATH for all steps
+      - name: Update PATH for MacPorts
+        shell: bash
+        run: |
+          echo 'export PATH=/opt/local/bin:/opt/local/sbin:$PATH' >> ~/.bash_profile
+          source ~/.bash_profile
+          echo "PATH updated to include MacPorts."
+          sudo /opt/local/bin/port version  # Use the full path to ensure port is installed
+          
       - name: Install Xcode Command Line Tools
         run: |
           sudo xcode-select --switch /Applications/Xcode_13.1.app
@@ -49,21 +51,24 @@ jobs:
         run: xcodebuild -version
 
       - name: Install DB5.3 with Java Headers
+        shell: bash
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          sudo port -v install db53 +java
+          sudo /opt/local/bin/port -v install db53 +java
           echo "DB5.3 installed with Java headers."
 
       - name: Install Boost 1.65.1 with custom patches
+        shell: bash
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          sudo port -v install boost @1.65.1 +without-icu
+          sudo /opt/local/bin/port -v install boost @1.65.1 +without-icu
           echo "Boost 1.65.1 installed."
 
       - name: Verify Boost installation
+        shell: bash
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          port installed boost
+          /opt/local/bin/port installed boost
 
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
