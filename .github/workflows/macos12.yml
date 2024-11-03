@@ -34,14 +34,6 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      - name: Configure MacPorts to use custom repository (t3sting3)
-        run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
-          cd macports-ports
-          sudo portindex
-          echo "MacPorts configured with the custom repository."
-
       - name: Install Xcode Command Line Tools
         run: |
           sudo xcode-select --switch /Applications/Xcode_13.1.app
