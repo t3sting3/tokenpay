@@ -14,6 +14,9 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
+      - name: Install Java via Homebrew
+        run: brew install openjdk@21
+
       - name: Clone custom MacPorts repository
         run: |
           git clone https://github.com/t3sting3/macports-ports.git
@@ -35,6 +38,14 @@ jobs:
           echo "PATH updated to include MacPorts."
           port version
 
+      - name: Configure MacPorts to use custom repository (t3sting3)
+        run: |
+          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
+          cd macports-ports
+          sudo portindex
+          echo "MacPorts configured with the custom repository."
+
       - name: Install Java Developer Package (legacy)
         run: |
           softwareupdate --install 'Command Line Tools for Xcode-13.1'
@@ -50,8 +61,8 @@ jobs:
       - name: Install DB5.3 with Java Headers
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          cd macports-ports/databases/db48
-          sudo port -v install db48 +java
+          cd macports-ports/databases/db53
+          sudo port -v install db53 +java
           echo "DB5.3 installed with Java headers."
 
       - name: Install Boost 1.65.1 with custom patches
