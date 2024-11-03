@@ -64,7 +64,7 @@ jobs:
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           cd macports-ports/databases/db48 && ls
-          sudo port -v install db48 cd .. && cd ..
+          sudo port -v install db48 && cd .. && cd ..
           cd macports-ports/lang/python27 && ls
           sudo port install python27
           sudo port -f activate python27
