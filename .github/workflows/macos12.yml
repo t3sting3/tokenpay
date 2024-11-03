@@ -24,11 +24,6 @@ jobs:
           /usr/libexec/java_home -v 1.6
           java -version
 
-      - name: Clone custom MacPorts repository
-        run: |
-          git clone https://github.com/t3sting3/macports-ports.git
-          echo "Custom MacPorts repository cloned."
-
       - name: Install MacPorts 2.8.1
         run: |
           curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.gz
@@ -38,12 +33,6 @@ jobs:
           make
           sudo make install
           echo "MacPorts installed."
-
-      - name: Configure PATH to include MacPorts
-        run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          echo "PATH updated to include MacPorts."
-          port version
 
       - name: Configure MacPorts to use custom repository (t3sting3)
         run: |
@@ -62,23 +51,15 @@ jobs:
 
       - name: Install DB5.3 with Java Headers
         run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          export JAVA_HOME=$(/usr/libexec/java_home -v1.6) # Ensure use of the legacy Java headers
-          cd macports-ports/databases/db53
-          sudo port clean db53
           sudo port -v install db53 +java
           echo "DB5.3 installed with Java headers."
 
       - name: Install Boost 1.65.1 with custom patches
         run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          cd macports-ports/devel/boost
           sudo port -v install boost @1.65.1 +without-icu
-          echo "Boost 1.65.1 installed from the custom repository with patches."
 
       - name: Verify Boost installation
         run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           port installed boost
 
       - name: Brew link dependencies
