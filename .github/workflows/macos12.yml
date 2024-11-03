@@ -16,9 +16,24 @@ jobs:
 
       - name: Install Apple's Legacy Java Developer Package
         run: |
+          # Download the Java for OS X .dmg file
           curl -O https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
-          hdiutil attach javaforosx.dmg
+          echo "Download completed. Verifying..."
+
+          # Verify the download
+          if [[ -f "javaforosx.dmg" ]]; then
+            echo "File exists. Proceeding with installation."
+          else
+            echo "File not found or download failed. Exiting."
+            exit 1
+          fi
+
+          # Attempt to mount the DMG file
+          hdiutil attach javaforosx.dmg || { echo "Failed to attach DMG."; exit 1; }
+
+          # Install the Java Developer package
           sudo installer -pkg /Volumes/Java\ for\ macOS\ 2017-001/JavaForOSX.pkg -target /
+          hdiutil detach /Volumes/Java\ for\ macOS\ 2017-001
 
       - name: Verify Java Developer Package Installation
         run: |
