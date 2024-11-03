@@ -34,6 +34,7 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
+      # Ensure PATH is updated immediately after MacPorts installation
       - name: Ensure PATH is updated for MacPorts
         shell: bash
         run: |
@@ -49,14 +50,16 @@ jobs:
 
       - name: Configure MacPorts to use the cloned repository
         run: |
+          # Add the local path to the sources.conf
           sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
-          echo "sources.conf updated to use custom repository."
+          echo "sources.conf updated to use the cloned repository."
 
       - name: Rebuild Port Index
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+          cd macports-ports
           sudo /opt/local/bin/portindex
-          echo "Port index rebuilt."
+          echo "Port index rebuilt from the custom repository."
 
       - name: Install Xcode Command Line Tools
         run: |
