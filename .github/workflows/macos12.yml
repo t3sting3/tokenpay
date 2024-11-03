@@ -60,7 +60,7 @@ jobs:
       - name: Set Xcode 13.1
         run: sudo xcode-select -switch /Applications/Xcode_13.1.app
 
-      - name: Install Boost 1.65.1 with custom patches
+      - name: Install db 5.3 and Boost 1.65.1 with custom patches
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           cd macports-ports/databases/db48 && ls
