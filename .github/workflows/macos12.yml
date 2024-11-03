@@ -50,17 +50,23 @@ jobs:
 
       - name: Install Xcode Command Line Tools
         run: |
-          if ! xcode-select -p; then
-            echo "Xcode Command Line Tools are not installed. Installing now..."
-            sudo xcode-select --install
-          else
-            echo "Xcode Command Line Tools are already installed."
-          fi
+          sudo xcode-select --install || echo "Xcode Command Line Tools are already installed."
 
       - name: Install Java Developer Package with Brew
         run: |
           brew install --cask zulu
           echo "Java Developer Package installed."
+
+      - name: Set JAVA_HOME
+        run: |
+          echo 'export JAVA_HOME=$(/usr/libexec/java_home)' >> ~/.bash_profile
+          source ~/.bash_profile
+          echo "JAVA_HOME set to: $JAVA_HOME"
+
+      - name: Verify Java Installation
+        run: |
+          java -version
+          ls -l $JAVA_HOME/include
 
       - name: Install DB5.3 with Java Headers
         run: |
