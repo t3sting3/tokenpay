@@ -48,7 +48,7 @@ jobs:
           sudo /opt/local/bin/portindex
           echo "Port index rebuilt from the custom repository."
 
-      - name: Check if Xcode Command Line Tools are installed
+      - name: Install Xcode Command Line Tools
         run: |
           if ! xcode-select -p; then
             echo "Xcode Command Line Tools are not installed. Installing now..."
@@ -57,13 +57,10 @@ jobs:
             echo "Xcode Command Line Tools are already installed."
           fi
 
-      - name: Install Legacy Java Developer Package
+      - name: Install Java Developer Package with Brew
         run: |
-          curl -O https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
-          hdiutil attach javaforosx.dmg
-          sudo installer -pkg /Volumes/Java\ for\ OS\ X\ 2017-001/JavaForOSX.pkg -target /
-          hdiutil detach /Volumes/Java\ for\ OS\ X\ 2017-001
-          echo "Legacy Java Developer Package installed."
+          brew install --cask zulu11
+          echo "Java Developer Package installed."
 
       - name: Install DB5.3 with Java Headers
         run: |
