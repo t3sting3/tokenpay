@@ -48,8 +48,9 @@ jobs:
           
       - name: Install Java Developer Package
         run: |
-          # Fetch list of software available for update
+          # Fetch the list of software updates to check for Java Developer Package
           softwareupdate --list
+          # Install the Java Developer Package, which provides the necessary Java headers
           softwareupdate --install 'Command Line Tools for Xcode-13.1'
 
       - name: Verify Java Installation
@@ -60,19 +61,20 @@ jobs:
       - name: Set Xcode 13.1
         run: sudo xcode-select -switch /Applications/Xcode_13.1.app
 
-      - name: Install DB5.3 and Python 2.7
+      - name: Install DB5.3 with Java Headers
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          # Install DB5.3 from the custom repository
+          # Ensure the MacPorts repository is up-to-date and install db48 with Java
           cd macports-ports/databases/db48
           sudo port -v install db48 +java
+          echo "DB4.8 installed with Java headers."
           
           # Install Python 2.7 from the custom repository
           cd ../../lang/python27
           sudo port -v install python27
           sudo port -f activate python27
           
-          echo "DB5.3 and Python 2.7 installed from custom repository."
+          echo "DB4.8 and Python 2.7 installed from custom repository."
 
       - name: Install Boost 1.65.1 with custom patches
         run: |
