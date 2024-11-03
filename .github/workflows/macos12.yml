@@ -14,16 +14,6 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
-      - name: Install Java Developer Package with Brew
-        run: |
-          brew install --cask zulu
-          echo "Java Developer Package installed."
-
-      - name: Verify Java Developer Package Installation
-        run: |
-          /usr/libexec/java_home -v 1.6
-          java -version
-
       - name: Install MacPorts 2.8.1
         run: |
           curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.gz
@@ -34,7 +24,6 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      # Ensure PATH is updated immediately after MacPorts installation
       - name: Ensure PATH is updated for MacPorts
         shell: bash
         run: |
@@ -50,13 +39,11 @@ jobs:
 
       - name: Configure MacPorts to use the cloned repository
         run: |
-          # Add the local path to the sources.conf
           sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
           echo "sources.conf updated to use the cloned repository."
 
       - name: Rebuild Port Index
         run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           cd macports-ports
           sudo /opt/local/bin/portindex
           echo "Port index rebuilt from the custom repository."
@@ -64,9 +51,19 @@ jobs:
       - name: Install Xcode Command Line Tools
         run: |
           sudo xcode-select --switch /Applications/Xcode_13.1.app
+          sudo xcode-select --install
 
       - name: Verify Xcode Installation
         run: xcodebuild -version
+
+      # Install legacy Java for Mac OS X 2017 to provide the required Java headers for db53
+      - name: Install Legacy Java Developer Package
+        run: |
+          curl -O https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
+          hdiutil attach javaforosx.dmg
+          sudo installer -pkg /Volumes/Java\ for\ OS\ X\ 2017-001/JavaForOSX.pkg -target /
+          hdiutil detach /Volumes/Java\ for\ OS\ X\ 2017-001
+          echo "Legacy Java Developer Package installed."
 
       - name: Install DB5.3 with Java Headers
         run: |
