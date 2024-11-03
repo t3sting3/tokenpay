@@ -16,7 +16,7 @@ jobs:
 
       - name: Install Java Developer Package with Brew
         run: |
-          brew install --cask zulu7
+          brew install --cask zulu8
           echo "Java Developer Package installed."
 
       - name: Verify Java Developer Package Installation
