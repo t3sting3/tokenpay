@@ -55,7 +55,6 @@ jobs:
 
       - name: Install Xcode Command Line Tools
         run: |
-          sudo xcode-select --install
           sudo xcode-select --switch /Applications/Xcode_13.1.app
 
       - name: Verify Xcode Installation
