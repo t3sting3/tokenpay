@@ -13,9 +13,6 @@ jobs:
 
       - name: Check GCC
         run: llvm-gcc --version
-        
-      - name: Install Java via Homebrew
-        run: brew install openjdk@21
 
       - name: Clone custom MacPorts repository
         run: |
