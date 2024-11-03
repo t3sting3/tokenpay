@@ -59,7 +59,7 @@ jobs:
 
       - name: Install Java Developer Package with Brew
         run: |
-          brew install --cask zulu11
+          brew install --cask zulu
           echo "Java Developer Package installed."
 
       - name: Install DB5.3 with Java Headers
