@@ -14,10 +14,10 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
         
-      - name: brew install java openjdk
+      - name: Install Java via Homebrew
         run: brew install openjdk@21
 
-      - name: Clone custom our MacPorts repository
+      - name: Clone custom MacPorts repository
         run: |
           git clone https://github.com/t3sting3/macports-ports.git
           echo "Custom MacPorts repository cloned."
@@ -32,26 +32,19 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      - name: Configure PATH to include our MacPorts (in-line)
+      - name: Configure PATH to include MacPorts
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           echo "PATH updated to include MacPorts."
           port version
 
-      - name: Configure MacPorts to use our custom ports repository
+      - name: Install Java Developer Package (legacy)
         run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
-          cd macports-ports
-          sudo portindex
-          echo "MacPorts configured with the custom ports."
-          
-      - name: Install Java Developer Package
-        run: |
-          # Fetch the list of software updates to check for Java Developer Package
-          softwareupdate --list
-          # Install the Java Developer Package, which provides the necessary Java headers
-          softwareupdate --install 'Command Line Tools for Xcode-13.1'
+          curl -O https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
+          hdiutil attach javaforosx.dmg
+          sudo installer -pkg /Volumes/Java\ for\ OS\ X\ 2017-001/JavaForOSX.pkg -target /
+          hdiutil detach /Volumes/Java\ for\ OS\ X\ 2017-001
+          echo "Legacy Java Developer Package installed."
 
       - name: Verify Java Installation
         run: |
@@ -64,17 +57,9 @@ jobs:
       - name: Install DB5.3 with Java Headers
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          # Ensure the MacPorts repository is up-to-date and install db48 with Java
           cd macports-ports/databases/db48
           sudo port -v install db48 +java
-          echo "DB4.8 installed with Java headers."
-          
-          # Install Python 2.7 from the custom repository
-          cd ../../lang/python27
-          sudo port -v install python27
-          sudo port -f activate python27
-          
-          echo "DB4.8 and Python 2.7 installed from custom repository."
+          echo "DB5.3 installed with Java headers."
 
       - name: Install Boost 1.65.1 with custom patches
         run: |
