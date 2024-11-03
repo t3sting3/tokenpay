@@ -67,7 +67,7 @@ jobs:
           sudo port -v install db48
           cd macports-ports/lang/python27/
           sudo port install python27
-          sudo port -f activate python27
+          sudo port -f activate python27 && cd .. && cd ..
           cd macports-ports/devel/boost && ls
           sudo port install boost @1.65.1 +without-icu
           echo "Boost 1.65.1 installed from the custom repository with patches."
