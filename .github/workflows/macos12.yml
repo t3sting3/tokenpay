@@ -14,21 +14,16 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
-      - name: Install OpenJDK 8 (required for db53)
+      - name: Install Apple's Legacy Java Developer Package
         run: |
-          brew install openjdk@8
-          sudo ln -sfn $(brew --prefix openjdk@8)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-8.jdk
-          echo 'export PATH="/usr/local/opt/openjdk@8/bin:$PATH"' >> ~/.zshrc
-          echo 'export JAVA_HOME=$(/usr/libexec/java_home -v1.8)' >> ~/.zshrc
-          echo 'export JDK_HOME=$JAVA_HOME' >> ~/.zshrc
-          source ~/.zshrc
+          curl -O https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
+          hdiutil attach javaforosx.dmg
+          sudo installer -pkg /Volumes/Java\ for\ macOS\ 2017-001/JavaForOSX.pkg -target /
 
-      - name: Verify Java Installation
+      - name: Verify Java Developer Package Installation
         run: |
-          /usr/libexec/java_home -v 1.8
+          /usr/libexec/java_home -v 1.6
           java -version
-          echo $JAVA_HOME
-          echo $JDK_HOME
 
       - name: Clone custom MacPorts repository
         run: |
@@ -59,19 +54,20 @@ jobs:
           sudo portindex
           echo "MacPorts configured with the custom repository."
 
-      - name: Install Java Developer Package (legacy)
+      - name: Install Xcode Command Line Tools
         run: |
-          softwareupdate --install 'Command Line Tools for Xcode-13.1'
+          sudo xcode-select --install
+          sudo xcode-select --switch /Applications/Xcode_13.1.app
 
-      - name: Set Xcode 13.1
-        run: sudo xcode-select -switch /Applications/Xcode_13.1.app
+      - name: Verify Xcode Installation
+        run: xcodebuild -version
 
       - name: Install DB5.3 with Java Headers
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          export JAVA_HOME=$(/usr/libexec/java_home -v1.8)
-          export JDK_HOME=$JAVA_HOME
+          export JAVA_HOME=$(/usr/libexec/java_home -v1.6) # Ensure use of the legacy Java headers
           cd macports-ports/databases/db53
+          sudo port clean db53
           sudo port -v install db53 +java
           echo "DB5.3 installed with Java headers."
 
