@@ -37,11 +37,7 @@ jobs:
 
       - name: Install Java Developer Package (legacy)
         run: |
-          curl -O https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
-          hdiutil attach javaforosx.dmg
-          sudo installer -pkg /Volumes/Java\ for\ OS\ X\ 2017-001/JavaForOSX.pkg -target /
-          hdiutil detach /Volumes/Java\ for\ OS\ X\ 2017-001
-          echo "Legacy Java Developer Package installed."
+          softwareupdate --install 'Command Line Tools for Xcode-13.1'
 
       - name: Verify Java Installation
         run: |
