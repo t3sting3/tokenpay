@@ -14,8 +14,21 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
-      - name: Install Java via Homebrew
-        run: brew install openjdk@21
+      - name: Install OpenJDK 8 (required for db53)
+        run: |
+          brew install openjdk@8
+          sudo ln -sfn $(brew --prefix openjdk@8)/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-8.jdk
+          echo 'export PATH="/usr/local/opt/openjdk@8/bin:$PATH"' >> ~/.zshrc
+          echo 'export JAVA_HOME=$(/usr/libexec/java_home -v1.8)' >> ~/.zshrc
+          echo 'export JDK_HOME=$JAVA_HOME' >> ~/.zshrc
+          source ~/.zshrc
+
+      - name: Verify Java Installation
+        run: |
+          /usr/libexec/java_home -v 1.8
+          java -version
+          echo $JAVA_HOME
+          echo $JDK_HOME
 
       - name: Clone custom MacPorts repository
         run: |
@@ -50,17 +63,14 @@ jobs:
         run: |
           softwareupdate --install 'Command Line Tools for Xcode-13.1'
 
-      - name: Verify Java Installation
-        run: |
-          /usr/libexec/java_home
-          java -version
-
       - name: Set Xcode 13.1
         run: sudo xcode-select -switch /Applications/Xcode_13.1.app
 
       - name: Install DB5.3 with Java Headers
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+          export JAVA_HOME=$(/usr/libexec/java_home -v1.8)
+          export JDK_HOME=$JAVA_HOME
           cd macports-ports/databases/db53
           sudo port -v install db53 +java
           echo "DB5.3 installed with Java headers."
