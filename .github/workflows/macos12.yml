@@ -48,15 +48,15 @@ jobs:
           sudo /opt/local/bin/portindex
           echo "Port index rebuilt from the custom repository."
 
-      - name: Install Xcode Command Line Tools
+      - name: Check if Xcode Command Line Tools are installed
         run: |
-          sudo xcode-select --switch /Applications/Xcode_13.1.app
-          sudo xcode-select --install
+          if ! xcode-select -p; then
+            echo "Xcode Command Line Tools are not installed. Installing now..."
+            sudo xcode-select --install
+          else
+            echo "Xcode Command Line Tools are already installed."
+          fi
 
-      - name: Verify Xcode Installation
-        run: xcodebuild -version
-
-      # Install legacy Java for Mac OS X 2017 to provide the required Java headers for db53
       - name: Install Legacy Java Developer Package
         run: |
           curl -O https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
