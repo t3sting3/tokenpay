@@ -34,7 +34,18 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      # Manually source MacPorts after installation to ensure it's available in the PATH for all steps
+      - name: Clone MacPorts Ports Repository
+        run: |
+          git clone https://github.com/macports/macports-ports.git
+          echo "MacPorts Ports repository cloned."
+
+      # Update the sources.conf to use the cloned macports-ports repository
+      - name: Configure MacPorts to use the cloned repository
+        run: |
+          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
+          sudo portindex
+          echo "MacPorts configured to use the cloned repository."
+
       - name: Update PATH for MacPorts
         shell: bash
         run: |
@@ -42,7 +53,7 @@ jobs:
           source ~/.bash_profile
           echo "PATH updated to include MacPorts."
           sudo /opt/local/bin/port version  # Use the full path to ensure port is installed
-          
+
       - name: Install Xcode Command Line Tools
         run: |
           sudo xcode-select --switch /Applications/Xcode_13.1.app
@@ -51,21 +62,18 @@ jobs:
         run: xcodebuild -version
 
       - name: Install DB5.3 with Java Headers
-        shell: bash
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           sudo /opt/local/bin/port -v install db53 +java
           echo "DB5.3 installed with Java headers."
 
       - name: Install Boost 1.65.1 with custom patches
-        shell: bash
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           sudo /opt/local/bin/port -v install boost @1.65.1 +without-icu
           echo "Boost 1.65.1 installed."
 
       - name: Verify Boost installation
-        shell: bash
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           /opt/local/bin/port installed boost
