@@ -34,17 +34,20 @@ jobs:
           echo "MacPorts installed."
 
       # Add MacPorts to PATH and Verify
-      - name: Add MacPorts to PATH and Verify
+      - name: Add MacPorts to PATH Globally
         run: |
           echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.bashrc
+          echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.zshrc
           export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           echo "PATH is now: $PATH"
           which port
           port version
 
+      # **Ensure MacPorts commands are available in all steps**
       # **Critical Step: Sync MacPorts Repository**
       - name: Sync MacPorts Repository
         run: |
+          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           sudo port -v selfupdate
           sudo port sync
           echo "MacPorts repository synced."
@@ -52,6 +55,7 @@ jobs:
       # **Ensure db53 Portfile is Used from macports-ports**
       - name: Add macports-ports Repository
         run: |
+          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
           sudo portindex
           echo "Custom macports-ports repository added and indexed."
@@ -59,12 +63,15 @@ jobs:
       # Install Xcode Command Line Tools
       - name: Install Xcode Command Line Tools
         run: |
+          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           sudo xcode-select --switch /Applications/Xcode_13.1.app
           echo "Switched to Xcode 13.1"
 
       # Verify Xcode Installation
       - name: Verify Xcode Installation
-        run: xcodebuild -version
+        run: |
+          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+          xcodebuild -version
 
       # Install DB5.3 with Java Headers
       - name: Install DB5.3 with Java Headers
