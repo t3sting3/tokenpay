@@ -43,15 +43,12 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      # Update PATH for MacPorts (Working Method)
-      - name: Update PATH for MacPorts
+      # **Fix: Explicitly update PATH for MacPorts**
+      - name: Update PATH and Check Port
         run: |
-          echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.zshrc
-          echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.bash_profile
-          source ~/.zshrc || true
-          source ~/.bash_profile || true
           export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          echo "PATH updated to include MacPorts."
+          echo "PATH is now: $PATH"
+          which port
           port version
 
       # Install Xcode Command Line Tools and switch to the correct Xcode version
@@ -69,20 +66,21 @@ jobs:
         run: |
           export JAVA_HOME=$(/usr/libexec/java_home -v 11)
           export CPPFLAGS="-I$JAVA_HOME/include"
+          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           sudo port -v install db53 +java
           echo "DB5.3 installed with Java headers."
 
       # Install Boost 1.65.1 with custom patches
       - name: Install Boost 1.65.1 with custom patches
         run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           sudo port -v install boost @1.65.1 +without-icu
           echo "Boost 1.65.1 installed."
 
       # Verify Boost installation
       - name: Verify Boost installation
         run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           port installed boost
 
       # Link dependencies with Brew
