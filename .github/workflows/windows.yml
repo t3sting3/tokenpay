@@ -30,7 +30,6 @@ jobs:
         
       - name: strip
         run: cd ./src && strip tokenpay.exe && strip tokenpayd.exe
-
 			
   windows64-ubuntu20:
     runs-on: ubuntu-20.04
