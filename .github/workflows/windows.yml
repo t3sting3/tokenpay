@@ -1,5 +1,6 @@
 on:
   push
+
 jobs:
   windows32-ubuntu20:
     runs-on: ubuntu-20.04
@@ -14,7 +15,7 @@ jobs:
         run: sudo apt-get install build-essential libtool gperf autotools-dev automake pkg-config bsdmainutils curl git bison byacc python3 nsis
 
       - name: Force Posix
-        run: sudo apt-get install  g++-mingw-w64-i686 mingw-w64-i686-dev && sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
+        run: sudo apt-get install g++-mingw-w64-i686 mingw-w64-i686-dev && sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
 
       - name: Build depends for MingW32 Cross Compile
         run: PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g') && cd depends/ && make HOST=i686-w64-mingw32 -j2
@@ -24,13 +25,16 @@ jobs:
 
       - name: configure
         run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/i686-w64-mingw32 --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
-        
+
       - name: make
         run: make -j2
-        
+
       - name: strip
-        run: cd ./src && strip tokenpay.exe && strip tokenpayd.exe
-			
+        run: |
+          cd ./src
+          strip tokenpay.exe
+          strip tokenpayd.exe
+
   windows64-ubuntu20:
     runs-on: ubuntu-20.04
 
@@ -57,7 +61,9 @@ jobs:
 
       - name: make
         run: make -j2
-        
+
       - name: strip
-        run: cd ./src && strip tokenpay.exe && strip tokenpayd.exe
-			
+        run: |
+          cd ./src
+          strip tokenpay.exe
+          strip tokenpayd.exe
