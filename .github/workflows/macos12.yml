@@ -11,10 +11,9 @@ jobs:
       - name: git config credential.helper
         run: git config credential.helper
 
-      # Install OpenJDK or Zulu using brew (OpenJDK 11 should work for db53)
-      - name: Install OpenJDK 11 with Brew
+      # Install Zulu OpenJDK 11 with Brew (from the main tap, not deprecated)
+      - name: Install Zulu OpenJDK 11 with Brew
         run: |
-          brew tap homebrew/cask-versions
           brew install --cask zulu@11
           echo "Zulu JDK 11 installed."
 
