@@ -12,115 +12,14 @@ jobs:
         run: git config credential.helper
 
       # Install Zulu OpenJDK 11 from Homebrew
-      - name: Install Zulu OpenJDK 11 with Brew
-        run: |
-          brew install --cask zulu@11
-          echo "Zulu JDK 11 installed."
-
-      # Set Zulu 11 as default Java version and configure JAVA_HOME
-      - name: Set JAVA_HOME to Zulu 11
-        run: |
-          export JAVA_HOME=$(/usr/libexec/java_home -v 11)
-          echo "JAVA_HOME set to: $JAVA_HOME"
-          echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 11)' >> ~/.bash_profile
-          source ~/.bash_profile
-
-      # Verify the correct Java version is in use (Zulu 11)
-      - name: Verify Java Installation
-        run: |
-          echo "JAVA_HOME: $JAVA_HOME"
-          java -version
-          ls -l /Library/Java/JavaVirtualMachines
-
-      # Install MacPorts 2.8.1 to manage packages and dependencies
-      - name: Install MacPorts 2.8.1
-        run: |
-          curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.gz
-          tar xvf MacPorts-2.8.1.tar.gz
-          cd MacPorts-2.8.1
-          ./configure --with-applications-dir=/Applications --prefix=/opt/local
-          make
-          sudo make install
-          echo "MacPorts installed."
-
-      # Ensure PATH is updated to include MacPorts
-      - name: Update PATH for MacPorts
-        shell: bash
-        run: |
-          echo 'export PATH=/opt/local/bin:/opt/local/sbin:$PATH' >> ~/.bash_profile
-          source ~/.bash_profile
-          sudo /opt/local/bin/port version
-          echo "PATH updated to include MacPorts."
-
-      # Install Xcode Command Line Tools and switch to the required version
-      - name: Install Xcode Command Line Tools
-        run: |
-          sudo xcode-select --install || echo "Xcode Command Line Tools are already installed."
-          sudo xcode-select --switch /Applications/Xcode_13.1.app
-          echo "Xcode tools installed."
-
-      # Verify Xcode installation
-      - name: Verify Xcode Installation
-        run: xcodebuild -version
-
-      # Clone the MacPorts ports repository to ensure db53 is available
-      - name: Clone MacPorts Ports Repository
-        run: |
-          git clone https://github.com/macports/macports-ports.git
-          echo "MacPorts ports repository cloned."
-
-      # Configure MacPorts to use the cloned repository
-      - name: Configure MacPorts to use custom repository
-        run: |
-          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
-          echo "sources.conf updated to use the cloned repository."
-
-      # Rebuild the port index to ensure all ports are available, including db53
-      - name: Rebuild Port Index
-        run: |
-          cd macports-ports
-          sudo /opt/local/bin/portindex
-          echo "Port index rebuilt."
-
-      # Install db53 with Java headers
-      - name: Install db53 with Java Headers
-        run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          sudo /opt/local/bin/port -v install db53 +java
-          echo "db53 installed with Java headers."
-
-      # Install Boost 1.65.1 from MacPorts
-      - name: Install Boost 1.65.1 with custom patches
-        run: |
-          sudo /opt/local/bin/port -v install boost @1.65.1 +without-icu
-          echo "Boost installed."
-
-      # Verify Boost installation
-      - name: Verify Boost installation
-        run: sudo /opt/local/bin/port installed boost
-
-      # Link additional dependencies via Homebrew
-      - name: Brew link dependencies
-        run: brew link qt@5 berkeley-db@4
-
-      # Run autogen and build steps
-      - name: Auto generate
-        run: ./autogen.sh
-
-      - name: Configure
-        run: ./configure --disable-dependency-tracking --disable-werror --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
-
-      - name: Make
-        run: make -j4
-
-      # Create .dmg package for the build
-      - name: Make .dmg
-        run: make deploy
-
-      # Upload the build artifact
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: tpay-macos13
-          path: |
-            *.dmg
+      - name: /usr/libexec/java_home -V
+        run: /usr/libexec/java_home -V
+        
+      - name: /Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/include
+        run: ls /Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/include
+        
+      - name: echo $JAVA_HOME
+        run: echo $JAVA_HOME
+        
+      - name: 
+        run: xcode-select --install && sudo xcodebuild -runFirstLaunch
