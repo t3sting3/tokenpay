@@ -11,15 +11,24 @@ jobs:
       - name: git config credential.helper
         run: git config credential.helper
 
-      # Install Zulu OpenJDK 11 with Brew (from the main tap, not deprecated)
+      # Install Zulu OpenJDK 11 from Homebrew
       - name: Install Zulu OpenJDK 11 with Brew
         run: |
           brew install --cask zulu@11
           echo "Zulu JDK 11 installed."
 
+      # Set Zulu 11 as default Java version and configure JAVA_HOME
+      - name: Set JAVA_HOME to Zulu 11
+        run: |
+          export JAVA_HOME=$(/usr/libexec/java_home -v 11)
+          echo "JAVA_HOME set to: $JAVA_HOME"
+          echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 11)' >> ~/.bash_profile
+          source ~/.bash_profile
+
+      # Verify the correct Java version is in use (Zulu 11)
       - name: Verify Java Installation
         run: |
-          /usr/libexec/java_home -v 11
+          echo "JAVA_HOME: $JAVA_HOME"
           java -version
           ls -l /Library/Java/JavaVirtualMachines
 
