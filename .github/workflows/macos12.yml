@@ -9,10 +9,6 @@ jobs:
       # Checkout the repository
       - uses: actions/checkout@v4
 
-      # Check GCC version
-      - name: Check GCC
-        run: llvm-gcc --version
-
       # Install Zulu JDK 11
       - name: Install Zulu JDK 11
         run: |
@@ -26,12 +22,6 @@ jobs:
           echo "JAVA_HOME is set to $JAVA_HOME"
           /usr/libexec/java_home -V
 
-      # Verify Zulu Installation and Headers
-      - name: Verify Zulu Installation and Java Headers
-        run: |
-          ls $JAVA_HOME/include
-          echo "Java headers verified."
-
       # Install MacPorts 2.8.1
       - name: Install MacPorts 2.8.1
         run: |
@@ -43,9 +33,10 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      # **Fix: Explicitly update PATH for MacPorts**
-      - name: Update PATH and Check Port
+      # **Critical Fix: Export PATH with MacPorts bin paths**
+      - name: Add MacPorts to PATH and Verify
         run: |
+          echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.bashrc
           export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           echo "PATH is now: $PATH"
           which port
@@ -86,10 +77,6 @@ jobs:
       # Link dependencies with Brew
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
-
-      # Check which clang/Xcode version
-      - name: Which clang/Xcode
-        run: clang --version
 
       # Autogenerate the build files
       - name: Auto generate
