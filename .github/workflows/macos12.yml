@@ -46,6 +46,8 @@ jobs:
       # Ensure the PATH is updated immediately after MacPorts installation
       - name: Update PATH for MacPorts
         run: |
+          echo 'export PATH=/opt/local/bin:/opt/local/sbin:$PATH' >> ~/.bash_profile
+          source ~/.bash_profile
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           echo "PATH updated to include MacPorts."
           port version
