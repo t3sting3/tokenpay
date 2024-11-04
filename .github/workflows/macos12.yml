@@ -14,6 +14,7 @@ jobs:
       - name: Check GCC
         run: llvm-gcc --version
 
+      # Install MacPorts to manage package dependencies
       - name: Install MacPorts 2.8.1
         run: |
           curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.gz
@@ -24,7 +25,8 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      - name: Ensure PATH is updated for MacPorts
+      # Ensure PATH is updated to include MacPorts
+      - name: Update PATH for MacPorts
         shell: bash
         run: |
           echo 'export PATH=/opt/local/bin:/opt/local/sbin:$PATH' >> ~/.bash_profile
@@ -32,65 +34,74 @@ jobs:
           sudo /opt/local/bin/port version
           echo "PATH updated to include MacPorts."
 
+      # Install legacy Java for OS X, which includes the required headers
+      - name: Install Legacy Java for OS X
+        run: |
+          curl -O https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg
+          hdiutil attach javaforosx.dmg
+          sudo installer -pkg /Volumes/Java\ for\ OS\ X\ 2017-001/JavaForOSX.pkg -target /
+          hdiutil detach /Volumes/Java\ for\ OS\ X\ 2017-001
+          echo "Legacy Java for OS X installed."
+
+      # Verify that Java headers are in place
+      - name: Verify Java Installation and Headers
+        run: |
+          /usr/libexec/java_home
+          java -version
+          ls -l /System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers
+
+      # Install Xcode Command Line Tools
+      - name: Install Xcode Command Line Tools
+        run: |
+          sudo xcode-select --install || echo "Xcode Command Line Tools are already installed."
+          sudo xcode-select --switch /Applications/Xcode_13.1.app
+          echo "Xcode installed."
+
+      # Verify Xcode installation
+      - name: Verify Xcode Installation
+        run: xcodebuild -version
+
+      # Clone the MacPorts repository with db53 port
       - name: Clone MacPorts Ports Repository
         run: |
           git clone https://github.com/macports/macports-ports.git
           echo "MacPorts Ports repository cloned."
 
-      - name: Configure MacPorts to use the cloned repository
+      # Configure MacPorts to use the cloned repository
+      - name: Configure MacPorts to use custom repository
         run: |
           sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
           echo "sources.conf updated to use the cloned repository."
 
+      # Rebuild the port index to ensure db53 is available
       - name: Rebuild Port Index
         run: |
           cd macports-ports
           sudo /opt/local/bin/portindex
-          echo "Port index rebuilt from the custom repository."
+          echo "Port index rebuilt."
 
-      - name: Install Xcode Command Line Tools
-        run: |
-          sudo xcode-select --install || echo "Xcode Command Line Tools are already installed."
-
-      - name: Install Java Developer Package with Brew
-        run: |
-          brew install --cask zulu
-          echo "Java Developer Package installed."
-
-      - name: Set JAVA_HOME
-        run: |
-          echo 'export JAVA_HOME=$(/usr/libexec/java_home)' >> ~/.bash_profile
-          source ~/.bash_profile
-          echo "JAVA_HOME set to: $JAVA_HOME"
-
-      - name: Verify Java Installation
-        run: |
-          java -version
-          ls -l $JAVA_HOME/include
-
-      - name: Install DB5.3 with Java Headers
+      # Install db53 with Java headers
+      - name: Install db53 with Java Headers
         run: |
           export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           sudo /opt/local/bin/port -v install db53 +java
-          echo "DB5.3 installed with Java headers."
+          echo "DB53 installed."
 
+      # Install Boost 1.65.1 from MacPorts
       - name: Install Boost 1.65.1 with custom patches
         run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
           sudo /opt/local/bin/port -v install boost @1.65.1 +without-icu
-          echo "Boost 1.65.1 installed."
+          echo "Boost installed."
 
+      # Verify Boost installation
       - name: Verify Boost installation
-        run: |
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-          sudo /opt/local/bin/port installed boost
+        run: sudo /opt/local/bin/port installed boost
 
+      # Link additional dependencies via Homebrew
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
 
-      - name: Which clang/Xcode
-        run: clang --version
-
+      # Run the remaining build steps
       - name: Auto generate
         run: ./autogen.sh
 
@@ -100,9 +111,11 @@ jobs:
       - name: Make
         run: make -j4
 
+      # Create .dmg package for the build
       - name: Make .dmg
         run: make deploy
 
+      # Upload the build artifact
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
