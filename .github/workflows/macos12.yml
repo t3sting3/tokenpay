@@ -33,7 +33,7 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      # **Critical Fix: Export PATH with MacPorts bin paths**
+      # Add MacPorts to PATH and Verify
       - name: Add MacPorts to PATH and Verify
         run: |
           echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.bashrc
@@ -42,7 +42,21 @@ jobs:
           which port
           port version
 
-      # Install Xcode Command Line Tools and switch to the correct Xcode version
+      # **Critical Step: Sync MacPorts Repository**
+      - name: Sync MacPorts Repository
+        run: |
+          sudo port -v selfupdate
+          sudo port sync
+          echo "MacPorts repository synced."
+
+      # **Ensure db53 Portfile is Used from macports-ports**
+      - name: Add macports-ports Repository
+        run: |
+          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
+          sudo portindex
+          echo "Custom macports-ports repository added and indexed."
+
+      # Install Xcode Command Line Tools
       - name: Install Xcode Command Line Tools
         run: |
           sudo xcode-select --switch /Applications/Xcode_13.1.app
