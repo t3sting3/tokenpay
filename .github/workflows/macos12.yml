@@ -43,12 +43,14 @@ jobs:
           sudo make install
           echo "MacPorts installed."
 
-      # Ensure the PATH is updated immediately after MacPorts installation
+      # Update PATH for MacPorts (Working Method)
       - name: Update PATH for MacPorts
         run: |
-          echo 'export PATH=/opt/local/bin:/opt/local/sbin:$PATH' >> ~/.bash_profile
-          source ~/.bash_profile
-          export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+          echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.zshrc
+          echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.bash_profile
+          source ~/.zshrc || true
+          source ~/.bash_profile || true
+          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
           echo "PATH updated to include MacPorts."
           port version
 
