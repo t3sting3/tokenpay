@@ -20,7 +20,7 @@ jobs:
         run: ./autogen.sh
 
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-scrypt-sse2 --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+        run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --with-openssl-dir=/home/runner/work/tokenpay-linux/tokenpay-linux/depends/x86_64-linux-gnu/lib --enable-scrypt-sse2 --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
 
       - name: make
         run: make -j4
