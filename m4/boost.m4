@@ -22,7 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 m4_define([_BOOST_SERIAL], [m4_translit([
-# serial 26
+# serial 1025
 ], [#
 ], [])])
 
@@ -86,10 +86,9 @@ dnl boost-lib-version =
 dnl # 2 "conftest.cc" 3
 dnl                    "1_56"
 dnl
-dnl So get rid of the # and empty lines, and glue the remaining ones together.
+dnl So get rid of the # lines, and glue the remaining ones together.
 (eval "$ac_cpp conftest.$ac_ext") 2>&AS_MESSAGE_LOG_FD |
   grep -v '#' |
-  grep -v '^[[[:space:]]]*$' |
   tr -d '\r' |
   tr -s '\n' ' ' |
   $SED -n -e "$1" >conftest.i 2>&1],
@@ -155,7 +154,7 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
     # If the user provided a value to --with-boost, use it and only it.
     case $with_boost in #(
       ''|yes) set x '' /opt/local/include /usr/local/include /opt/include \
-                 /usr/include C:/Boost/include;; #(
+                 /usr/include /opt/homebrew/include C:/Boost/include;; #(
       *)      set x "$with_boost/include" "$with_boost";;
     esac
     shift
@@ -217,9 +216,11 @@ AC_LANG_POP([C++])dnl
         BOOST_CPPFLAGS=
         ;;#(
       *)
-        AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"])dnl
+        BOOST_CPPFLAGS="-I$boost_cv_inc_path"
         ;;
     esac
+  BOOST_CPPFLAGS="$BOOST_STD $BOOST_CPPFLAGS"
+  AC_SUBST([BOOST_CPPFLAGS])
   if test x"$boost_cv_inc_path" != xno; then
   AC_DEFINE([HAVE_BOOST], [1],
             [Defined if the requested minimum BOOST version is satisfied])
@@ -396,8 +397,8 @@ AC_DEFUN([_BOOST_FIND_LIBS],
     AC_MSG_ERROR([the libext variable is empty, did you invoke Libtool?])
   boost_save_ac_objext=$ac_objext
   # Generate the test file.
-  AC_LANG_CONFTEST([AC_LANG_PROGRAM([#include <$4>
-$6], [$5])])
+  AC_LANG_CONFTEST([AC_LANG_PROGRAM([$6
+#include <$4>], [$5])])
 dnl Optimization hacks: compiling C++ is slow, especially with Boost.  What
 dnl we're trying to do here is guess the right combination of link flags
 dnl (LIBS / LDFLAGS) to use a given library.  This can take several
@@ -426,12 +427,15 @@ for boost_tag_ in -$boost_cv_lib_tag ''; do
 for boost_ver_ in -$boost_cv_lib_version ''; do
 for boost_mt_ in $boost_mt -mt ''; do
 for boost_rtopt_ in $boost_rtopt '' -d; do
-  for boost_lib in \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_rtopt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_mt_$boost_ver_ \
-    boost_$boost_lib_$boost_tag_$boost_ver_
+  for boost_full_suffix in \
+    $boost_last_suffix \
+    x$boost_tag_$boost_mt_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_rtopt_$boost_ver_ \
+    x$boost_tag_$boost_mt_$boost_ver_ \
+    x$boost_tag_$boost_ver_
   do
+    boost_real_suffix=`echo "$boost_full_suffix" | sed 's/^x//'`
+    boost_lib="boost_$boost_lib_$boost_real_suffix"
     # Avoid testing twice the same lib
     case $boost_failed_libs in #(
       (*@$boost_lib@*) continue;;
@@ -441,7 +445,7 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     boost_tmp_lib=$with_boost
     test x"$with_boost" = x && boost_tmp_lib=${boost_cv_inc_path%/include}
     for boost_ldpath in "$boost_tmp_lib/lib" '' \
-             /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
+             /opt/local/lib* /opt/homebrew/lib /usr/local/lib* /opt/lib* /usr/lib* \
              "$with_boost" C:/Boost/lib /lib*
     do
       # Don't waste time with directories that don't exist.
@@ -496,6 +500,7 @@ dnl generated only once above (before we start the for loops).
         test x"$boost_ldpath" != x &&
           Boost_lib_LDFLAGS="-L$boost_ldpath $boost_cv_rpath_link_ldflag$boost_ldpath"
         Boost_lib_LDPATH="$boost_ldpath"
+        boost_last_suffix="$boost_full_suffix"
         break 7
       else
         boost_failed_libs="$boost_failed_libs@$boost_lib@"
@@ -549,11 +554,21 @@ BOOST_DEFUN([Asio],
 BOOST_FIND_HEADER([boost/asio.hpp])])
 
 
-# BOOST_ASSIGN()
-# -------------
-# Look for Boost.Assign
-BOOST_DEFUN([Assign],
-[BOOST_FIND_HEADER([boost/assign.hpp])])
+# BOOST_ATOMIC([PREFERRED-RT-OPT])
+# -------------------------------
+# Look for Boost.Atomic.  For the documentation of PREFERRED-RT-OPT, see the
+# documentation of BOOST_FIND_LIB above.
+BOOST_DEFUN([Atomic],
+[BOOST_FIND_LIB([atomic], [$1],
+                [boost/atomic.hpp],
+                [boost::atomic<int> a;],
+                [#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#endif])
+])# BOOST_ATOMIC
 
 
 # BOOST_BIND()
@@ -1009,11 +1024,74 @@ BOOST_DEFUN([Unordered],
 [BOOST_FIND_HEADER([boost/unordered_map.hpp])])
 
 
-# BOOST_UUID()
-# ------------
-# Look for Boost.Uuid
+# BOOST_UUID([EXTRA-CPP-FLAGS])
+# -----------------------
+# Look for Boost.Uuid.  Beginning with Boost 1.67, Boost.Uuid on
+# Windows might require -lbcrypt.
 BOOST_DEFUN([Uuid],
-[BOOST_FIND_HEADER([boost/uuid/uuid.hpp])])
+[BOOST_FIND_HEADER([boost/uuid/uuid.hpp])
+
+BOOST_UUID_LDFLAGS=
+BOOST_UUID_LIBS=
+
+AC_LANG_PUSH([C++])
+boost_save_CPPFLAGS=$CPPFLAGS
+boost_filesystem_save_LIBS=$LIBS
+boost_filesystem_save_LDFLAGS=$LDFLAGS
+CPPFLAGS="$CPPFLAGS $1"
+if test x"$boost_inc" != x; then
+  CPPFLAGS="$CPPFLAGS -I$boost_inc"
+fi
+
+AC_LINK_IFELSE([AC_LANG_SOURCE([[
+#include <boost/uuid/uuid_generators.hpp>
+int main(void) {
+  boost::uuids::random_generator()();
+  return 0;
+}]])], [boost_link=yes], [boost_link=no])
+
+CPPFLAGS=$boost_save_CPPFLAGS
+LIBS=$boost_filesystem_save_LIBS
+LDFLAGS=$boost_filesystem_save_LDFLAGS
+AC_LANG_POP([C++])
+
+if test x"$boost_link" = xno; then
+
+  AC_LANG_PUSH([C++])
+  boost_save_CPPFLAGS=$CPPFLAGS
+  boost_filesystem_save_LIBS="$LIBS"
+  boost_filesystem_save_LDFLAGS="$LDFLAGS"
+  CPPFLAGS="$CPPFLAGS $1"
+  if test x"$boost_inc" != x; then
+     CPPFLAGS="$CPPFLAGS -I$boost_inc"
+  fi
+  LIBS="$LIBS -lbcrypt"
+
+  AC_LINK_IFELSE([AC_LANG_SOURCE([[
+  #include <boost/uuid/uuid_generators.hpp>
+  int main(void) {
+    boost::uuids::random_generator()();
+    return 0;
+  }]])], [boost_link=yes], [boost_link=no])
+
+  CPPFLAGS=$boost_save_CPPFLAGS
+  LIBS=$boost_filesystem_save_LIBS
+  LDFLAGS=$boost_filesystem_save_LDFLAGS
+  AC_LANG_POP([C++])
+
+  if test x"$boost_link" = xyes; then
+    BOOST_UUID_LIBS="-lbcrypt"
+  fi
+fi
+
+if test x"$boost_link" = xno; then
+  AC_MSG_ERROR([cannot find the flags to link with Boost UUID])
+fi
+
+AC_SUBST(BOOST_UUID_LDFLAGS)
+AC_SUBST(BOOST_UUID_LIBS)
+
+]) # BOOST_UUID
 
 
 # BOOST_PROGRAM_OPTIONS([PREFERRED-RT-OPT])
@@ -1073,6 +1151,13 @@ BOOST_DEFUN([Regex],
                 [boost/regex.hpp],
                 [boost::regex exp("*"); boost::regex_match("foo", exp);])
 ])# BOOST_REGEX
+
+
+# BOOST_SCOPE_EXIT()
+# ------------
+# Look for Boost.ScopeExit.
+BOOST_DEFUN([SCOPE_EXIT],
+[BOOST_FIND_HEADER([boost/scope_exit.hpp])])
 
 
 # BOOST_SERIALIZATION([PREFERRED-RT-OPT])
@@ -1378,15 +1463,17 @@ AC_LANG_POP([C++])dnl
 # -----------------------------
 # Internal helper for _BOOST_FIND_COMPILER_TAG.
 m4_define([_BOOST_gcc_test],
-["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC @ gcc$1$2"])dnl
+["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC \
+     && (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
+         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw$1$2" \
+"defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC @ gcc$1$2"])dnl
 
-# _BOOST_mingw_test(MAJOR, MINOR)
+
+# _BOOST_clang_test(MAJOR, MINOR)
 # -----------------------------
 # Internal helper for _BOOST_FIND_COMPILER_TAG.
-m4_define([_BOOST_mingw_test],
-["defined __GNUC__ && __GNUC__ == $1 && __GNUC_MINOR__ == $2 && !defined __ICC && \
-  (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
-         || defined __WIN32__ || defined __WINNT || defined __WINNT__) @ mgw$1$2"])dnl
+m4_define([_BOOST_clang_test],
+["defined __clang__ && __clang_major__ == $1 && __clang_minor__ == $2 @ clang$1$2"])dnl
 
 
 # _BOOST_FIND_COMPILER_TAG()
@@ -1416,41 +1503,90 @@ if test x$boost_cv_inc_path != xno; then
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
   for i in \
-    _BOOST_mingw_test(6, 2) \
+    _BOOST_clang_test(17, 0) \
+    _BOOST_clang_test(16, 0) \
+    _BOOST_clang_test(15, 0) \
+    _BOOST_clang_test(14, 0) \
+    _BOOST_clang_test(13, 0) \
+    _BOOST_clang_test(12, 0) \
+    _BOOST_clang_test(11, 1) \
+    _BOOST_clang_test(11, 0) \
+    _BOOST_clang_test(10, 0) \
+    _BOOST_clang_test(9, 0) \
+    _BOOST_clang_test(8, 0) \
+    _BOOST_clang_test(7, 1) \
+    _BOOST_clang_test(7, 0) \
+    _BOOST_clang_test(6, 0) \
+    _BOOST_clang_test(5, 0) \
+    _BOOST_clang_test(4, 0) \
+    _BOOST_clang_test(3, 9) \
+    _BOOST_clang_test(3, 8) \
+    _BOOST_clang_test(3, 7) \
+    _BOOST_clang_test(3, 6) \
+    _BOOST_clang_test(3, 5) \
+    _BOOST_clang_test(3, 4) \
+    _BOOST_clang_test(3, 3) \
+    _BOOST_clang_test(3, 2) \
+    _BOOST_clang_test(3, 1) \
+    _BOOST_clang_test(3, 0) \
+    _BOOST_gcc_test(13, 2) \
+    _BOOST_gcc_test(13, 1) \
+    _BOOST_gcc_test(13, 0) \
+    _BOOST_gcc_test(12, 3) \
+    _BOOST_gcc_test(12, 2) \
+    _BOOST_gcc_test(12, 1) \
+    _BOOST_gcc_test(12, 0) \
+    _BOOST_gcc_test(11, 4) \
+    _BOOST_gcc_test(11, 3) \
+    _BOOST_gcc_test(11, 2) \
+    _BOOST_gcc_test(11, 1) \
+    _BOOST_gcc_test(11, 0) \
+    _BOOST_gcc_test(10, 5) \
+    _BOOST_gcc_test(10, 4) \
+    _BOOST_gcc_test(10, 3) \
+    _BOOST_gcc_test(10, 2) \
+    _BOOST_gcc_test(10, 1) \
+    _BOOST_gcc_test(10, 0) \
+    _BOOST_gcc_test(9, 5) \
+    _BOOST_gcc_test(9, 4) \
+    _BOOST_gcc_test(9, 3) \
+    _BOOST_gcc_test(9, 2) \
+    _BOOST_gcc_test(9, 1) \
+    _BOOST_gcc_test(9, 0) \
+    _BOOST_gcc_test(8, 5) \
+    _BOOST_gcc_test(8, 4) \
+    _BOOST_gcc_test(8, 3) \
+    _BOOST_gcc_test(8, 2) \
+    _BOOST_gcc_test(8, 1) \
+    _BOOST_gcc_test(8, 0) \
+    _BOOST_gcc_test(7, 5) \
+    _BOOST_gcc_test(7, 4) \
+    _BOOST_gcc_test(7, 3) \
+    _BOOST_gcc_test(7, 2) \
+    _BOOST_gcc_test(7, 1) \
+    _BOOST_gcc_test(7, 0) \
+    _BOOST_gcc_test(6, 5) \
+    _BOOST_gcc_test(6, 4) \
+    _BOOST_gcc_test(6, 3) \
     _BOOST_gcc_test(6, 2) \
-    _BOOST_mingw_test(6, 1) \
     _BOOST_gcc_test(6, 1) \
-    _BOOST_mingw_test(6, 0) \
     _BOOST_gcc_test(6, 0) \
-    _BOOST_mingw_test(5, 3) \
+    _BOOST_gcc_test(5, 5) \
+    _BOOST_gcc_test(5, 4) \
     _BOOST_gcc_test(5, 3) \
-    _BOOST_mingw_test(5, 2) \
     _BOOST_gcc_test(5, 2) \
-    _BOOST_mingw_test(5, 1) \
     _BOOST_gcc_test(5, 1) \
-    _BOOST_mingw_test(5, 0) \
     _BOOST_gcc_test(5, 0) \
-    _BOOST_mingw_test(4, 10) \
     _BOOST_gcc_test(4, 10) \
-    _BOOST_mingw_test(4, 9) \
     _BOOST_gcc_test(4, 9) \
-    _BOOST_mingw_test(4, 8) \
     _BOOST_gcc_test(4, 8) \
-    _BOOST_mingw_test(4, 7) \
     _BOOST_gcc_test(4, 7) \
-    _BOOST_mingw_test(4, 6) \
     _BOOST_gcc_test(4, 6) \
-    _BOOST_mingw_test(4, 5) \
     _BOOST_gcc_test(4, 5) \
-    _BOOST_mingw_test(4, 4) \
     _BOOST_gcc_test(4, 4) \
-    _BOOST_mingw_test(4, 3) \
     _BOOST_gcc_test(4, 3) \
-    _BOOST_mingw_test(4, 2) \
     _BOOST_gcc_test(4, 2) \
-    _BOOST_mingw_test(4, 1) \
     _BOOST_gcc_test(4, 1) \
-    _BOOST_mingw_test(4, 0) \
     _BOOST_gcc_test(4, 0) \
     "defined __GNUC__ && __GNUC__ == 3 && !defined __ICC \
      && (defined WIN32 || defined WINNT || defined _WIN32 || defined __WIN32 \
