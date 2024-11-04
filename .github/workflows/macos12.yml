@@ -52,13 +52,14 @@ jobs:
           sudo port sync
           echo "MacPorts repository synced."
 
-      # **Ensure db53 Portfile is Used from macports-ports**
-      - name: Add macports-ports Repository
+      # **Configure sources.conf to use both default and local repositories**
+      - name: Configure sources.conf for MacPorts
         run: |
           export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" > /opt/local/etc/macports/sources.conf'
+          sudo sh -c 'echo "rsync://rsync.macports.org/release/tarballs/ports.tar [default]" > /opt/local/etc/macports/sources.conf'
+          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" >> /opt/local/etc/macports/sources.conf'
           sudo portindex
-          echo "Custom macports-ports repository added and indexed."
+          echo "sources.conf file configured correctly and repository indexed."
 
       # Install Xcode Command Line Tools
       - name: Install Xcode Command Line Tools
