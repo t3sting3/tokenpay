@@ -92,11 +92,11 @@ if test "x$enable_gui" = "xyes" ; then
   ])
 if test "x$enable_gui" = "xyes" ; then
     dnl Check for libdb_cxx only if wallet enabled
-    VERGE_FIND_BDB48
+    TOKENPAY_FIND_BDB48
   fi
   if test "x$enable_gui" = "xno" ; then
     dnl Check for libdb_cxx only if wallet enabled
-    VERGE_FIND_BDB48
+    TOKENPAY_FIND_BDB48
   fi
   MACDEPLOYQT_LIBPATH=""
   AC_ARG_WITH([qt5webkit], [AS_HELP_STRING([--with-qt5webkit], [Manually specify the path to a stand-alone Qt5WebKit installation (pkg-config will be used if not set). This has no effect if --enable-gui is not also specified.])], [
