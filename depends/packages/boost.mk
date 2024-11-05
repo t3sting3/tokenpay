@@ -1,8 +1,8 @@
 package=boost
-$(package)_version=1_63_0
-$(package)_download_path=https://sourceforge.net/projects/boost/files/boost/1.63.0
+$(package)_version=1_61_0
+$(package)_download_path=https://sourceforge.net/projects/boost/files/boost/1.61.0
 $(package)_file_name=$(package)_$($(package)_version).tar.bz2
-$(package)_sha256_hash=beae2529f759f6b3bf3f4969a19c2e9d6f0c503edcb2de4a61d1428519fcb3b0
+$(package)_sha256_hash=a547bd06c2fd9a71ba1d169d9cf0339da7ebf4753849a8f7d6fdb8feee99b640
 
 define $(package)_set_vars
 $(package)_config_opts_release=variant=release
@@ -19,7 +19,7 @@ $(package)_toolset_$(host_os)=gcc
 $(package)_archiver_$(host_os)=$($(package)_ar)
 $(package)_toolset_darwin=darwin
 $(package)_archiver_darwin=$($(package)_libtool)
-$(package)_config_libraries=chrono,filesystem,date_time,iostreams,program_options,system,thread,test
+$(package)_config_libraries=chrono,filesystem,iostreams,date_time,program_options,system,thread,test
 $(package)_cxxflags=-std=c++11 -fvisibility=hidden
 $(package)_cxxflags_linux=-fPIC
 endef
@@ -34,4 +34,8 @@ endef
 
 define $(package)_build_cmds
   ./b2 -d2 -j2 -d1 --prefix=$($(package)_staging_prefix_dir) $($(package)_config_opts) stage
+endef
+
+define $(package)_stage_cmds
+  ./b2 -d0 -j4 --prefix=$($(package)_staging_prefix_dir) $($(package)_config_opts) install
 endef
