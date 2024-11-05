@@ -7,7 +7,7 @@ $(package)_sha256_hash=36dd9574f006eaa1e5af780e4b33d11fe39d09fd7c12f3b9d83294174
 $(package)_dependencies=openssl zlib
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libxslt icu libxkbcommon
 $(package)_build_subdir=qtbase
-$(package)_qt_libs=corelib network widgets gui plugins testlib webkit webkitwidgets
+$(package)_qt_libs=corelib network widgets gui plugins testlib webkitwidgets
 $(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
@@ -85,7 +85,6 @@ $(package)_config_opts += -no-feature-textodfwriter
 $(package)_config_opts += -no-feature-udpsocket
 $(package)_config_opts += -no-feature-wizard
 $(package)_config_opts += -no-feature-xml
-$(package)_config_opts += -feature-webkit
 $(package)_config_opts += -feature-webkitwidgets
 
 ifneq ($(build_os),darwin)
