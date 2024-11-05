@@ -1,8 +1,5 @@
-name: Build TokenPay on Ubuntu 20.04
-
 on:
   push
-
 jobs:
   ubuntu20:
     runs-on: ubuntu-20.04
@@ -13,57 +10,48 @@ jobs:
       - name: Update apt repos
         run: sudo apt-get update
 
-      - name: Download and untar Boost
-        run: |
-          wget https://sourceforge.net/projects/boost/files/boost/1.65.1/boost_1_65_1.tar.gz
-          tar xzvf boost_1_65_1.tar.gz
+      - name: download and untar boost
+        run: wget https://sourceforge.net/projects/boost/files/boost/1.65.1/boost_1_65_1.tar.gz
+      - name: untar boost
+        run: tar xzvf boost_1_65_1.tar.gz
+        
+      - name: go in and run bootstrap
+        run: cd boost_1_65_1 && ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
 
-      - name: Install Boost Libraries
-        run: |
-          cd boost_1_65_1
-          ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
-          sudo ./b2 install
-
-      - name: Download and untar Berkeley DB 4.8
-        run: |
-          wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
-          tar -xzvf db-4.8.30.NC.tar.gz
-
-      - name: Fix atomic for Berkeley DB 4.8
-        run: |
-          sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' db-4.8.30.NC/dbinc/atomic.h 
-
-      - name: Build and install Berkeley DB 4.8
-        run: |
-          cd db-4.8.30.NC/build_unix/
-          ../dist/configure --enable-cxx --prefix=/usr/local/BerkeleyDB.4.8
-          make
-          sudo make install
-
+      - name: run b2 
+        run: cd boost_1_65_1 && sudo ./b2 install
+        
+      - name: get and untar bdb4.8
+        run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
+        
+      - name: list files
+        run: ls
+        
+      - name: fix atomic
+        run: cd db-4.8.30.NC/build_unix/ && sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' /home/runner/work/tokenpay-linux/tokenpay-linux/db-4.8.30.NC/dbinc/atomic.h 
+        
+      - name: build bdb4.8
+        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx
+        
+      - name: make and make install 
+        run: cd db-4.8.30.NC/build_unix/ && make && sudo make install
+        
       - name: Install base dependencies
-        run: |
-          sudo apt-get install -y build-essential libtool autotools-dev automake pkg-config zlib1g-dev libevent-dev bsdmainutils git libseccomp-dev libcap-dev libminiupnpc-dev libqt5gui5 libqt5core5a libqt5webkit5-dev libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
+        run: sudo apt-get install build-essential libtool autotools-dev automake pkg-config zlib1g-dev libevent-dev bsdmainutils git libseccomp-dev libcap-dev libminiupnpc-dev libqt5gui5 libqt5core5a libqt5webkit5-dev libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
 
-      - name: Auto generate configuration
+      - name: Auto generate
         run: ./autogen.sh
+        
+      - name: bdb locate
+        run: sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb-4.8.so /usr/lib/libdb-4.8.so && sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb_cxx-4.8.so /usr/lib/libdb_cxx-4.8.so
 
-      - name: Configure Berkeley DB library linking
-        run: |
-          sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb-4.8.so /usr/lib/libdb-4.8.so
-          sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb_cxx-4.8.so /usr/lib/libdb_cxx-4.8.so
+      - name: configure
+        run: ./configure --enable-gui --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
 
-      - name: Configure build with LDFLAGS and CPPFLAGS
-        env:
-          LDFLAGS: "-L/usr/local/BerkeleyDB.4.8/lib"
-          CPPFLAGS: "-I/usr/local/BerkeleyDB.4.8/include"
-        run: |
-          ./configure --enable-gui --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
-
-      - name: Compile source
+      - name: make
         run: make -j4
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: tpay-ubuntu20
           path: |
