@@ -56,11 +56,7 @@ jobs:
       - name: BDB locate and symlink
         run: sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb-4.8.so /usr/lib/libdb-4.8.so && sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb_cxx-4.8.so /usr/lib/libdb_cxx-4.8.so
 
-      # Step 11: Clean previous builds (if any)
-      - name: Clean project
-        run: make clean
-
-      # Step 12: Configure the build with Berkeley DB paths
+      # Step 11: Configure the build with Berkeley DB paths
       - name: Configure with BDB paths
         run: |
           ./configure --enable-gui --disable-werror \
@@ -70,11 +66,11 @@ jobs:
           LDFLAGS="-L/usr/local/BerkeleyDB.4.8/lib" \
           CPPFLAGS="-I/usr/local/BerkeleyDB.4.8/include"
 
-      # Step 13: Build the project
+      # Step 12: Build the project
       - name: Make
         run: make -j4
 
-      # Step 14: Upload artifacts
+      # Step 13: Upload artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: tpay-ubuntu20
