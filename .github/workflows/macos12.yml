@@ -1,125 +1,105 @@
-on:
-  push
+on: 
+  push:
+    branches:
+      - main  # or your target branch
 
 jobs:
-  macos12:
-    runs-on: macos-12
+  windows32-ubuntu20:
+    runs-on: ubuntu-20.04
 
     steps:
-      # Checkout the repository
       - uses: actions/checkout@v4
 
-      # Install Zulu JDK 11
-      - name: Install Zulu JDK 11
+      - name: Install base tools and Qt dependencies
         run: |
-          brew install --cask zulu@11
-          echo "Zulu JDK 11 installed."
+          sudo apt-get update
+          sudo apt-get install -y build-essential libtool automake pkg-config bsdmainutils curl git \
+              g++-mingw-w64-i686 mingw-w64-i686-dev libx11-dev libxext-dev libxtst-dev libxcb1-dev \
+              libx11-xcb-dev libxcb-glx0-dev libxrender-dev libxcb-render-util0-dev libxcb-shape0-dev \
+              libxcb-xfixes0-dev
+          sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
 
-      # Set JAVA_HOME to Zulu 11 and verify
-      - name: Set and Verify JAVA_HOME
+      - name: Verify dependencies in /depends/packages
         run: |
-          export JAVA_HOME=$(/usr/libexec/java_home -v 11)
-          echo "JAVA_HOME is set to $JAVA_HOME"
-          /usr/libexec/java_home -V
+          ls depends/packages  # Lists available packages for verification
+          # Additional commands can be added here if needed to handle packages
 
-      # Install MacPorts 2.8.1
-      - name: Install MacPorts 2.8.1
+      - name: Build dependencies in the depends folder
         run: |
-          curl -O https://distfiles.macports.org/MacPorts/MacPorts-2.8.1.tar.gz
-          tar xvf MacPorts-2.8.1.tar.gz
-          cd MacPorts-2.8.1
-          ./configure --with-applications-dir=/Applications --prefix=/opt/local
-          make
-          sudo make install
-          echo "MacPorts installed."
+          PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
+          cd depends/
+          make HOST=i686-w64-mingw32 -j1 VERBOSE=1
 
-      # Add MacPorts to PATH and Verify
-      - name: Add MacPorts to PATH Globally
-        run: |
-          echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.bashrc
-          echo 'export PATH="/opt/local/bin:/opt/local/sbin:$PATH"' >> ~/.zshrc
-          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          echo "PATH is now: $PATH"
-          which port
-          port version
-
-      # **Ensure MacPorts commands are available in all steps**
-      # **Critical Step: Sync MacPorts Repository**
-      - name: Sync MacPorts Repository
-        run: |
-          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          sudo port -v selfupdate
-          sudo port sync
-          echo "MacPorts repository synced."
-
-      # **Configure sources.conf to use both default and local repositories**
-      - name: Configure sources.conf for MacPorts
-        run: |
-          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          sudo sh -c 'echo "rsync://rsync.macports.org/release/tarballs/ports.tar [default]" > /opt/local/etc/macports/sources.conf'
-          sudo sh -c 'echo "file://$(pwd)/macports-ports [nosync]" >> /opt/local/etc/macports/sources.conf'
-          sudo portindex
-          echo "sources.conf file configured correctly and repository indexed."
-
-      # Install Xcode Command Line Tools
-      - name: Install Xcode Command Line Tools
-        run: |
-          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          sudo xcode-select --switch /Applications/Xcode_13.1.app
-          echo "Switched to Xcode 13.1"
-
-      # Verify Xcode Installation
-      - name: Verify Xcode Installation
-        run: |
-          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          xcodebuild -version
-
-      # Install DB5.3 with Java Headers
-      - name: Install DB5.3 with Java Headers
-        run: |
-          export JAVA_HOME=$(/usr/libexec/java_home -v 11)
-          export CPPFLAGS="-I$JAVA_HOME/include"
-          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          sudo port -v install db53 +java
-          echo "DB5.3 installed with Java headers."
-
-      # Install Boost 1.65.1 with custom patches
-      - name: Install Boost 1.65.1 with custom patches
-        run: |
-          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          sudo port -v install boost @1.65.1 +without-icu
-          echo "Boost 1.65.1 installed."
-
-      # Verify Boost installation
-      - name: Verify Boost installation
-        run: |
-          export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-          port installed boost
-
-      # Link dependencies with Brew
-      - name: Brew link dependencies
-        run: brew link qt@5 berkeley-db@4
-
-      # Autogenerate the build files
-      - name: Auto generate
+      - name: Auto-generate configuration
         run: ./autogen.sh
 
-      # Configure the build
-      - name: Configure
-        run: ./configure --disable-dependency-tracking --disable-werror --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+      - name: Configure with depends folder
+        run: |
+          CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --prefix=$(pwd)/depends/i686-w64-mingw32 --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --bindir=$(pwd)/release/bin --libdir=$(pwd)/release/lib
 
-      # Make (build) the project
-      - name: Make
-        run: make -j4
+      - name: Compile with custom dependencies
+        run: |
+          cd src  # Ensure correct directory if Makefile is in /src
+          make -j1 VERBOSE=1
 
-      # Create the .dmg package
-      - name: Make .dmg
-        run: make deploy
+      - name: Strip binaries
+        run: |
+          cd ./src
+          strip tokenpay.exe
+          strip tokenpayd.exe
 
-      # Upload Build Artifact
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: tpay-macos13
-          path: |
-            *.dmg
+          name: windows32-ubuntu20-build
+          path: ./src/tokenpay.exe  # Adjust path to the location of the executable
+
+  windows64-ubuntu20:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install base tools and Qt dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libtool automake pkg-config bsdmainutils curl git \
+              g++-mingw-w64-x86-64 libx11-dev libxext-dev libxtst-dev libxcb1-dev libx11-xcb-dev \
+              libxcb-glx0-dev libxrender-dev libxcb-render-util0-dev libxcb-shape0-dev libxcb-xfixes0-dev
+          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix 
+
+      - name: Verify dependencies in /depends/packages
+        run: |
+          ls depends/packages  # Lists available packages for verification
+          # Additional commands can be added here if needed to handle packages
+
+      - name: Build dependencies in the depends folder
+        run: |
+          PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
+          cd depends/
+          make HOST=x86_64-w64-mingw32 -j1 VERBOSE=1
+
+      - name: Auto-generate configuration
+        run: ./autogen.sh
+
+      - name: Configure with depends folder
+        run: |
+          CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-scrypt-sse2 --prefix=$(pwd)/depends/x86_64-w64-mingw32 --disable-bench --disable-tests
+
+      - name: Compile with custom dependencies
+        run: |
+          cd src  # Ensure correct directory if Makefile is in /src
+          make -j1 VERBOSE=1
+
+      - name: Strip binaries
+        run: |
+          cd ./src
+          strip tokenpay.exe
+          strip tokenpayd.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows64-ubuntu20-build
+          path: ./src/tokenpay.exe  # Adjust path to the location of the executable
+
