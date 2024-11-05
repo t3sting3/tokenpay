@@ -43,6 +43,7 @@ PKG_CHECK_MODULES(LZMA, [liblzma], [], [AC_MSG_NOTICE([liblzma not found])])
 AC_CHECK_LIB([snappy], [main], , [AC_MSG_NOTICE([snappy not found])])
 AC_CHECK_LIB([pthread], [pthread_self], , [AC_MSG_ERROR([libpthread not found])])
 AC_LANG([C++])
+
 # TODO investigate whether earlier Boost versions will still work.
 BOOST_REQUIRE([1.58])
 BOOST_SYSTEM([mt])
@@ -89,6 +90,14 @@ if test "x$enable_gui" = "xyes" ; then
       ])
     ])
   ])
+if test "x$enable_gui" = "xyes" ; then
+    dnl Check for libdb_cxx only if wallet enabled
+    VERGE_FIND_BDB48
+  fi
+  if test "x$enable_gui" = "xno" ; then
+    dnl Check for libdb_cxx only if wallet enabled
+    VERGE_FIND_BDB48
+  fi
   MACDEPLOYQT_LIBPATH=""
   AC_ARG_WITH([qt5webkit], [AS_HELP_STRING([--with-qt5webkit], [Manually specify the path to a stand-alone Qt5WebKit installation (pkg-config will be used if not set). This has no effect if --enable-gui is not also specified.])], [
     if test "x$build_mac" = "xyes" ; then
@@ -124,14 +133,6 @@ if test "x$enable_gui" = "xyes" ; then
   fi
   if test "x$UIC" = "x" ; then
     AC_CHECK_TOOLS(UIC, [uic-qt5 uic])
-  fi
-  if test "x$enable_gui" = "xyes" ; then
-    dnl Check for libdb_cxx only if wallet enabled
-    VERGE_FIND_BDB48
-  fi
-  if test "x$enable_gui" = "xno" ; then
-    dnl Check for libdb_cxx only if wallet enabled
-    VERGE_FIND_BDB48
   fi
   if notbeginswith "$($UIC -v)" "$UIC 5." ; then
     AC_MSG_ERROR([Cannot find Qt5 tool "uic" - please install the Qt5 development tools.])
