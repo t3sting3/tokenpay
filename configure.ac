@@ -125,6 +125,14 @@ if test "x$enable_gui" = "xyes" ; then
   if test "x$UIC" = "x" ; then
     AC_CHECK_TOOLS(UIC, [uic-qt5 uic])
   fi
+  if test "x$enable_gui" = "xyes" ; then
+    dnl Check for libdb_cxx only if wallet enabled
+    VERGE_FIND_BDB48
+  fi
+  if test "x$enable_gui" = "xno" ; then
+    dnl Check for libdb_cxx only if wallet enabled
+    VERGE_FIND_BDB48
+  fi
   if notbeginswith "$($UIC -v)" "$UIC 5." ; then
     AC_MSG_ERROR([Cannot find Qt5 tool "uic" - please install the Qt5 development tools.])
   fi
