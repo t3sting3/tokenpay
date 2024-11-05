@@ -35,6 +35,7 @@ $(package)_config_opts+=no-weak-ssl-ciphers
 $(package)_config_opts+=no-whirlpool
 $(package)_config_opts+=no-zlib
 $(package)_config_opts+=no-zlib-dynamic
+$(package)_config_opts+=$($(package)_cflags) $($(package)_cppflags)
 $(package)_config_opts_linux=-fPIC -Wa,--noexecstack
 $(package)_config_opts_x86_64_linux=linux-x86_64
 $(package)_config_opts_i686_linux=linux-generic32
@@ -53,7 +54,8 @@ endif
 endef
 
 define $(package)_config_cmds
-  ./Configure $($(package)_config_opts)
+  ./Configure $($(package)_config_opts) && \
+  $(MAKE) depend
 endef
 
 define $(package)_build_cmds
@@ -61,5 +63,5 @@ define $(package)_build_cmds
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) -j1 install_dev
+  $(MAKE) INSTALL_PREFIX=$($(package)_staging_dir) -j1 install_dev
 endef
