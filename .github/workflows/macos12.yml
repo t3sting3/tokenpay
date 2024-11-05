@@ -1,4 +1,3 @@
-
 on:
   push
 jobs:
@@ -6,52 +5,76 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      # Step 1: Checkout the code
       - uses: actions/checkout@v4
 
+      # Step 2: Update package repositories
       - name: Update apt repos
         run: sudo apt-get update
 
-      - name: download and untar boost
+      # Step 3: Download and unpack Boost library
+      - name: Download Boost 1.65.1
         run: wget https://sourceforge.net/projects/boost/files/boost/1.65.1/boost_1_65_1.tar.gz
-      - name: untar boost
+
+      - name: Extract Boost
         run: tar xzvf boost_1_65_1.tar.gz
         
-      - name: go in and run bootstrap
+      # Step 4: Install Boost libraries
+      - name: Boost Bootstrap
         run: cd boost_1_65_1 && ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
 
-      - name: run b2 
+      - name: Install Boost
         run: cd boost_1_65_1 && sudo ./b2 install
         
-      - name: get and untar bdb4.8
+      # Step 5: Download and unpack Berkeley DB 4.8
+      - name: Download BDB 4.8
         run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
-        
-      - name: list files
+
+      - name: List files
         run: ls
         
-      - name: fix atomic
+      # Step 6: Fix atomic issue in Berkeley DB 4.8
+      - name: Fix atomic issue in BDB
         run: cd db-4.8.30.NC/build_unix/ && sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' /home/runner/work/tokenpay-linux/tokenpay-linux/db-4.8.30.NC/dbinc/atomic.h 
         
-      - name: build bdb4.8
+      # Step 7: Build and install Berkeley DB 4.8
+      - name: Configure BDB 4.8
         run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx
-        
-      - name: make and make install 
-        run: cd db-4.8.30.NC/build_unix/ && make && sudo make install
-        
-      - name: Install base dependencies
-        run: sudo apt-get install build-essential libtool autotools-dev automake pkg-config zlib1g-dev libevent-dev bsdmainutils git libseccomp-dev libcap-dev libminiupnpc-dev libqt5gui5 libqt5core5a libqt5webkit5-dev libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
 
+      - name: Make and Install BDB 4.8
+        run: cd db-4.8.30.NC/build_unix/ && make && sudo make install
+
+      # Step 8: Install base dependencies
+      - name: Install base dependencies
+        run: sudo apt-get install -y build-essential libtool autotools-dev automake pkg-config zlib1g-dev libevent-dev bsdmainutils git libseccomp-dev libcap-dev libminiupnpc-dev libqt5gui5 libqt5core5a libqt5webkit5-dev libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqrencode-dev
+
+      # Step 9: Generate configuration scripts
       - name: Auto generate
         run: ./autogen.sh
-        
-      - name: bdb locate
+
+      # Step 10: Set up symbolic links for BDB
+      - name: BDB locate and symlink
         run: sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb-4.8.so /usr/lib/libdb-4.8.so && sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb_cxx-4.8.so /usr/lib/libdb_cxx-4.8.so
 
-      - name: configure
-        run: ./configure --enable-gui --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+      # Step 11: Clean previous builds (if any)
+      - name: Clean project
+        run: make clean
 
-      - name: make
+      # Step 12: Configure the build with Berkeley DB paths
+      - name: Configure with BDB paths
+        run: |
+          ./configure --enable-gui --disable-werror \
+          --prefix=`pwd`/depends/x86_64-linux-gnu \
+          --bindir=`pwd`/release/bin \
+          --libdir=`pwd`/release/lib \
+          LDFLAGS="-L/usr/local/BerkeleyDB.4.8/lib" \
+          CPPFLAGS="-I/usr/local/BerkeleyDB.4.8/include"
+
+      # Step 13: Build the project
+      - name: Make
         run: make -j4
 
+      # Step 14: Upload artifacts
       - uses: actions/upload-artifact@v4
         with:
           name: tpay-ubuntu20
