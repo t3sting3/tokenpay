@@ -1,7 +1,7 @@
 on: 
   push:
     branches:
-      - main  # or your target branch
+      - main
 
 jobs:
   windows32-ubuntu20:
@@ -31,6 +31,8 @@ jobs:
 
       - name: Configure with depends folder
         run: |
+          export CXXFLAGS="-I$PWD/depends/i686-w64-mingw32/include"
+          export LDFLAGS="-L$PWD/depends/i686-w64-mingw32/lib -ldb_cxx"
           CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --prefix=$(pwd)/depends/i686-w64-mingw32 --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --bindir=$(pwd)/release/bin --libdir=$(pwd)/release/lib
 
       - name: Compile with custom dependencies
@@ -41,6 +43,14 @@ jobs:
           cd ./src
           strip tokenpay.exe
           strip tokenpayd.exe
+
+      - name: Upload 32-bit Windows artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows32-build
+          path: |
+            ./src/tokenpay.exe
+            ./src/tokenpayd.exe
 
   windows64-ubuntu20:
     runs-on: ubuntu-20.04
@@ -69,6 +79,8 @@ jobs:
 
       - name: Configure with depends folder
         run: |
+          export CXXFLAGS="-I$PWD/depends/x86_64-w64-mingw32/include"
+          export LDFLAGS="-L$PWD/depends/x86_64-w64-mingw32/lib -ldb_cxx"
           CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-scrypt-sse2 --prefix=$(pwd)/depends/x86_64-w64-mingw32 --disable-bench --disable-tests
 
       - name: Compile with custom dependencies
@@ -79,4 +91,13 @@ jobs:
           cd ./src
           strip tokenpay.exe
           strip tokenpayd.exe
+
+      - name: Upload 64-bit Windows artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows64-build
+          path: |
+            ./src/tokenpay.exe
+            ./src/tokenpayd.exe
+
 
