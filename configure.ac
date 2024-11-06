@@ -34,7 +34,7 @@ AM_CONDITIONAL([OS_MACOS], [test "$build_mac" = "yes"])
 AX_CXX_COMPILE_STDCXX(14, noext, mandatory)
 AC_CONFIG_FILES([Makefile src/Makefile])
 PKG_PROG_PKG_CONFIG
-PKG_CHECK_MODULES(OPENSSL, [openssl >= 1.1], [], [AC_MSG_ERROR([OpenSSL 1.1 not found])])
+PKG_CHECK_MODULES(OPENSSL, [openssl >= 1.0], [], [AC_MSG_ERROR([OpenSSL 1.1 not found])])
 PKG_CHECK_MODULES(LIBEVENT, [libevent], [], [AC_MSG_ERROR([libevent not found])])
 AX_SUBDIRS_CONFIGURE([tor], [[--disable-unittests], [--disable-system-torrc], [--disable-systemd], [--disable-asciidoc], [--disable-shared], [--disable-gcc-hardening], [--disable-lzma], [--disable-zstd], [--disable-asciidoc], [--disable-jni], [--disable-system-torrc]])
 PKG_CHECK_MODULES(ZLIB, [zlib], [], [AC_MSG_ERROR([zlib not found])])
