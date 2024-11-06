@@ -1,83 +1,83 @@
-# on: 
-#   push:
-#     branches:
-#       - main  # or your target branch
+on: 
+  push:
+    branches:
+      - main  # or your target branch
 
-# jobs:
-#   windows32-ubuntu20:
-#     runs-on: ubuntu-20.04
+jobs:
+  windows32-ubuntu20:
+    runs-on: ubuntu-20.04
 
-#     steps:
-#       - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-#       - name: Install base tools
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get install -y build-essential libtool automake pkg-config bsdmainutils curl git
+      - name: Install base tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libtool automake pkg-config bsdmainutils curl git
 
-#       - name: Set up MingW32 Cross Compile tools
-#         run: |
-#           sudo apt-get install -y g++-mingw-w64-i686 mingw-w64-i686-dev
-#           sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
+      - name: Set up MingW32 Cross Compile tools
+        run: |
+          sudo apt-get install -y g++-mingw-w64-i686 mingw-w64-i686-dev
+          sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
 
-#       - name: Build dependencies in the depends folder
-#         run: |
-#           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
-#           cd depends/
-#           make HOST=i686-w64-mingw32 -j2
+      - name: Build dependencies in the depends folder
+        run: |
+          PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
+          cd depends/
+          make HOST=i686-w64-mingw32 -j2
 
-#       - name: Auto-generate configuration
-#         run: ./autogen.sh
+      - name: Auto-generate configuration
+        run: ./autogen.sh
 
-#       - name: Configure with depends folder
-#         run: |
-#           CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --prefix=$(pwd)/depends/i686-w64-mingw32 --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --bindir=$(pwd)/release/bin --libdir=$(pwd)/release/lib
+      - name: Configure with depends folder
+        run: |
+          CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --prefix=$(pwd)/depends/i686-w64-mingw32 --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --bindir=$(pwd)/release/bin --libdir=$(pwd)/release/lib
 
-#       - name: Compile with custom dependencies
-#         run: make -j2
+      - name: Compile with custom dependencies
+        run: make -j2
 
-#       - name: Strip binaries
-#         run: |
-#           cd ./src
-#           strip tokenpay.exe
-#           strip tokenpayd.exe
+      - name: Strip binaries
+        run: |
+          cd ./src
+          strip tokenpay.exe
+          strip tokenpayd.exe
 
-#   windows64-ubuntu20:
-#     runs-on: ubuntu-20.04
+  windows64-ubuntu20:
+    runs-on: ubuntu-20.04
 
-#     steps:
-#       - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-#       - name: Install base tools
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get install -y build-essential libtool automake pkg-config bsdmainutils curl git
+      - name: Install base tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libtool automake pkg-config bsdmainutils curl git
 
-#       - name: Set up MingW64 Cross Compile tools
-#         run: |
-#           sudo apt-get install -y g++-mingw-w64-x86-64
-#           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix 
+      - name: Set up MingW64 Cross Compile tools
+        run: |
+          sudo apt-get install -y g++-mingw-w64-x86-64
+          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix 
 
-#       - name: Build dependencies in the depends folder
-#         run: |
-#           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
-#           cd depends/
-#           make HOST=x86_64-w64-mingw32 -j2
+      - name: Build dependencies in the depends folder
+        run: |
+          PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
+          cd depends/
+          make HOST=x86_64-w64-mingw32 -j2
 
-#       - name: Auto-generate configuration
-#         run: ./autogen.sh
+      - name: Auto-generate configuration
+        run: ./autogen.sh
 
-#       - name: Configure with depends folder
-#         run: |
-#           CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-scrypt-sse2 --prefix=$(pwd)/depends/x86_64-w64-mingw32 --disable-bench --disable-tests
+      - name: Configure with depends folder
+        run: |
+          CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-scrypt-sse2 --prefix=$(pwd)/depends/x86_64-w64-mingw32 --disable-bench --disable-tests
 
-#       - name: Compile with custom dependencies
-#         run: make -j2
+      - name: Compile with custom dependencies
+        run: make -j2
 
-#       - name: Strip binaries
-#         run: |
-#           cd ./src
-#           strip tokenpay.exe
-#           strip tokenpayd.exe
+      - name: Strip binaries
+        run: |
+          cd ./src
+          strip tokenpay.exe
+          strip tokenpayd.exe
 
 
