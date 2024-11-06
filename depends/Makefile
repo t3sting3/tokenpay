@@ -131,9 +131,9 @@ $(host_prefix)/share/config.site : config.site.in $(host_prefix)/.stamp_$(final_
             -e 's|@build_os@|$(build_os)|' \
             -e 's|@host_os@|$(host_os)|' \
             -e 's|@CFLAGS@|$(strip $(host_CFLAGS) $(host_$(release_type)_CFLAGS))|' \
-            -e 's|@CXXFLAGS@|$(strip $(host_CXXFLAGS) $(host_$(release_type)_CXXFLAGS))|' \
+            -e 's|@CXXFLAGS@|$(strip $(host_CXXFLAGS) $(host_$(release_type)_CXXFLAGS) -I$(BASEDIR)/depends/$(host)/include)|' \
             -e 's|@CPPFLAGS@|$(strip $(host_CPPFLAGS) $(host_$(release_type)_CPPFLAGS))|' \
-            -e 's|@LDFLAGS@|$(strip $(host_LDFLAGS) $(host_$(release_type)_LDFLAGS))|' \
+            -e 's|@LDFLAGS@|$(strip $(host_LDFLAGS) $(host_$(release_type)_LDFLAGS) -L$(BASEDIR)/depends/$(host)/lib -ldb_cxx)|' \
             -e 's|@allow_host_packages@|$(ALLOW_HOST_PACKAGES)|' \
             -e 's|@no_qt@|$(NO_QT)|' \
             -e 's|@no_wallet@|$(NO_WALLET)|' \
@@ -142,47 +142,3 @@ $(host_prefix)/share/config.site : config.site.in $(host_prefix)/.stamp_$(final_
             $< > $@
 	$(AT)touch $@
 
-
-define check_or_remove_cached
-  mkdir -p $(BASE_CACHE)/$(host)/$(package) && cd $(BASE_CACHE)/$(host)/$(package); \
-  $(build_SHA256SUM) -c $($(package)_cached_checksum) >/dev/null 2>/dev/null || \
-  ( rm -f $($(package)_cached_checksum); \
-    if test -f "$($(package)_cached)"; then echo "Checksum mismatch for $(package). Forcing rebuild.."; rm -f $($(package)_cached_checksum) $($(package)_cached); fi )
-endef
-
-define check_or_remove_sources
-  mkdir -p $($(package)_source_dir); cd $($(package)_source_dir); \
-  test -f $($(package)_fetched) && ( $(build_SHA256SUM) -c $($(package)_fetched) >/dev/null 2>/dev/null || \
-    ( echo "Checksum missing or mismatched for $(package) source. Forcing re-download."; \
-      rm -f $($(package)_all_sources) $($(1)_fetched))) || true
-endef
-
-check-packages:
-	@$(foreach package,$(all_packages),$(call check_or_remove_cached,$(package));)
-check-sources:
-	@$(foreach package,$(all_packages),$(call check_or_remove_sources,$(package));)
-
-$(host_prefix)/share/config.site: check-packages
-
-check-packages: check-sources
-
-clean-all: clean
-	@rm -rf $(SOURCES_PATH) x86_64* i686* mips* arm* aarch64* riscv32* riscv64*
-
-clean:
-	@rm -rf $(WORK_PATH) $(BASE_CACHE) $(BUILD)
-
-install: check-packages $(host_prefix)/share/config.site
-
-
-download-one: check-sources $(all_sources)
-
-download-osx:
-	@$(MAKE) -s HOST=x86_64-apple-darwin14 download-one
-download-linux:
-	@$(MAKE) -s HOST=x86_64-unknown-linux-gnu download-one
-download-win:
-	@$(MAKE) -s HOST=x86_64-w64-mingw32 download-one
-download: download-osx download-linux download-win
-
-.PHONY: install cached clean clean-all download-one download-osx download-linux download-win download check-packages check-sources
