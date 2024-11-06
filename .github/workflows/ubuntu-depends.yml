@@ -29,6 +29,8 @@ jobs:
         run: |
           sudo apt-get install libevent-dev libboost-all-dev
           sudo apt-get install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+          sudo apt-get install libdb4.8-dev
+          sudo apt-get install libqt5webkit5-dev
           CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=$PWD/depends/x86_64-linux-gnu
 
       - name: Build project
