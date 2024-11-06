@@ -1,38 +1,27 @@
-name: Ubuntu Dependencies
-
+name: ubuntu-depends.yml
 on:
-  push:
-
+  push
 jobs:
   ubuntu20-depends:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Update apt repositories
+      - name: Update apt repos
         run: sudo apt-get update
 
       - name: Install base dependencies
-        run: sudo apt-get install -y build-essential xutils-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold python3
-        
+        run: sudo apt-get install build-essential xutils-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python3
 
-      # - name: Build depends
-      #   run: cd depends && make -j4 HOST=x86_64-linux-gnu
-      #   continue-on-error: true
+      - name: Build depends
+        run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
 
-      - name: Auto-generate configuration files
+      - name: Auto generate
         run: ./autogen.sh
 
-      - name: Configure project
-        run: |
-          sudo apt-get install libevent-dev libboost-all-dev
-          sudo apt-get install qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
-          sudo apt-get install libminiupnpc-dev -y
-          sudo apt-get install libqt5webkit5-dev
-          sudo apt-get install qt5-qmake qtbase5-dev-tools qttranslations5-l10n
-          CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=$PWD/depends/x86_64-linux-gnu
+      - name: configure
+        run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=pwd/depends/x86_64-linux-gnu
 
-      - name: Build project
+      - name: make
         run: make -j4
