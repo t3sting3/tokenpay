@@ -1,27 +1,30 @@
-ubuntu-depends.yml:
+name: Ubuntu Dependencies
+
 on:
-  push
+  push:
+
 jobs:
   ubuntu20-depends:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Update apt repos
+      - name: Update apt repositories
         run: sudo apt-get update
 
       - name: Install base dependencies
-        run: sudo apt-get install build-essential xutils-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python3
+        run: sudo apt-get install -y build-essential xutils-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold python3
 
       - name: Build depends
-        run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
+        run: cd depends && make -j4 HOST=x86_64-linux-gnu
 
-      - name: Auto generate
+      - name: Auto-generate configuration files
         run: ./autogen.sh
 
-      - name: configure
-        run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=pwd/depends/x86_64-linux-gnu
+      - name: Configure project
+        run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=$PWD/depends/x86_64-linux-gnu
 
-      - name: make
+      - name: Build project
         run: make -j4
