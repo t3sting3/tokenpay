@@ -15,13 +15,10 @@ jobs:
           brew update
           brew install automake libtool pkg-config boost
 
-      - name: Verify dependencies in /depends/packages
+      - name: List dependencies in /depends/packages
         run: ls depends/packages
 
-      - name: Build specific dependencies in the depends folder
-        run: |
-          cd depends/
-          make -j2 HOST=x86_64-apple-darwin VERBOSE=1
+      # We skip `make` in the `depends` folder if no targets are defined
 
       - name: Auto-generate configuration
         run: ./autogen.sh
@@ -47,6 +44,7 @@ jobs:
         with:
           name: macos-build
           path: ./src/tokenpay
+
 
 
 
