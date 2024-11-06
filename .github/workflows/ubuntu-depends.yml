@@ -18,15 +18,16 @@ jobs:
         run: sudo apt-get install -y build-essential xutils-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold python3
         
 
-      - name: Build depends
-        run: cd depends && make -j4 HOST=x86_64-linux-gnu
-        continue-on-error: true
+      # - name: Build depends
+      #   run: cd depends && make -j4 HOST=x86_64-linux-gnu
+      #   continue-on-error: true
 
       - name: Auto-generate configuration files
         run: ./autogen.sh
 
       - name: Configure project
         run: |
+          sudo apt-get install libevent-dev libboost-all-dev
           CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=$PWD/depends/x86_64-linux-gnu
 
       - name: Build project
