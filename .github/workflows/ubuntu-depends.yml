@@ -16,10 +16,11 @@ jobs:
 
       - name: Install base dependencies
         run: sudo apt-get install -y build-essential xutils-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold python3
-        continue-on-error: true
+        
 
       - name: Build depends
         run: cd depends && make -j4 HOST=x86_64-linux-gnu
+        continue-on-error: true
 
       - name: Auto-generate configuration files
         run: ./autogen.sh
