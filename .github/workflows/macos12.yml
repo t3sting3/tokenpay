@@ -1,15 +1,18 @@
-on:
-  push
+on: 
+  push:
+    branches:
+      - main
 
 jobs:
-  macos12:
-    runs-on: macos-12
+  macos-build:
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Install base tools and dependencies
         run: |
+          brew update
           brew install automake libtool pkg-config boost
 
       - name: Verify dependencies in /depends/packages
@@ -17,9 +20,8 @@ jobs:
 
       - name: Build dependencies in the depends folder
         run: |
-          PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
-          make HOST=x86_64-apple-darwin -j1 VERBOSE=1
+          make HOST=x86_64-apple-darwin -j2 VERBOSE=1
 
       - name: Auto-generate configuration
         run: ./autogen.sh
@@ -33,16 +35,17 @@ jobs:
       - name: Compile with custom dependencies
         run: |
           cd src
-          make -j4 VERBOSE=1
+          make -j2 VERBOSE=1
 
       - name: Strip binaries
         run: |
           cd ./src
           strip tokenpay
 
-      - name: Upload artifact
+      - name: Upload macOS artifact
         uses: actions/upload-artifact@v3
         with:
-          name: macos12-build
+          name: macos-build
           path: ./src/tokenpay
+
 
