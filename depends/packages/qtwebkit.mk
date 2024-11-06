@@ -1,4 +1,4 @@
-PACKAGE=qtwebkit
+PACKAGE=QTWEBKIT
 $(package)_version=5.9.2
 $(package)_download_path=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
 $(package)_file_name=qtwebkit-everywhere-src-5.9.2.tar.xz
