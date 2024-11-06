@@ -10,20 +10,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Command Line Tools
+        run: xcode-select --install || true
+
       - name: Install base tools and dependencies
         run: |
           brew update
           brew install automake libtool pkg-config boost
 
+      - name: Set Compiler Variables
+        run: |
+          export CC=clang
+          export CXX=clang++
+
       - name: List dependencies in /depends/packages
         run: ls depends/packages
-
-      # We skip `make` in the `depends` folder if no targets are defined
 
       - name: Auto-generate configuration
         run: ./autogen.sh
 
       - name: Configure with depends folder
+        env:
+          CC: clang
+          CXX: clang++
         run: |
           export CXXFLAGS="-I$PWD/depends/x86_64-apple-darwin/include"
           export LDFLAGS="-L$PWD/depends/x86_64-apple-darwin/lib -ldb_cxx"
@@ -44,6 +53,7 @@ jobs:
         with:
           name: macos-build
           path: ./src/tokenpay
+
 
 
 
