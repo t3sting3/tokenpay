@@ -1,8 +1,5 @@
 on:
-  push:
-    branches:
-      - main
-
+  push
 jobs:
   ubuntu20-depends:
     runs-on: ubuntu-20.04
@@ -14,41 +11,16 @@ jobs:
         run: sudo apt-get update
 
       - name: Install base dependencies
-        run: |
-          sudo apt-get install -y build-essential xutils-dev libtool gperf autotools-dev automake \
-              pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl \
-              g++-multilib binutils-gold python3
+        run: sudo apt-get install build-essential xutils-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python3
 
-      - name: Force Posix
-        run: sudo apt install g++-mingw-w64-x86-64 && sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+      - name: Build depends
+        run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
 
-      - name: Build dependencies in the depends folder
-        run: |
-          cd depends/
-          make -j4 HOST=x86_64-linux-gnu
-
-      - name: Auto-generate configuration
+      - name: Auto generate
         run: ./autogen.sh
 
-      - name: Configure with depends folder
-        run: |
-          export CXXFLAGS="-I$PWD/depends/x86_64-linux-gnu/include"
-          export LDFLAGS="-L$PWD/depends/x86_64-linux-gnu/lib -ldb_cxx"
-          CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=$(pwd)/depends/x86_64-linux-gnu
+      - name: configure
+        run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu
 
-      - name: Compile with custom dependencies
+      - name: make
         run: make -j4
-
-      - name: Strip binaries
-        run: |
-          cd ./src
-          strip tokenpay
-          strip tokenpayd
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ubuntu-depends-build
-          path: |
-            ./src/tokenpay
-            ./src/tokenpayd
