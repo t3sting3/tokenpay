@@ -13,16 +13,27 @@ jobs:
       - name: Install Command Line Tools
         run: xcode-select --install || true
 
-      - name: Install base tools and dependencies
+      - name: Install LLVM and other dependencies
         run: |
           brew update
-          brew install automake libtool pkg-config boost gcc
+          brew install llvm automake libtool pkg-config boost gcc
 
       - name: Set Compiler and Architecture Variables
+        env:
+          CC: /opt/homebrew/opt/llvm/bin/clang
+          CXX: /opt/homebrew/opt/llvm/bin/clang++
+          ARCHFLAGS: "-arch x86_64"
         run: |
-          export CC=/usr/bin/clang
-          export CXX=/usr/bin/clang++
-          export ARCHFLAGS="-arch x86_64"
+          export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+          export CFLAGS="-I$PWD/depends/x86_64-apple-darwin/include $ARCHFLAGS"
+          export CXXFLAGS="-I$PWD/depends/x86_64-apple-darwin/include $ARCHFLAGS"
+          export LDFLAGS="-L$PWD/depends/x86_64-apple-darwin/lib -ldb_cxx $ARCHFLAGS"
+
+      - name: Check Compiler Versions
+        run: |
+          clang --version
+          clang++ --version
+          gcc --version
 
       - name: List dependencies in /depends/packages
         run: ls depends/packages
@@ -30,19 +41,19 @@ jobs:
       - name: Auto-generate configuration
         run: ./autogen.sh
 
-      - name: Configure with depends folder
+      - name: Configure with depends folder and Output `config.log` if it fails
         env:
-          CC: /usr/bin/clang
-          CXX: /usr/bin/clang++
+          CC: /opt/homebrew/opt/llvm/bin/clang
+          CXX: /opt/homebrew/opt/llvm/bin/clang++
           ARCHFLAGS: "-arch x86_64"
+          CFLAGS: "-I$PWD/depends/x86_64-apple-darwin/include $ARCHFLAGS"
+          CXXFLAGS: "-I$PWD/depends/x86_64-apple-darwin/include $ARCHFLAGS"
+          LDFLAGS: "-L$PWD/depends/x86_64-apple-darwin/lib -ldb_cxx $ARCHFLAGS"
         run: |
-          export CXXFLAGS="-I$PWD/depends/x86_64-apple-darwin/include $ARCHFLAGS"
-          export LDFLAGS="-L$PWD/depends/x86_64-apple-darwin/lib -ldb_cxx $ARCHFLAGS"
           CONFIG_SITE=$PWD/depends/x86_64-apple-darwin/share/config.site \
           ./configure --prefix=$(pwd)/depends/x86_64-apple-darwin \
           --build=x86_64-apple-darwin --host=x86_64-apple-darwin --target=x86_64-apple-darwin \
-          --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --enable-gui \
-          || (cat config.log && false)
+          --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --enable-gui || (cat config.log && false)
 
       - name: Compile with custom dependencies
         run: |
