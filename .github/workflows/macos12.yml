@@ -16,12 +16,13 @@ jobs:
       - name: Install base tools and dependencies
         run: |
           brew update
-          brew install automake libtool pkg-config boost
+          brew install automake libtool pkg-config boost gcc
 
-      - name: Set Compiler Variables
+      - name: Set Compiler Variables with Full Path and Architecture Flags
         run: |
-          export CC=clang
-          export CXX=clang++
+          export CC=/usr/bin/clang
+          export CXX=/usr/bin/clang++
+          export ARCHFLAGS="-arch x86_64"
 
       - name: List dependencies in /depends/packages
         run: ls depends/packages
@@ -31,12 +32,13 @@ jobs:
 
       - name: Configure with depends folder
         env:
-          CC: clang
-          CXX: clang++
+          CC: /usr/bin/clang
+          CXX: /usr/bin/clang++
+          ARCHFLAGS: "-arch x86_64"
         run: |
           export CXXFLAGS="-I$PWD/depends/x86_64-apple-darwin/include"
           export LDFLAGS="-L$PWD/depends/x86_64-apple-darwin/lib -ldb_cxx"
-          CONFIG_SITE=$PWD/depends/x86_64-apple-darwin/share/config.site ./configure --prefix=$(pwd)/depends/x86_64-apple-darwin --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --enable-gui
+          CONFIG_SITE=$PWD/depends/x86_64-apple-darwin/share/config.site ./configure --prefix=$(pwd)/depends/x86_64-apple-darwin --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --enable-gui || (cat config.log && false)
 
       - name: Compile with custom dependencies
         run: |
@@ -53,6 +55,7 @@ jobs:
         with:
           name: macos-build
           path: ./src/tokenpay
+
 
 
 
