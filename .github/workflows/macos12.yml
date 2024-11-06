@@ -18,10 +18,10 @@ jobs:
       - name: Verify dependencies in /depends/packages
         run: ls depends/packages
 
-      - name: Build dependencies in the depends folder
+      - name: Build specific dependencies in the depends folder
         run: |
           cd depends/
-          make HOST=x86_64-apple-darwin -j2 VERBOSE=1
+          make -j2 HOST=x86_64-apple-darwin VERBOSE=1
 
       - name: Auto-generate configuration
         run: ./autogen.sh
@@ -47,5 +47,6 @@ jobs:
         with:
           name: macos-build
           path: ./src/tokenpay
+
 
 
