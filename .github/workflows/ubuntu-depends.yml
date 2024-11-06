@@ -27,7 +27,6 @@ jobs:
 
       - name: Configure project
         run: |
-          sudo add-apt-repository ppa:beineri/opt-qt-5.12.8-xenial && sudo apt-get update && sudo apt-get install libevent-dev libboost-all-dev qt5-default
           CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=$PWD/depends/x86_64-linux-gnu
 
       - name: Build project
