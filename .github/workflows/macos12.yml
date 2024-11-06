@@ -18,7 +18,7 @@ jobs:
           brew update
           brew install automake libtool pkg-config boost gcc
 
-      - name: Set Compiler Variables with Full Path and Architecture Flags
+      - name: Set Compiler and Architecture Variables
         run: |
           export CC=/usr/bin/clang
           export CXX=/usr/bin/clang++
@@ -36,9 +36,13 @@ jobs:
           CXX: /usr/bin/clang++
           ARCHFLAGS: "-arch x86_64"
         run: |
-          export CXXFLAGS="-I$PWD/depends/x86_64-apple-darwin/include"
-          export LDFLAGS="-L$PWD/depends/x86_64-apple-darwin/lib -ldb_cxx"
-          CONFIG_SITE=$PWD/depends/x86_64-apple-darwin/share/config.site ./configure --prefix=$(pwd)/depends/x86_64-apple-darwin --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --enable-gui || (cat config.log && false)
+          export CXXFLAGS="-I$PWD/depends/x86_64-apple-darwin/include $ARCHFLAGS"
+          export LDFLAGS="-L$PWD/depends/x86_64-apple-darwin/lib -ldb_cxx $ARCHFLAGS"
+          CONFIG_SITE=$PWD/depends/x86_64-apple-darwin/share/config.site \
+          ./configure --prefix=$(pwd)/depends/x86_64-apple-darwin \
+          --build=x86_64-apple-darwin --host=x86_64-apple-darwin --target=x86_64-apple-darwin \
+          --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --enable-gui \
+          || (cat config.log && false)
 
       - name: Compile with custom dependencies
         run: |
@@ -55,6 +59,7 @@ jobs:
         with:
           name: macos-build
           path: ./src/tokenpay
+
 
 
 
