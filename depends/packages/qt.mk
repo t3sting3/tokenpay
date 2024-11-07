@@ -31,7 +31,7 @@ $(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6
 $(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
 $(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
 
-$(package)_ldflags_linux += -Wl,--wrap=log2f -Wl, --wrap=powf --no-as-needed -ldl 
+$(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=pow -Wl,--no-as-needed
 
 $(package)_patch_glibc_compat_linux = patch -p1 < $($(package)_patch_dir)/strip_log2f.patch &&
 $(package)_patch_glibc_compat = $($(package)_patch_glibc_compat_$(host_os))
