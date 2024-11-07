@@ -16,8 +16,12 @@ $(package)_qttranslations_sha256_hash=c4bd6db6e426965c6f8824c54e81f68bbd61e2bae1
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=d9e06bd19ecc86afba5e95d45a906d1bc1ad579aa70001e36143c1aaf695bdd6
 
+$(package)_qtwebkit_file_name=qtwebkit-$($(package)_suffix)
+$(package)_qtwebkit_sha256_hash=cd9d0e8c9e800db0d6ef78861e534b5bf97fb7c52e7865ae0b437d7cbbf00c42
+
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
+$(package)_extra_sources += $($(package)_qtwebkit_file_name)
 
 define $(package)_set_vars
 $(package)_config_opts_release = -release
@@ -102,7 +106,8 @@ endef
 define $(package)_fetch_cmds
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttranslations_file_name),$($(package)_qttranslations_file_name),$($(package)_qttranslations_sha256_hash)) && \
-$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash))
+$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash)) && \
+$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_sha256_hash))
 endef
 
 define $(package)_extract_cmds
@@ -110,6 +115,7 @@ define $(package)_extract_cmds
   echo "$($(package)_sha256_hash)  $($(package)_source)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttranslations_sha256_hash)  $($(package)_source_dir)/$($(package)_qttranslations_file_name)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttools_sha256_hash)  $($(package)_source_dir)/$($(package)_qttools_file_name)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
+  echo "$($(package)_qtwebkit_sha256_hash)  $($(package)_source_dir)/$($(package)_qtwebkit_file_name)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   $(build_SHA256SUM) -c $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   mkdir qtbase && \
   tar --strip-components=1 -xf $($(package)_source) -C qtbase && \
