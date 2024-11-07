@@ -19,24 +19,17 @@ $(package)_qttools_sha256_hash=fce6e0fd39a40bcef880c669080087dba94af1ec442296222
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 
-# QtWebKit additional configuration
-$(package)_qtwebkit_version=5.9.2
-$(package)_qtwebkit_download_path=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
-$(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.tar.xz
-$(package)_qtwebkit_sha256_hash=db725c75a1e9378b0aa7c186c9044cf372060337cefcca3de201c59609bd5436
-
-$(package)_qtwebkit_dependencies=qtbase
-
 define $(package)_set_vars
 $(package)_config_opts_release = -release
 $(package)_config_opts_debug = -debug
 $(package)_config_opts += -bindir $(build_prefix)/bin
-$(package)_config_opts += -c++std c++11
+$(package)_config_opts += -c++std c++1z
 $(package)_config_opts += -confirm-license
 $(package)_config_opts += -dbus-runtime
 $(package)_config_opts += -hostprefix $(build_prefix)
 $(package)_config_opts += -no-compile-examples
 $(package)_config_opts += -no-cups
+$(package)_config_opts += -no-direct2d
 $(package)_config_opts += -no-egl
 $(package)_config_opts += -no-eglfs
 $(package)_config_opts += -no-freetype
@@ -46,6 +39,7 @@ $(package)_config_opts += -no-icu
 $(package)_config_opts += -no-iconv
 $(package)_config_opts += -no-kms
 $(package)_config_opts += -no-linuxfb
+$(package)_config_opts += -no-libjpeg
 $(package)_config_opts += -no-libudev
 $(package)_config_opts += -no-mtdev
 $(package)_config_opts += -no-openvg
@@ -69,9 +63,10 @@ $(package)_config_opts += -openssl-linked
 $(package)_config_opts += -optimized-qmake
 $(package)_config_opts += -pch
 $(package)_config_opts += -pkg-config
+$(package)_config_opts += -webkit
 $(package)_config_opts += -prefix $(host_prefix)
 $(package)_config_opts += -qt-libpng
-$(package)_config_opts += -qt-libjpeg
+$(package)_config_opts += -gif
 $(package)_config_opts += -qt-pcre
 $(package)_config_opts += -qt-harfbuzz
 $(package)_config_opts += -system-zlib
@@ -93,12 +88,10 @@ $(package)_config_opts += -no-feature-textodfwriter
 $(package)_config_opts += -no-feature-udpsocket
 $(package)_config_opts += -no-feature-wizard
 $(package)_config_opts += -no-feature-xml
-
-# QtWebKit specific flags
-$(package)_config_opts += -no-webkit
-$(package)_config_opts += -webkit
+$(package)_config_opts += -Wno-deprecated-copy
 
 ifneq ($(build_os),darwin)
+$(package)_config_opts_darwin = -no-dbus
 $(package)_config_opts_darwin = -xplatform macx-clang-linux
 $(package)_config_opts_darwin += -device-option MAC_SDK_PATH=$(OSX_SDK)
 $(package)_config_opts_darwin += -device-option MAC_SDK_VERSION=$(OSX_SDK_VERSION)
@@ -114,6 +107,8 @@ $(package)_config_opts_linux += -system-freetype
 $(package)_config_opts_linux += -no-feature-sessionmanager
 $(package)_config_opts_linux += -fontconfig
 $(package)_config_opts_linux += -no-opengl
+$(package)_config_opts_linux += -dbus-runtime
+
 $(package)_config_opts_arm_linux += -platform linux-g++ -xplatform bitcoin-linux-g++
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
@@ -153,6 +148,7 @@ $(package)_config_opts_android += -L $(host_prefix)/lib
 $(package)_config_opts_android += -I $(host_prefix)/include
 $(package)_config_opts_android += -pch
 $(package)_config_opts_android += -no-feature-vulkan
+
 $(package)_config_opts_aarch64_android += -android-arch arm64-v8a
 $(package)_config_opts_armv7a_android += -android-arch armeabi-v7a
 $(package)_config_opts_x86_64_android += -android-arch x86_64
@@ -160,8 +156,7 @@ $(package)_config_opts_x86_64_android += -android-arch x86_64
 define $(package)_fetch_cmds
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttranslations_file_name),$($(package)_qttranslations_file_name),$($(package)_qttranslations_sha256_hash)) && \
-$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash)) && \
-$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_sha256_hash))
+$(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash))
 endef
 
 define $(package)_extract_cmds
@@ -169,16 +164,13 @@ define $(package)_extract_cmds
   echo "$($(package)_sha256_hash)  $($(package)_source)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttranslations_sha256_hash)  $($(package)_source_dir)/$($(package)_qttranslations_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttools_sha256_hash)  $($(package)_source_dir)/$($(package)_qttools_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
-  echo "$($(package)_qtwebkit_sha256_hash)  $($(package)_source_dir)/$($(package)_qtwebkit_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   $(build_SHA256SUM) -c $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   mkdir qtbase && \
   tar --no-same-owner --strip-components=1 -xf $($(package)_source) -C qtbase && \
   mkdir qttranslations && \
   tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttranslations_file_name) -C qttranslations && \
   mkdir qttools && \
-  tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
-  mkdir qtwebkit && \
-  tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qtwebkit_file_name) -C qtwebkit
+  tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools
 endef
 
 define $(package)_preprocess_cmds
@@ -212,7 +204,6 @@ define $(package)_preprocess_cmds
   sed -i.old "s|QMAKE_CFLAGS            = |!host_build: QMAKE_CFLAGS            = $($(package)_cflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_LFLAGS            = |!host_build: QMAKE_LFLAGS            = $($(package)_ldflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_CXXFLAGS          = |!host_build: QMAKE_CXXFLAGS            = $($(package)_cxxflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf
-
 endef
 
 define $(package)_config_cmds
@@ -227,17 +218,26 @@ define $(package)_config_cmds
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd ../.. && \
   cd qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile && \
   cd ../lupdate/ && ../../../../qtbase/bin/qmake lupdate.pro -o Makefile && cd ../../../..
+endef
 
 define $(package)_build_cmds
-  $(MAKE) -C qtbase $(addprefix sub-,$($(package)_dependencies)) && \
-  $(MAKE) -C qttranslations && \
-  $(MAKE) -C qttools && \
-  $(MAKE) -C qtwebkit
+  $(MAKE) -C src $(addprefix sub-,$($(package)_qt_libs)) && \
+  $(MAKE) -C ../qttools/src/linguist/lrelease && \
+  $(MAKE) -C ../qttools/src/linguist/lupdate && \
+  $(MAKE) -C ../qttranslations
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) -C qtbase INSTALL_ROOT=$($(package)_staging_dir) install && \
-  $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install && \
-  $(MAKE) -C qttools INSTALL_ROOT=$($(package)_staging_dir) install && \
-  $(MAKE) -C qtwebkit INSTALL_ROOT=$($(package)_staging_dir) install
+  $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
+  $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
+  $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
+  $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
+  if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
+    cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
+  fi
+endef
+
+define $(package)_postprocess_cmds
+  rm -rf native/mkspecs/ native/lib/ lib/cmake/ && \
+  rm -f lib/lib*.la lib/*.prl plugins/*/*.prl
 endef
