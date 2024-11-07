@@ -1,8 +1,7 @@
 package=icu4c
 $(package)_version=55.2
 $(package)_download_path=https://github.com/unicode-org/icu/releases/download/release-55-2/
-$(package)_file_name=$(package)-55_2-src.tgz
-$(package)_sha256_hash=eda2aa9f9c787748a2e2d310590720ca8bcc6252adf6b4cfb03b65bef9d66759
+$(package)_file_name=icu4c-55_2-src.tgz
 $(package)_patches=icu-001-dont-build-static-dynamic-twice.patch no-timestamp-in-makefile.patch
 
 define $(package)_set_vars
