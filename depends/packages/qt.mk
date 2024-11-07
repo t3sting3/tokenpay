@@ -20,11 +20,10 @@ $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 
 # QtWebKit additional configuration
-$(package)_qtwebkit_version=5.212.0
-$(package)_qtwebkit_download_path=https://download.qt.io/official_releases/qt/5.9/$($(package)_version)/submodules
-$(package)_qtwebkit_suffix=opensource-src-$($(package)_qtwebkit_version).tar.xz
-$(package)_qtwebkit_file_name=qtwebkit-$($(package)_qtwebkit_suffix)
-$(package)_qtwebkit_sha256_hash=c38773b2ec4c6ff2b0ef1ea71de9e56e4f1d65d13282d0224063d7a627736af1
+$(package)_qtwebkit_version=5.9.2
+$(package)_qtwebkit_download_path=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
+$(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.tar.xz
+$(package)_qtwebkit_sha256_hash=db725c75a1e9378b0aa7c186c9044cf372060337cefcca3de201c59609bd5436
 
 $(package)_qtwebkit_dependencies=qtbase
 
