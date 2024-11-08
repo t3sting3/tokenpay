@@ -66,7 +66,8 @@ endef
 define $(package)_preprocess_cmds
   sed -i.old "/define DATE/d" util/mkbuildinf.pl && \
   sed -i.old "s|\"engines\", \"apps\", \"test\"|\"engines\"|" Configure && \
-  echo 'use File::Glob ":glob";' >> util/mkbuildinf.pl
+  echo 'use File::Glob ":glob";' >> util/mkbuildinf.pl && \
+  echo 'use File::Glob ":glob";' >> util/shlib_wrap.sh
 endef
 
 define $(package)_config_cmds
