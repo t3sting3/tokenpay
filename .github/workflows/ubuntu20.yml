@@ -27,7 +27,7 @@ jobs:
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
 
       - name: locate uic
-        run: locate uic
+        run: sudo find / -iname uic
       
       - name: Auto generate
         run: ./autogen.sh
