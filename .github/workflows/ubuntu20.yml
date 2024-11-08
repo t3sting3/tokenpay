@@ -12,7 +12,7 @@ jobs:
         run: sudo apt-get update
 
       - name: Install base dependencies
-        run: sudo apt-get install build-essential xutils-dev libicu-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python2
+        run: sudo apt-get install build-essential perl libperl-dev xutils-dev libicu-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python2
 
       - name: Set Python 2 as default
         run: |
