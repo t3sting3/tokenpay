@@ -1,6 +1,6 @@
 PACKAGE=qt
 $(package)_version=5.7.1
-$(package)_download_path=http://download.qt.io/official_releases/qt/5.7/$($(package)_version)/submodules
+$(package)_download_path=https://download.qt.io/new_archive/qt/5.7/$($(package)_version)/submodules
 $(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
@@ -14,13 +14,12 @@ $(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-c
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
 
-
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
 
-$(package)_qtwebkit_download_path=https://download.qt.io/snapshots/ci/qtwebkit/5.212/latest/src/submodules/qtwebkit-opensource-src-5.212.zip
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.212.zip
-$(package)_qtwebkit_sha256_hash=3c418dda16fca454551b8fd92d358ae071d0df0a78ba3285e435364d801b5641
+$(package)_qtwebkit_download_path=https://github.com/qtwebkit/qtwebkit/releases/download/qtwebkit-5.212.0-alpha4/
+$(package)_qtwebkit_file_name=qtwebkit-5.212.0-alpha4.zip
+$(package)_qtwebkit_sha256_hash=F84BEB9B80121D2C4B5981B0BBDAD41CEF032F760781C0342058598B1DA39B84
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
