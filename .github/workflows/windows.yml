@@ -19,6 +19,15 @@ jobs:
         run: |
           sudo apt-get install -y g++-mingw-w64-i686 mingw-w64-i686-dev
           sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
+          
+      - name: install openssl 1.1.0e
+        run: wget https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_0e/openssl-1.1.0e.tar.gz
+        
+      - name: untar openssl, go in and run config
+        run: tar -xzf openssl-1.1.0e.tar.gz
+        
+      - name: go in and configure then run  
+        run: cd openssl-1.1.0e && ./Configure --cross-compile-prefix=i686-w64-mingw32- mingw32
 
       - name: Build dependencies in the depends folder
         run: |
@@ -58,6 +67,15 @@ jobs:
           sudo apt-get install -y g++-mingw-w64-x86-64
           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix 
 
+      - name: install openssl 1.1.0e
+        run: wget https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_0e/openssl-1.1.0e.tar.gz
+        
+      - name: untar openssl, go in and run config
+        run: tar -xzf openssl-1.1.0e.tar.gz
+        
+      - name: go in and configure then run  
+        run: cd openssl-1.1.0e && ./Configure --cross-compile-prefix=x86_64-w64-mingw32- mingw64
+      
       - name: Build dependencies in the depends folder
         run: |
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
