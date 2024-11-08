@@ -29,6 +29,14 @@ jobs:
       - name: untar openssl, go in and run config
         run: tar -xzf openssl-1.1.0e.tar.gz
         
+      - name: Patch the Perl file to fix "glob" error
+        run: |
+          cd openssl-1.1.0e
+          # Assuming the error is in util/perl/OpenSSL/config.pm, update the path if needed
+          sed -i '1i use File::Glob qw(glob);' util/perl/OpenSSL/config.pm
+          # Optionally verify the patch
+          head -n 10 util/perl/OpenSSL/config.pm
+      
       - name: go in and configure then run  
         run: cd openssl-1.1.0e && ./Configure --prefix=/usr/local/ssl 
         
