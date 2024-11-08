@@ -28,6 +28,9 @@ jobs:
 
       - name: locate uic
         run: sudo find / -iname uic
+
+      - name: Add uic path to environment
+        run: echo "/home/runner/work/tokenpay-linux/tokenpay-linux/depends/x86_64-linux-gnu/native/bin/uic" >> $GITHUB_PATH
       
       - name: Auto generate
         run: ./autogen.sh
