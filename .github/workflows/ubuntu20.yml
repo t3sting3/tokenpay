@@ -30,7 +30,10 @@ jobs:
         run: tar -xzf openssl-1.1.0e.tar.gz
         
       - name: go in and configure then run  
-        run: cd openssl-1.1.0e && ./config -Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)' 
+        run: cd openssl-1.1.0e && grep -nr "'File::Glob' => qw/glob/"
+        
+      - name: go in and config  
+        run: ./config -Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)' 
         
       - name: go in and make and install openssl  
         run: make && sudo make install
