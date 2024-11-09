@@ -24,19 +24,16 @@ jobs:
         run: python --version  # Should print Python 2.7.x
 
       - name: install openssl 1.1.0e
-        run: wget https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_0e/openssl-1.1.0e.tar.gz
+        run: wget wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz
         
       - name: untar openssl
-        run: tar -xzf openssl-1.1.0e.tar.gz
-        
-      - name: go in and configure then run  
-        run: cd openssl-1.1.0e && grep -nr "'File::Glob' => qw/glob/"
+        run: tar -xzf openssl-1.1.1g.tar.gz
         
       - name: go in and config  
-        run: cd openssl-1.1.0e && ./Configure -Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)' 
+        run: cd openssl-1.1.1g && ./Configure -Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)' 
         
       - name: go in and make and install openssl  
-        run: cd openssl-1.1.0e && make && sudo make install
+        run: cd openssl-1.1.1g && make && sudo make install
       
       - name: Build depends
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
