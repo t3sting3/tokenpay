@@ -28,8 +28,8 @@ $(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b
 
 
 $(package)_download_path_webkit=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
-$(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.zip
-$(package)_qtwebkit_sha256_hash=4f25eb20ddb93daadeef0b7a715b9c398d3ff940744bebba0858ee3511c972ae
+$(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.tar.xz
+$(package)_qtwebkit_sha256_hash=db725c75a1e9378b0aa7c186c9044cf372060337cefcca3de201c59609bd5436
 
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
 
