@@ -24,7 +24,7 @@ jobs:
         run: python --version  # Should print Python 2.7.x
 
       - name: install openssl 1.1.0e
-        run: wget wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+        run: wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz
         
       - name: untar openssl
         run: tar -xzf openssl-1.1.1g.tar.gz
