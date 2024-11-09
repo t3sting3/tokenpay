@@ -12,7 +12,7 @@ jobs:
         run: sudo apt-get update
 
       - name: Install base dependencies
-        run: sudo apt-get install build-essential libperl-dev perl xutils-dev libicu-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python2
+        run: sudo apt-get install build-essential xutils-dev libicu-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python2
 
       - name: Set Python 2 as default
         run: |
@@ -26,19 +26,11 @@ jobs:
       - name: install openssl 1.1.0e
         run: wget https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_0e/openssl-1.1.0e.tar.gz
         
-      - name: untar openssl, go in and run config
+      - name: untar openssl
         run: tar -xzf openssl-1.1.0e.tar.gz
         
-      - name: Patch mkbuildinf.pl to fix "glob" error
-        run: |
-          cd openssl-1.1.0e
-          # Patch the Perl script that causes the error
-          sed -i '1i use File::Glob qw(glob);' util/mkbuildinf.pl
-          # Optionally verify the patch
-          head -n 10 util/mkbuildinf.pl
-      
       - name: go in and configure then run  
-        run: cd openssl-1.1.0e && ./Configure --prefix=/usr/local/ssl 
+        run: cd openssl-1.1.0e && ./config -Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)' 
         
       - name: go in and make and install openssl  
         run: make && sudo make install
