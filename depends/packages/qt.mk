@@ -27,9 +27,9 @@ $(package)_qwt_file_name=qwt-$($(package)_qwt_version).tar.bz2
 $(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733
 
 
-$(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6.0
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
-$(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
+$(package)_download_path_webkit=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
+$(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.zip
+$(package)_qtwebkit_sha256_hash=4f25eb20ddb93daadeef0b7a715b9c398d3ff940744bebba0858ee3511c972ae
 
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
 
