@@ -33,7 +33,7 @@ jobs:
         run: cd openssl-1.1.0e && grep -nr "'File::Glob' => qw/glob/"
         
       - name: go in and config  
-        run: grep -nr "'File::Glob' => qw/glob/" && ./config -Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)' 
+        run: grep -nr "'File::Glob' => qw/glob/" && ./Configure -Wl,--enable-new-dtags,-rpath,'$(LIBRPATH)' 
         
       - name: go in and make and install openssl  
         run: make && sudo make install
