@@ -25,6 +25,9 @@ jobs:
 
       - name: Build depends
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
+        
+      - name: locate uic
+        run: sudo find / -iname uic
 
       - name: Add uic path to environment
         run: echo "/home/runner/work/tokenpay-linux/tokenpay-linux/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
