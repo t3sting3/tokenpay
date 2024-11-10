@@ -29,19 +29,6 @@ jobs:
       - name: Auto-generate configuration
         run: ./autogen.sh
 
-      - name: Configure with depends folder
-        run: |
-          CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --prefix=$(pwd)/depends/i686-w64-mingw32 --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --bindir=$(pwd)/release/bin --libdir=$(pwd)/release/lib
-
-      - name: Compile with custom dependencies
-        run: make -j2
-
-      - name: Strip binaries
-        run: |
-          cd ./src
-          strip tokenpay.exe
-          strip tokenpayd.exe
-
   windows64-ubuntu20:
     runs-on: ubuntu-20.04
 
@@ -66,18 +53,5 @@ jobs:
 
       - name: Auto-generate configuration
         run: ./autogen.sh
-
-      - name: Configure with depends folder
-        run: |
-          CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-scrypt-sse2 --prefix=$(pwd)/depends/x86_64-w64-mingw32 --disable-bench --disable-tests
-
-      - name: Compile with custom dependencies
-        run: make -j2
-
-      - name: Strip binaries
-        run: |
-          cd ./src
-          strip tokenpay.exe
-          strip tokenpayd.exe
 
 

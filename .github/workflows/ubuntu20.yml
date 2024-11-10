@@ -37,9 +37,3 @@ jobs:
 
       - name: Auto generate
         run: ./autogen.sh
-
-      - name: configure
-        run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
-
-      - name: make
-        run: make -j4
