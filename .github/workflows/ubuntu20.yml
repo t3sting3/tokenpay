@@ -19,7 +19,7 @@ jobs:
           sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
           sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 2
           sudo update-alternatives --set python /usr/bin/python2
-
+          
       - name: Verify Python Version
         run: python --version  # Should print Python 2.7.x
 
