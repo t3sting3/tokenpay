@@ -24,10 +24,16 @@ jobs:
         run: |
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
-          make HOST=i686-w64-mingw32 -j2
+          make HOST=i686-w64-mingw32
+          
+      - name: Add depends path to environment
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/" >> $GITHUB_PATH
 
       - name: Auto-generate configuration
         run: ./autogen.sh
+        
+      - name: configure
+        run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/i686-w64-mingw32 --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
 
   windows64-ubuntu20:
     runs-on: ubuntu-20.04
@@ -49,9 +55,15 @@ jobs:
         run: |
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
-          make HOST=x86_64-w64-mingw32 -j2
+          make HOST=x86_64-w64-mingw32
+          
+      - name: Add depends path to environment
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/" >> $GITHUB_PATH
 
       - name: Auto-generate configuration
         run: ./autogen.sh
+      
+      - name: configure
+        run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-w64-mingw32 --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
 
 
