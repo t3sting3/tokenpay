@@ -1,9 +1,10 @@
+
 PACKAGE=qt
-$(package)_version=5.9.9
-$(package)_download_path=https://download.qt.io/new_archive/qt/5.9/$($(package)_version)/submodules
-$(package)_suffix=opensource-src-$($(package)_version).tar.xz
+$(package)_version=5.7.1
+$(package)_download_path=http://download.qt.io/official_releases/qt/5.7/$($(package)_version)/submodules
+$(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
-$(package)_sha256_hash=d5a97381b9339c0fbaf13f0c05d599a5c999dcf94145044058198987183fed65
+$(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
 $(package)_dependencies=openssl zlib icu
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
@@ -15,11 +16,11 @@ $(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-c
 $(package)_patches+=fix_mojave_fonts.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
-$(package)_qttranslations_sha256_hash=f7474f260a1382549720081bf2359a3d425ec3bf7d31976c512834303d30d73b
+$(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
 
 
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
-$(package)_qttools_sha256_hash=fce6e0fd39a40bcef880c669080087dba94af1ec442296222210472e0852bf98
+$(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
 
 $(package)_qwt_version=6.1.3
 $(package)_qwt_download_path=https://ufpr.dl.sourceforge.net/project/qwt/qwt/$($(package)_qwt_version)/
@@ -27,9 +28,9 @@ $(package)_qwt_file_name=qwt-$($(package)_qwt_version).tar.bz2
 $(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733
 
 
-$(package)_download_path_webkit=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
-$(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.tar.xz
-$(package)_qtwebkit_sha256_hash=db725c75a1e9378b0aa7c186c9044cf372060337cefcca3de201c59609bd5436
+$(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6.0
+$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
+$(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
 
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
 
