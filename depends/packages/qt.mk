@@ -1,5 +1,4 @@
 
-
 PACKAGE=qt
 $(package)_version=5.7.1
 $(package)_download_path=http://download.qt.io/official_releases/qt/5.7/$($(package)_version)/submodules
