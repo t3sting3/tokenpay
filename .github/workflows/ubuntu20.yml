@@ -32,9 +32,6 @@ jobs:
       - name: Add uic path to environment
         run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin/uic" >> $GITHUB_PATH
 
-      - name: Verify uic path
-        run: which uic
-
       - name: Auto generate
         run: ./autogen.sh
         
