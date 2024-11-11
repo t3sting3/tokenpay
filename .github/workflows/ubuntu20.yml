@@ -32,6 +32,9 @@ jobs:
       - name: Verify uic path
         run: which uic
 
+      - name: Verify qt install
+        run: qmake --version
+
       - name: Auto generate
         run: ./autogen.sh
 
