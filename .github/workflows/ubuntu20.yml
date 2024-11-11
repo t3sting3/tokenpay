@@ -29,11 +29,23 @@ jobs:
       - name: find qmake
         run: sudo find / -name qmake 2>/dev/null
         
-      - name: list all binaries created in depends
+      - name: list made depends
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/ && ls
         
-      - name: list all binaries created in depends native
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin/ && ls
+      - name: list made depends include
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include && ls
+        
+      - name: list made depends lib
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib && ls
+        
+      - name: list made depends bin
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/bin && ls
+        
+      - name: list made depends native
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native && ls
+        
+      - name: list made depends native bin
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin && ls
 
       - name: Add uic path to environment
         run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
