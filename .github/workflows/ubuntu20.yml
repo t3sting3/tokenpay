@@ -25,6 +25,12 @@ jobs:
 
       - name: Build depends
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
+        
+      - name: find qmake
+        run: sudo find / -name qmake 2>/dev/null
+        
+      - name: list all binaries created in depends
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin/ && ls
 
       - name: Add uic path to environment
         run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
