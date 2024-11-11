@@ -24,17 +24,19 @@ jobs:
         run: python --version  # Should print Python 2.7.x
 
       - name: Build depends
-        run: cd depends/ && make HOST=x86_64-linux-gnu
-        
-      - name: locate uic
-        run: sudo find / -iname uic
+        run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
 
       - name: Add uic path to environment
-        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin/uic" >> $GITHUB_PATH
+        run: echo "/home/runner/work/tokenpay-linux/tokenpay-linux/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
+
+      - name: Verify uic path
+        run: which uic
 
       - name: Auto generate
         run: ./autogen.sh
-        
+
       - name: configure
         run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
 
+      - name: make
+        run: make -j4
