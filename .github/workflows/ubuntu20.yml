@@ -1,7 +1,5 @@
 on:
   push
-  pull_request:
-    types: [opened, reopened. review_requested]
 
 jobs:
   ubuntu20:
