@@ -38,6 +38,9 @@ jobs:
       - name: list made depends lib
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib && ls
         
+      - name: list made depends lib pkgconfig
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig && ls
+        
       - name: list made depends bin
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/bin && ls
         

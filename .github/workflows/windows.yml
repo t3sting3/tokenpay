@@ -35,6 +35,9 @@ jobs:
       - name: list made depends lib
         run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/lib && ls
         
+      - name: list made depends lib pkgconfig
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/lib/pkgconfig && ls
+        
       - name: list made depends bin
         run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/bin && ls
         
@@ -77,6 +80,9 @@ jobs:
         
       - name: list made depends lib
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/lib && ls
+        
+      - name: list made depends lib pkgconfig
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/lib/pkgconfig && ls
         
       - name: list made depends bin
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/bin && ls
