@@ -14,8 +14,17 @@ $(package)_reverse_patch_xlocale =  $($(package)_reverse_patch_xlocale_$(host_os
 
 
 define $(package)_set_vars
-$(package)_config_opts=
+  $(package)_config_opts=$($(package)_standard_opts)
+  $(package)_config_opts_debug=--enable-debug --disable-release
+  $(package)_config_opts_release=--disable-debug --enable-release
+  $(package)_config_opts_mingw32=--with-cross-build="$($(package)_extract_dir)/build"
+  $(package)_config_opts_darwin=--with-cross-build="$($(package)_extract_dir)/build" LIBTOOL="$($(package)_libtool)"
+  $(package)_archiver_darwin=$($(package)_libtool)
+  $(package)_cflags_linux=-fPIC
+  $(package)_cppflags_linux=-fPIC
+  $(package)_cxxflags=-std=c++11
 endef
+
 
 define $(package)_config_cmds
   $($(package)_patch_xlocale) && \
