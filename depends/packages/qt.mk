@@ -30,9 +30,6 @@ $(package)_qtwebkit_sha256_hash=DB725C75A1E9378B0AA7C186C9044CF372060337CEFCCA3D
 
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
 
-$(package)_patch_glibc_compat_linux = patch -p1 < $($(package)_patch_dir)/strip_log2f.patch &&
-$(package)_patch_glibc_compat = $($(package)_patch_glibc_compat_$(host_os))
-
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 $(package)_extra_sources += $($(package)_qwt_file_name)
