@@ -1,9 +1,9 @@
 PACKAGE=qt
 $(package)_version=5.9.9
-$(package)_download_path=http://download.qt.io/official_releases/qt/5.9/$($(package)_version)/submodules
-$(package)_suffix=opensource-src-$($(package)_version).tar.gz
+$(package)_download_path=https://download.qt.io/new_archive/qt/5.9/$($(package)_version)/submodules
+$(package)_suffix=opensource-src-$($(package)_version).tar.xz
 $(package)_file_name=qtbase-$($(package)_suffix)
-$(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
+$(package)_sha256_hash=d5a97381b9339c0fbaf13f0c05d599a5c999dcf94145044058198987183fed65
 $(package)_dependencies=openssl zlib icu
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
@@ -24,9 +24,9 @@ $(package)_qwt_file_name=qwt-$($(package)_qwt_version).tar.bz2
 $(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733
 
 
-$(package)_download_path_webkit=http://download.qt.io/community_releases/5.9/5.9.2
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.9.2.tar.gz
-$(package)_qtwebkit_sha256_hash=985c4796e2f19f4c8e14ca7a890e09c83e731febe4f58aa5fd479034621503ff
+$(package)_download_path_webkit=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
+$(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.tar.xz
+$(package)_qtwebkit_sha256_hash=DB725C75A1E9378B0AA7C186C9044CF372060337CEFCCA3DE201C59609BD5436
 
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
 
