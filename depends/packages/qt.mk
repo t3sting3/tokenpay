@@ -13,9 +13,9 @@ $(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=f7474f260a1382549720081bf2359a3d425ec3bf7d31976c512834303d30d73b
 
-$(package)_download_path_webkit=http://download.qt.io/community_releases/5.9/5.9.2
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.9.2.tar.gz
-$(package)_qtwebkit_sha256_hash=06a81cad538df18b63f585a8faf51fe2a69a0cbb4dc35325f1bbc19fc193540c
+$(package)_download_path_webkit=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
+$(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.tar.xz
+$(package)_qtwebkit_sha256_hash=DB725C75A1E9378B0AA7C186C9044CF372060337CEFCCA3DE201C59609BD5436
 
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=fce6e0fd39a40bcef880c669080087dba94af1ec442296222210472e0852bf98
