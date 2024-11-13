@@ -8,12 +8,8 @@ $(package)_dependencies=openssl zlib icu
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
-$(package)_patches=mac-qmake.conf mingw-uuidof.patch pidlist_absolute.patch fix-xcb-include-order.patch
-$(package)_patches+=0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch
-$(package)_patches+=strip_log2f.patch
-$(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-coretext.patch
-$(package)_patches+=fix_mojave_fonts.patch
-$(package)_patch_dir=depends/patches
+$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_mingw_cross_compile.patch
+
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
@@ -28,9 +24,9 @@ $(package)_qwt_file_name=qwt-$($(package)_qwt_version).tar.bz2
 $(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733
 
 
-$(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6.0
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
-$(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
+$(package)_download_path_webkit=http://download.qt.io/community_releases/5.9/5.9.2
+$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.9.2.tar.gz
+$(package)_qtwebkit_sha256_hash=985c4796e2f19f4c8e14ca7a890e09c83e731febe4f58aa5fd479034621503ff
 
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
 
@@ -136,6 +132,7 @@ $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_fi
 $(call fetch_file,$(package),$($(package)_qwt_download_path),$($(package)_qwt_file_name),$($(package)_qwt_file_name),$($(package)_qwt_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path_webkit),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_sha256_hash))
 endef
+$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_mingw_cross_compile.patch
 
 define $(package)_extract_cmds
   mkdir -p $($(package)_extract_dir) && \
