@@ -232,7 +232,8 @@ define $(package)_config_cmds
   export PKG_CONFIG_SYSROOT_DIR=/ && \
   export PKG_CONFIG_LIBDIR=$(host_prefix)/lib/pkgconfig && \
   export PKG_CONFIG_PATH=$(host_prefix)/share/pkgconfig  && \
-  ./configure $($(package)_config_opts) && \
+  sed -i.old "s|LIBS_PRIVATE += -lz|LIBS_PRIVATE += `pkg-config zlib --libs`|" src/3rdparty/zlib_dependency.pri && \
+  OPENSSL_LIBS='-L$(host_prefix)/lib -lssl -lcrypto $($(package)_ssl_extras)' ./configure `pkg-config icu-uc --cflags` `pkg-config icu-uc --libs` $($(package)_config_opts) && \
   echo "host_build: QT_CONFIG ~= s/system-zlib/zlib" >> mkspecs/qconfig.pri && \
   echo "CONFIG += force_bootstrap" >> mkspecs/qconfig.pri && \
   $(MAKE) sub-src-clean && \
