@@ -7,7 +7,7 @@ $(package)_sha256_hash=d5a97381b9339c0fbaf13f0c05d599a5c999dcf941450440581989871
 $(package)_dependencies=openssl zlib icu
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
-$(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
+$(package)_qt_libs=corelib network widgets gui plugins testlib concurrent printsupport
 $(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_mingw_cross_compile.patch strip_log2f.patch
 
 
@@ -51,7 +51,7 @@ define $(package)_set_vars
 $(package)_config_opts_release = -release
 $(package)_config_opts_debug = -debug
 $(package)_config_opts += -bindir $(build_prefix)/bin
-$(package)_config_opts += -c++std c++1z
+$(package)_config_opts += -c++std c++11
 $(package)_config_opts += -confirm-license
 $(package)_config_opts += -dbus-runtime
 $(package)_config_opts += -hostprefix $(build_prefix)
