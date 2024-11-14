@@ -60,7 +60,6 @@ $(package)_config_opts += -no-egl
 $(package)_config_opts += -no-eglfs
 $(package)_config_opts += -no-freetype
 $(package)_config_opts += -no-glib
-$(package)_config_opts += -no-gstreamer
 $(package)_config_opts += -no-iconv
 $(package)_config_opts += -no-icu
 $(package)_config_opts += -no-kms
