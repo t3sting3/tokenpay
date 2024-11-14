@@ -196,7 +196,6 @@ define $(package)_preprocess_cmds
   patch -p1 < $($(package)_patch_dir)/fix_configure_mac.patch && \
   patch -p1 < $($(package)_patch_dir)/fix_no_printer.patch && \
   patch -p1 < $($(package)_patch_dir)/fix_rcc_determinism.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_riscv64_arch.patch && \
   patch -p1 < $($(package)_patch_dir)/xkb-default.patch && \
   patch -p1 < $($(package)_patch_dir)/fix_mingw_cross_compile.patch && \
   $($(package)_patch_glibc_compat) \
