@@ -1,8 +1,8 @@
 package=icu
 $(package)_version=58.1
-$(package)_download_path=https://github.com/unicode-org/icu/releases/download/release-58-2/
-$(package)_file_name=icu4c-58_2-src.tgz
-$(package)_sha256_hash=2B0A4410153A9B20DE0E20C7D8B66049A72AEF244B53683D0D7521371683DA0C
+$(package)_download_path=https://ftp2.osuosl.org/pub/blfs/conglomeration/icu/
+$(package)_file_name=icu4c-58_1-src.tgz
+$(package)_sha256_hash=0eb46ba3746a9c2092c8ad347a29b1a1b4941144772d13a88667a7b11ea30309
 $(package)_build_subdir=source
 
 
@@ -14,17 +14,8 @@ $(package)_reverse_patch_xlocale =  $($(package)_reverse_patch_xlocale_$(host_os
 
 
 define $(package)_set_vars
-  $(package)_config_opts=$($(package)_standard_opts)
-  $(package)_config_opts_debug=--enable-debug --disable-release
-  $(package)_config_opts_release=--disable-debug --enable-release
-  $(package)_config_opts_mingw32=--with-cross-build="$($(package)_extract_dir)/build"
-  $(package)_config_opts_darwin=--with-cross-build="$($(package)_extract_dir)/build" LIBTOOL="$($(package)_libtool)"
-  $(package)_archiver_darwin=$($(package)_libtool)
-  $(package)_cflags_linux=-fPIC
-  $(package)_cppflags_linux=-fPIC
-  $(package)_cxxflags=-std=c++11
+$(package)_config_opts=
 endef
-
 
 define $(package)_config_cmds
   $($(package)_patch_xlocale) && \
