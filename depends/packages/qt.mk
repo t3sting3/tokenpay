@@ -65,7 +65,6 @@ $(package)_config_opts += -no-icu
 $(package)_config_opts += -no-kms
 $(package)_config_opts += -no-linuxfb
 $(package)_config_opts += -no-libudev
-$(package)_config_opts += -no-mitshm
 $(package)_config_opts += -no-mtdev
 $(package)_config_opts += -no-pulseaudio
 $(package)_config_opts += -no-openvg
