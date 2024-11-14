@@ -1,5 +1,5 @@
 package=icu
-$(package)_version=58.1
+$(package)_version=58.2
 $(package)_download_path=https://github.com/unicode-org/icu/releases/download/release-58-2/
 $(package)_file_name=icu4c-58_2-src.tgz
 $(package)_sha256_hash=2B0A4410153A9B20DE0E20C7D8B66049A72AEF244B53683D0D7521371683DA0C
