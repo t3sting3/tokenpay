@@ -18,10 +18,10 @@ $(package)_qttranslations_sha256_hash=f7474f260a1382549720081bf2359a3d425ec3bf7d
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=fce6e0fd39a40bcef880c669080087dba94af1ec442296222210472e0852bf98
 
-$(package)_qwt_version=6.1.6
+$(package)_qwt_version=6.1.3
 $(package)_qwt_download_path=https://ufpr.dl.sourceforge.net/project/qwt/qwt/$($(package)_qwt_version)/
 $(package)_qwt_file_name=qwt-$($(package)_qwt_version).tar.bz2
-$(package)_qwt_sha256_hash=99460D31C115EE4117B0175D885F47C2C590D784206F09815DC058FBE5EDE1F6
+$(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733
 
 
 $(package)_download_path_webkit=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
