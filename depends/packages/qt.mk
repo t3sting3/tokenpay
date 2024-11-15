@@ -10,30 +10,38 @@ $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql
 $(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_mingw_cross_compile.patch strip_log2f.patch
 
-
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=f7474f260a1382549720081bf2359a3d425ec3bf7d31976c512834303d30d73b
-
 
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=fce6e0fd39a40bcef880c669080087dba94af1ec442296222210472e0852bf98
 
+$(package)_qwt_version=6.1.3
+$(package)_qwt_download_path=https://ufpr.dl.sourceforge.net/project/qwt/qwt/$($(package)_qwt_version)/
+$(package)_qwt_file_name=qwt-$($(package)_qwt_version).tar.bz2
+$(package)_qwt_sha256_hash=f3ecd34e72a9a2b08422fb6c8e909ca76f4ce5fa77acad7a2883b701f4309733
 
 $(package)_download_path_webkit=https://download.qt.io/snapshots/ci/qtwebkit/5.9/1562081748/src/submodules/
 $(package)_qtwebkit_file_name=qtwebkit-everywhere-src-5.9.2.tar.xz
 $(package)_qtwebkit_sha256_hash=db725c75a1e9378b0aa7c186c9044cf372060337cefcca3de201c59609bd5436
 
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
-
 $(package)_patch_glibc_compat_linux = patch -p1 < $($(package)_patch_dir)/strip_log2f.patch &&
 $(package)_patch_glibc_compat = $($(package)_patch_glibc_compat_$(host_os))
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
+$(package)_extra_sources += $($(package)_qwt_file_name)
 $(package)_extra_sources += $($(package)_qtwebkit_file_name)
 
 $(package)_ssl_extras_mingw32 =-lwsock32 -lgdi32
 $(package)_ssl_extras = $($(package)_ssl_extras_$(host_os))
+
+#Work around for a mingw issue where the prl files contain .a instead of .dll even though we are a shared build - this causes qwt to link the wrong thing and fail.
+$(package)_patch_prl_files_mingw32 = sed -rie 's|lib(.*?)[.]a|\1.dll|' ../qtbase/lib/*.prl && sed -rie 's|(.*?)[.]a|\1.dll|' ../qtbase/lib/*.prl &&
+$(package)_patch_prl_files = $($(package)_patch_prl_files_$(host_os))
+$(package)_patch_qwt_pc_files_mingw32 = find / -name *Qt*.pc | xargs sed -rie 's|Libs.private.*||' &&
+$(package)_patch_qwt_pc_files = $($(package)_patch_qwt_pc_files_$(host_os))
 
 define $(package)_set_vars
 $(package)_config_opts_release = -release
@@ -146,6 +154,7 @@ define $(package)_fetch_cmds
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttranslations_file_name),$($(package)_qttranslations_file_name),$($(package)_qttranslations_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash)) && \
+$(call fetch_file,$(package),$($(package)_qwt_download_path),$($(package)_qwt_file_name),$($(package)_qwt_file_name),$($(package)_qwt_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path_webkit),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_sha256_hash))
 endef
 
@@ -153,6 +162,7 @@ define $(package)_extract_cmds
   mkdir -p $($(package)_extract_dir) && \
   echo "$($(package)_sha256_hash)  $($(package)_source)" > $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttranslations_sha256_hash)  $($(package)_source_dir)/$($(package)_qttranslations_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
+  echo "$($(package)_qwt_sha256_hash)  $($(package)_source_dir)/$($(package)_qwt_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qttools_sha256_hash)  $($(package)_source_dir)/$($(package)_qttools_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   echo "$($(package)_qtwebkit_sha256_hash)  $($(package)_source_dir)/$($(package)_qtwebkit_file_name)" >> $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   $(build_SHA256SUM) -c $($(package)_extract_dir)/.$($(package)_file_name).hash && \
@@ -160,6 +170,8 @@ define $(package)_extract_cmds
   tar --strip-components=1 -xf $($(package)_source) -C qtbase && \
   mkdir qttranslations && \
   tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttranslations_file_name) -C qttranslations && \
+  mkdir qwt && \
+  tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qwt_file_name) -C qwt && \
   mkdir qttools && \
   tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
   mkdir qtwebkit && tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qtwebkit_file_name) -C qtwebkit
@@ -168,7 +180,7 @@ endef
 define $(package)_preprocess_cmds
   sed -i.old "s|updateqm.commands = \$$$$\$$$$LRELEASE|updateqm.commands = $($(package)_extract_dir)/qttools/bin/lrelease|" qttranslations/translations/translations.pro && \
   sed -i.old "/updateqm.depends =/d" qttranslations/translations/translations.pro && \
-  sed -i.old "s/src_plugins.depends = src_sql src_network/src_plugins.depends = src_network/" qtbase/src/src.pro && \
+  sed -i.old "s/src_plugins.depends = src_sql src_xml src_network/src_plugins.depends = src_xml src_network/" qtbase/src/src.pro && \
   sed -i.old "s|X11/extensions/XIproto.h|X11/X.h|" qtbase/src/plugins/platforms/xcb/qxcbxsettings.cpp && \
   sed -i.old 's/if \[ "$$$$XPLATFORM_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/if \[ "$$$$BUILD_ON_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/' qtbase/configure && \
   sed -i.old 's/CGEventCreateMouseEvent(0, kCGEventMouseMoved, pos, 0)/CGEventCreateMouseEvent(0, kCGEventMouseMoved, pos, kCGMouseButtonLeft)/' qtbase/src/plugins/platforms/cocoa/qcocoacursor.mm && \
@@ -196,7 +208,16 @@ define $(package)_preprocess_cmds
   sed -i.old "s|QMAKE_CFLAGS            = |!host_build: QMAKE_CFLAGS            = $($(package)_cflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_LFLAGS            = |!host_build: QMAKE_LFLAGS            = $($(package)_ldflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_CXXFLAGS          = |!host_build: QMAKE_CXXFLAGS            = $($(package)_cxxflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
-  sed -i.old "s|debug_and_release|release|g" qtbase/mkspecs/win32-g++/qmake.conf
+  sed -i.old "s|debug_and_release|release|g" qtbase/mkspecs/win32-g++/qmake.conf && \
+  sed -i.old "s|QWT_CONFIG.*QwtOpenGL||" qwt/qwtconfig.pri && \
+  sed -i.old "s|QWT_CONFIG.*QwtDesigner||" qwt/qwtconfig.pri && \
+  sed -i.old "s|QWT_CONFIG.*QwtWidgets||" qwt/qwtconfig.pri && \
+  sed -i.old "s|QWT_CONFIG.*QwtSvg||" qwt/qwtconfig.pri  && \
+  sed -i.old "s|QWT_INSTALL_PREFIX.*=.*|QWT_INSTALL_PREFIX = $(host_prefix)|" qwt/qwtconfig.pri && \
+  sed -i.old "s|CONFIG.*=.*debug_and_release|CONFIG+=release|" qwt/qwtbuild.pri && \
+  sed -i.old "s|CONFIG.*=.*build_all||" qwt/qwtbuild.pri && \
+  echo "unix|mingw {QWT_CONFIG     += QwtPkgConfig }" >> qwt/qwtconfig.pri && \
+  echo "unix|mingw {QMAKE_PKGCONFIG_VERSION = $($(package)_qwt_version) }" >> qwt/qwtconfig.pr
 endef
 
 define $(package)_config_cmds
@@ -210,6 +231,7 @@ define $(package)_config_cmds
   cd ../qtwebkit && SQLITE3SRCDIR="../qtbase/src/3rdparty/sqlite" ../qtbase/bin/qmake WebKit.pro -o Makefile && \
   cd ../qttranslations && ../qtbase/bin/qmake qttranslations.pro -o Makefile && \
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd .. &&\
+  cd ../qwt && ../qtbase/bin/qmake -o Makefile && \
   cd ../qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile
 endef
 
@@ -217,6 +239,8 @@ define $(package)_build_cmds
   $(MAKE) -C src $(addprefix sub-,$($(package)_qt_libs)) && \
   $(MAKE) -C ../qttools/src/linguist/lrelease && \
   $(MAKE) -C ../qttranslations && \
+  $($(package)_patch_prl_files) \
+  $(MAKE) -C ../qwt && \
   $(MAKE) -C ../qtwebkit
 endef
 
@@ -225,6 +249,7 @@ define $(package)_stage_cmds
   $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qwt INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
+  $($(package)_patch_qwt_pc_files) \
   $(MAKE) -C qtwebkit INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
     cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
