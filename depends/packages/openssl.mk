@@ -59,7 +59,8 @@ define $(package)_preprocess_cmds
 endef
 
 define $(package)_config_cmds
-  ./Configure $($(package)_config_opts)
+  ./Configure $($(package)_config_opts) && \
+  $(MAKE) depend
 endef
 
 define $(package)_build_cmds
@@ -67,7 +68,7 @@ define $(package)_build_cmds
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) -j1 install_sw
+ $(MAKE) INSTALL_PREFIX=$($(package)_staging_dir) -j1 install_sw
 endef
 
 define $(package)_postprocess_cmds
