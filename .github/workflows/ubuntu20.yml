@@ -26,9 +26,6 @@ jobs:
       - name: Build depends
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
         
-      - name: find qmake
-        run: sudo find / -name qmake 2>/dev/null
-        
       - name: list usr/bin
         run: cd /usr/bin && ls
         
@@ -73,3 +70,6 @@ jobs:
 
       - name: configure
         run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+        
+      - name: make
+        run: make -j2
