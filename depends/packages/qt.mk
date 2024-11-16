@@ -6,7 +6,7 @@ $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_dependencies=openssl zlib icu
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
-$(package)_qt_libs=corelib network widgets gui plugins testlib xml webkit
+$(package)_qt_libs=corelib network widgets gui plugins testlib xml widgets
 $(package)_sha256_hash=7fe2bb468955f633c71b3ddd3c269e68a2c4137a4e5b8dd12dcdb34cbc6d609b
 $(package)_patches=mac-qmake.conf
 
