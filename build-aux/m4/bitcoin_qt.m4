@@ -3,21 +3,21 @@ dnl Distributed under the MIT software license, see the accompanying
 dnl file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 dnl Helper for cases where a qt dependency is not met.
-dnl Output: If qt version is auto, set verge_enable_qt to false. Else, exit.
-AC_DEFUN([VERGE_QT_FAIL],[
-  if test "x$verge_qt_want_version" = xauto && test "x$verge_qt_force" != xyes; then
-    if test "x$verge_enable_qt" != xno; then
-      AC_MSG_WARN([$1; verge-qt frontend will not be built])
+dnl Output: If qt version is auto, set tokenpay_enable_qt to false. Else, exit.
+AC_DEFUN([TOKENPAY_QT_FAIL],[
+  if test "x$tokenpay_qt_want_version" = xauto && test "x$tokenpay_qt_force" != xyes; then
+    if test "x$tokenpay_enable_qt" != xno; then
+      AC_MSG_WARN([$1; tokenpay-qt frontend will not be built])
     fi
-    verge_enable_qt=no
-    verge_enable_qt_test=no
+    tokenpay_enable_qt=no
+    tokenpay_enable_qt_test=no
   else
     AC_MSG_ERROR([$1])
   fi
 ])
 
-AC_DEFUN([VERGE_QT_CHECK],[
-  if test "x$verge_enable_qt" != xno && test "x$verge_qt_want_version" != xno; then
+AC_DEFUN([TOKENPAY_QT_CHECK],[
+  if test "x$tokenpay_enable_qt" != xno && test "x$tokenpay_qt_want_version" != xno; then
     true
     $1
   else
@@ -26,43 +26,43 @@ AC_DEFUN([VERGE_QT_CHECK],[
   fi
 ])
 
-dnl VERGE_QT_PATH_PROGS([FOO], [foo foo2], [/path/to/search/first], [continue if missing])
+dnl TOKENPAY_QT_PATH_PROGS([FOO], [foo foo2], [/path/to/search/first], [continue if missing])
 dnl Helper for finding the path of programs needed for Qt.
 dnl Inputs: $1: Variable to be set
 dnl Inputs: $2: List of programs to search for
 dnl Inputs: $3: Look for $2 here before $PATH
 dnl Inputs: $4: If "yes", don't fail if $2 is not found.
 dnl Output: $1 is set to the path of $2 if found. $2 are searched in order.
-AC_DEFUN([VERGE_QT_PATH_PROGS],[
-  VERGE_QT_CHECK([
+AC_DEFUN([TOKENPAY_QT_PATH_PROGS],[
+  TOKENPAY_QT_CHECK([
     if test "x$3" != x; then
       AC_PATH_PROGS($1,$2,,$3)
     else
       AC_PATH_PROGS($1,$2)
     fi
     if test "x$$1" = x && test "x$4" != xyes; then
-      VERGE_QT_FAIL([$1 not found])
+      TOKENPAY_QT_FAIL([$1 not found])
     fi
   ])
 ])
 
 dnl Initialize qt input.
-dnl This must be called before any other VERGE_QT* macros to ensure that
+dnl This must be called before any other TOKENPAY_QT* macros to ensure that
 dnl input variables are set correctly.
 dnl CAUTION: Do not use this inside of a conditional.
-AC_DEFUN([VERGE_QT_INIT],[
+AC_DEFUN([TOKENPAY_QT_INIT],[
   dnl enable qt support
   AC_ARG_WITH([gui],
     [AS_HELP_STRING([--with-gui@<:@=no|qt5|auto@:>@],
-    [build verge-qt GUI (default=auto)])],
+    [build tokenpay-qt GUI (default=auto)])],
     [
-     verge_qt_want_version=$withval
-     if test "x$verge_qt_want_version" = xyes; then
-       verge_qt_force=yes
-       verge_qt_want_version=auto
+     tokenpay_qt_want_version=$withval
+     if test "x$tokenpay_qt_want_version" = xyes; then
+       tokenpay_qt_force=yes
+       tokenpay_qt_want_version=auto
      fi
     ],
-    [verge_qt_want_version=auto])
+    [tokenpay_qt_want_version=auto])
 
   AC_ARG_WITH([qt-incdir],[AS_HELP_STRING([--with-qt-incdir=INC_DIR],[specify qt include path (overridden by pkgconfig)])], [qt_include_path=$withval], [])
   AC_ARG_WITH([qt-libdir],[AS_HELP_STRING([--with-qt-libdir=LIB_DIR],[specify qt lib path (overridden by pkgconfig)])], [qt_lib_path=$withval], [])
@@ -83,10 +83,10 @@ dnl Find the appropriate version of Qt libraries and includes.
 dnl Inputs: $1: Whether or not pkg-config should be used. yes|no. Default: yes.
 dnl Inputs: $2: If $1 is "yes" and --with-gui=auto, which qt version should be
 dnl         tried first.
-dnl Outputs: See _VERGE_QT_FIND_LIBS_*
+dnl Outputs: See _TOKENPAY_QT_FIND_LIBS_*
 dnl Outputs: Sets variables for all qt-related tools.
-dnl Outputs: verge_enable_qt, verge_enable_qt_dbus, verge_enable_qt_test
-AC_DEFUN([VERGE_QT_CONFIGURE],[
+dnl Outputs: tokenpay_enable_qt, tokenpay_enable_qt_dbus, tokenpay_enable_qt_test
+AC_DEFUN([TOKENPAY_QT_CONFIGURE],[
   use_pkgconfig=$1
 
   if test "x$use_pkgconfig" = x; then
@@ -94,9 +94,9 @@ AC_DEFUN([VERGE_QT_CONFIGURE],[
   fi
 
   if test "x$use_pkgconfig" = xyes; then
-    VERGE_QT_CHECK([_VERGE_QT_FIND_LIBS_WITH_PKGCONFIG])
+    TOKENPAY_QT_CHECK([_TOKENPAY_QT_FIND_LIBS_WITH_PKGCONFIG])
   else
-    VERGE_QT_CHECK([_VERGE_QT_FIND_LIBS_WITHOUT_PKGCONFIG])
+    TOKENPAY_QT_CHECK([_TOKENPAY_QT_FIND_LIBS_WITHOUT_PKGCONFIG])
   fi
 
   dnl This is ugly and complicated. Yuck. Works as follows:
@@ -105,18 +105,18 @@ AC_DEFUN([VERGE_QT_CONFIGURE],[
   dnl the final binary as well.
   dnl With Qt5, languages moved into core and the WindowsIntegration plugin was
   dnl added.
-  dnl _VERGE_QT_CHECK_STATIC_PLUGINS does a quick link-check and appends the
+  dnl _TOKENPAY_QT_CHECK_STATIC_PLUGINS does a quick link-check and appends the
   dnl results to QT_LIBS.
-  VERGE_QT_CHECK([
+  TOKENPAY_QT_CHECK([
   TEMP_CPPFLAGS=$CPPFLAGS
   TEMP_CXXFLAGS=$CXXFLAGS
   CPPFLAGS="$QT_INCLUDES $CPPFLAGS"
   CXXFLAGS="$PIC_FLAGS $CXXFLAGS"
-  _VERGE_QT_IS_STATIC
-  if test "x$verge_cv_static_qt" = xyes; then
-    _VERGE_QT_FIND_STATIC_PLUGINS
+  _TOKENPAY_QT_IS_STATIC
+  if test "x$tokenpay_cv_static_qt" = xyes; then
+    _TOKENPAY_QT_FIND_STATIC_PLUGINS
     AC_DEFINE(QT_STATICPLUGIN, 1, [Define this symbol if qt plugins are static])
-    AC_CACHE_CHECK(for Qt < 5.4, verge_cv_need_acc_widget,[
+    AC_CACHE_CHECK(for Qt < 5.4, tokenpay_cv_need_acc_widget,[
       AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
           #include <QtCore/qconfig.h>
           #ifndef QT_VERSION
@@ -128,23 +128,23 @@ AC_DEFUN([VERGE_QT_CONFIGURE],[
           choke
           #endif
         ]])],
-      [verge_cv_need_acc_widget=yes],
-      [verge_cv_need_acc_widget=no])
+      [tokenpay_cv_need_acc_widget=yes],
+      [tokenpay_cv_need_acc_widget=no])
     ])
-    if test "x$verge_cv_need_acc_widget" = xyes; then
-      _VERGE_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(AccessibleFactory)], [-lqtaccessiblewidgets])
+    if test "x$tokenpay_cv_need_acc_widget" = xyes; then
+      _TOKENPAY_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(AccessibleFactory)], [-lqtaccessiblewidgets])
     fi
-    _VERGE_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QMinimalIntegrationPlugin)],[-lqminimal])
+    _TOKENPAY_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QMinimalIntegrationPlugin)],[-lqminimal])
     AC_DEFINE(QT_QPA_PLATFORM_MINIMAL, 1, [Define this symbol if the minimal qt platform exists])
     if test "x$TARGET_OS" = xwindows; then
-      _VERGE_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)],[-lqwindows])
+      _TOKENPAY_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)],[-lqwindows])
       AC_DEFINE(QT_QPA_PLATFORM_WINDOWS, 1, [Define this symbol if the qt platform is windows])
     elif test "x$TARGET_OS" = xlinux; then
-      _VERGE_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)],[-lqxcb -lxcb-static])
+      _TOKENPAY_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QXcbIntegrationPlugin)],[-lqxcb -lxcb-static])
       AC_DEFINE(QT_QPA_PLATFORM_XCB, 1, [Define this symbol if the qt platform is xcb])
     elif test "x$TARGET_OS" = xdarwin; then
       AX_CHECK_LINK_FLAG([[-framework IOKit]],[QT_LIBS="$QT_LIBS -framework IOKit"],[AC_MSG_ERROR(could not iokit framework)])
-      _VERGE_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)],[-lqcocoa])
+      _TOKENPAY_QT_CHECK_STATIC_PLUGINS([Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)],[-lqcocoa])
       AC_DEFINE(QT_QPA_PLATFORM_COCOA, 1, [Define this symbol if the qt platform is cocoa])
     fi
   fi
@@ -157,7 +157,7 @@ AC_DEFUN([VERGE_QT_CONFIGURE],[
   fi
 
   if test "x$use_hardening" != xno; then
-    VERGE_QT_CHECK([
+    TOKENPAY_QT_CHECK([
     AC_MSG_CHECKING(whether -fPIE can be used with this Qt config)
     TEMP_CPPFLAGS=$CPPFLAGS
     TEMP_CXXFLAGS=$CXXFLAGS
@@ -181,7 +181,7 @@ AC_DEFUN([VERGE_QT_CONFIGURE],[
     CXXFLAGS=$TEMP_CXXFLAGS
     ])
   else
-    VERGE_QT_CHECK([
+    TOKENPAY_QT_CHECK([
     AC_MSG_CHECKING(whether -fPIC is needed with this Qt config)
     TEMP_CPPFLAGS=$CPPFLAGS
     CPPFLAGS="$QT_INCLUDES $CPPFLAGS"
@@ -203,23 +203,23 @@ AC_DEFUN([VERGE_QT_CONFIGURE],[
     ])
   fi
 
-  VERGE_QT_PATH_PROGS([MOC], [moc-qt5 moc5 moc], $qt_bin_path)
-  VERGE_QT_PATH_PROGS([UIC], [uic-qt5 uic5 uic], $qt_bin_path)
-  VERGE_QT_PATH_PROGS([RCC], [rcc-qt5 rcc5 rcc], $qt_bin_path)
-  VERGE_QT_PATH_PROGS([LRELEASE], [lrelease-qt5 lrelease5 lrelease], $qt_bin_path)
-  VERGE_QT_PATH_PROGS([LUPDATE], [lupdate-qt5 lupdate5 lupdate],$qt_bin_path, yes)
+  TOKENPAY_QT_PATH_PROGS([MOC], [moc-qt5 moc5 moc], $qt_bin_path)
+  TOKENPAY_QT_PATH_PROGS([UIC], [uic-qt5 uic5 uic], $qt_bin_path)
+  TOKENPAY_QT_PATH_PROGS([RCC], [rcc-qt5 rcc5 rcc], $qt_bin_path)
+  TOKENPAY_QT_PATH_PROGS([LRELEASE], [lrelease-qt5 lrelease5 lrelease], $qt_bin_path)
+  TOKENPAY_QT_PATH_PROGS([LUPDATE], [lupdate-qt5 lupdate5 lupdate],$qt_bin_path, yes)
 
   MOC_DEFS='-DHAVE_CONFIG_H -I$(srcdir)'
   case $host in
     *darwin*)
-     VERGE_QT_CHECK([
+     TOKENPAY_QT_CHECK([
        MOC_DEFS="${MOC_DEFS} -DQ_OS_MAC"
        base_frameworks="-framework Foundation -framework ApplicationServices -framework AppKit"
        AX_CHECK_LINK_FLAG([[$base_frameworks]],[QT_LIBS="$QT_LIBS $base_frameworks"],[AC_MSG_ERROR(could not find base frameworks)])
      ])
     ;;
     *mingw*)
-       VERGE_QT_CHECK([
+       TOKENPAY_QT_CHECK([
          AX_CHECK_LINK_FLAG([[-mwindows]],[QT_LDFLAGS="$QT_LDFLAGS -mwindows"],[AC_MSG_WARN(-mwindows linker support not detected)])
        ])
   esac
@@ -227,15 +227,15 @@ AC_DEFUN([VERGE_QT_CONFIGURE],[
 
   dnl enable qt support
   AC_MSG_CHECKING(whether to build ]AC_PACKAGE_NAME[ GUI)
-  VERGE_QT_CHECK([
-    verge_enable_qt=yes
-    verge_enable_qt_test=yes
+  TOKENPAY_QT_CHECK([
+    tokenpay_enable_qt=yes
+    tokenpay_enable_qt_test=yes
     if test "x$have_qt_test" = xno; then
-      verge_enable_qt_test=no
+      tokenpay_enable_qt_test=no
     fi
-    verge_enable_qt_dbus=no
+    tokenpay_enable_qt_dbus=no
     if test "x$use_dbus" != xno && test "x$have_qt_dbus" = xyes; then
-      verge_enable_qt_dbus=yes
+      tokenpay_enable_qt_dbus=yes
     fi
     if test "x$use_dbus" = xyes && test "x$have_qt_dbus" = xno; then
       AC_MSG_ERROR([libQtDBus not found. Install libQtDBus or remove --with-qtdbus.])
@@ -244,9 +244,9 @@ AC_DEFUN([VERGE_QT_CONFIGURE],[
       AC_MSG_WARN([lupdate is required to update qt translations])
     fi
   ],[
-    verge_enable_qt=no
+    tokenpay_enable_qt=no
   ])
-  AC_MSG_RESULT([$verge_enable_qt (Qt5)])
+  AC_MSG_RESULT([$tokenpay_enable_qt (Qt5)])
 
   AC_SUBST(QT_PIE_FLAGS)
   AC_SUBST(QT_INCLUDES)
@@ -266,9 +266,9 @@ dnl ----
 
 dnl Internal. Check if the included version of Qt is Qt5.
 dnl Requires: INCLUDES must be populated as necessary.
-dnl Output: verge_cv_qt5=yes|no
-AC_DEFUN([_VERGE_QT_CHECK_QT5],[
-  AC_CACHE_CHECK(for Qt 5, verge_cv_qt5,[
+dnl Output: tokenpay_cv_qt5=yes|no
+AC_DEFUN([_TOKENPAY_QT_CHECK_QT5],[
+  AC_CACHE_CHECK(for Qt 5, tokenpay_cv_qt5,[
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
       #include <QtCore/qconfig.h>
       #ifndef QT_VERSION
@@ -280,15 +280,15 @@ AC_DEFUN([_VERGE_QT_CHECK_QT5],[
       choke
       #endif
     ]])],
-    [verge_cv_qt5=yes],
-    [verge_cv_qt5=no])
+    [tokenpay_cv_qt5=yes],
+    [tokenpay_cv_qt5=no])
 ])])
 
 dnl Internal. Check if the included version of Qt is greater than Qt58.
 dnl Requires: INCLUDES must be populated as necessary.
-dnl Output: verge_cv_qt5=yes|no
-AC_DEFUN([_VERGE_QT_CHECK_QT58],[
-  AC_CACHE_CHECK(for > Qt 5.7, verge_cv_qt58,[
+dnl Output: tokenpay_cv_qt5=yes|no
+AC_DEFUN([_TOKENPAY_QT_CHECK_QT58],[
+  AC_CACHE_CHECK(for > Qt 5.7, tokenpay_cv_qt58,[
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
       #include <QtCore/qconfig.h>
       #ifndef QT_VERSION
@@ -300,18 +300,18 @@ AC_DEFUN([_VERGE_QT_CHECK_QT58],[
       choke
       #endif
     ]])],
-    [verge_cv_qt58=yes],
-    [verge_cv_qt58=no])
+    [tokenpay_cv_qt58=yes],
+    [tokenpay_cv_qt58=no])
 ])])
 
 
 dnl Internal. Check if the linked version of Qt was built as static libs.
 dnl Requires: Qt5. This check cannot determine if Qt4 is static.
 dnl Requires: INCLUDES and LIBS must be populated as necessary.
-dnl Output: verge_cv_static_qt=yes|no
+dnl Output: tokenpay_cv_static_qt=yes|no
 dnl Output: Defines QT_STATICPLUGIN if plugins are static.
-AC_DEFUN([_VERGE_QT_IS_STATIC],[
-  AC_CACHE_CHECK(for static Qt, verge_cv_static_qt,[
+AC_DEFUN([_TOKENPAY_QT_IS_STATIC],[
+  AC_CACHE_CHECK(for static Qt, tokenpay_cv_static_qt,[
     AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
         #include <QtCore/qconfig.h>
         #ifndef QT_VERSION OR QT_VERSION_STR
@@ -323,10 +323,10 @@ AC_DEFUN([_VERGE_QT_IS_STATIC],[
         choke
         #endif
       ]])],
-      [verge_cv_static_qt=yes],
-      [verge_cv_static_qt=no])
+      [tokenpay_cv_static_qt=yes],
+      [tokenpay_cv_static_qt=no])
     ])
-  if test "x$verge_cv_static_qt" = xyes; then
+  if test "x$tokenpay_cv_static_qt" = xyes; then
     AC_DEFINE(QT_STATICPLUGIN, 1, [Define this symbol for static Qt plugins])
   fi
 ])
@@ -336,7 +336,7 @@ dnl Requires: INCLUDES and LIBS must be populated as necessary.
 dnl Inputs: $1: A series of Q_IMPORT_PLUGIN().
 dnl Inputs: $2: The libraries that resolve $1.
 dnl Output: QT_LIBS is prepended or configure exits.
-AC_DEFUN([_VERGE_QT_CHECK_STATIC_PLUGINS],[
+AC_DEFUN([_TOKENPAY_QT_CHECK_STATIC_PLUGINS],[
   AC_MSG_CHECKING(for static Qt plugins: $2)
   CHECK_STATIC_PLUGINS_TEMP_LIBS="$LIBS"
   LIBS="$2 $QT_LIBS $LIBS"
@@ -346,14 +346,14 @@ AC_DEFUN([_VERGE_QT_CHECK_STATIC_PLUGINS],[
     $1]],
     [[return 0;]])],
     [AC_MSG_RESULT(yes); QT_LIBS="$2 $QT_LIBS"],
-    [AC_MSG_RESULT(no); VERGE_QT_FAIL(Could not resolve: $2)])
+    [AC_MSG_RESULT(no); TOKENPAY_QT_FAIL(Could not resolve: $2)])
   LIBS="$CHECK_STATIC_PLUGINS_TEMP_LIBS"
 ])
 
 dnl Internal. Find paths necessary for linking qt static plugins
 dnl Inputs: qt_plugin_path. optional.
 dnl Outputs: QT_LIBS is appended
-AC_DEFUN([_VERGE_QT_FIND_STATIC_PLUGINS],[
+AC_DEFUN([_TOKENPAY_QT_FIND_STATIC_PLUGINS],[
     if test "x$qt_plugin_path" != x; then
       QT_LIBS="$QT_LIBS -L$qt_plugin_path/platforms"
       if test -d "$qt_plugin_path/accessible"; then
@@ -362,7 +362,7 @@ AC_DEFUN([_VERGE_QT_FIND_STATIC_PLUGINS],[
      if test "x$use_pkgconfig" = xyes; then
      : dnl
      m4_ifdef([PKG_CHECK_MODULES],[
-       if test x$verge_cv_qt58 = xno; then
+       if test x$tokenpay_cv_qt58 = xno; then
          PKG_CHECK_MODULES([QTPLATFORM], [Qt5PlatformSupport], [QT_LIBS="$QTPLATFORM_LIBS $QT_LIBS"])
        else
          PKG_CHECK_MODULES([QTFONTDATABASE], [Qt5FontDatabaseSupport], [QT_LIBS="-lQt5FontDatabaseSupport $QT_LIBS"])
@@ -385,7 +385,7 @@ AC_DEFUN([_VERGE_QT_FIND_STATIC_PLUGINS],[
      ])
      else
        if test "x$TARGET_OS" = xwindows; then
-         AC_CACHE_CHECK(for Qt >= 5.6, verge_cv_need_platformsupport,[
+         AC_CACHE_CHECK(for Qt >= 5.6, tokenpay_cv_need_platformsupport,[
            AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
                #include <QtCore/qconfig.h>
                #ifndef QT_VERSION
@@ -397,19 +397,19 @@ AC_DEFUN([_VERGE_QT_FIND_STATIC_PLUGINS],[
                choke
                #endif
              ]])],
-           [verge_cv_need_platformsupport=yes],
-           [verge_cv_need_platformsupport=no])
+           [tokenpay_cv_need_platformsupport=yes],
+           [tokenpay_cv_need_platformsupport=no])
          ])
-         if test "x$verge_cv_need_platformsupport" = xyes; then
-           if test x$verge_cv_qt58 = xno; then
-             VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}PlatformSupport],[main],,VERGE_QT_FAIL(lib$QT_LIB_PREFIXPlatformSupport not found)))
+         if test "x$tokenpay_cv_need_platformsupport" = xyes; then
+           if test x$tokenpay_cv_qt58 = xno; then
+             TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}PlatformSupport],[main],,TOKENPAY_QT_FAIL(lib$QT_LIB_PREFIXPlatformSupport not found)))
            else
-             VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}FontDatabaseSupport],[main],,VERGE_QT_FAIL(lib$QT_LIB_PREFIXFontDatabaseSupport not found)))
-             VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}EventDispatcherSupport],[main],,VERGE_QT_FAIL(lib$QT_LIB_PREFIXEventDispatcherSupport not found)))
-             VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}ThemeSupport],[main],,VERGE_QT_FAIL(lib$QT_LIB_PREFIXThemeSupport not found)))
-             VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}FbSupport],[main],,VERGE_QT_FAIL(lib$QT_LIB_PREFIXFbSupport not found)))
-             VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}DeviceDiscoverySupport],[main],,VERGE_QT_FAIL(lib$QT_LIB_PREFIXDeviceDiscoverySupport not found)))
-             VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}AccessibilitySupport],[main],,VERGE_QT_FAIL(lib$QT_LIB_PREFIXAccessibilitySupport not found)))
+             TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}FontDatabaseSupport],[main],,TOKENPAY_QT_FAIL(lib$QT_LIB_PREFIXFontDatabaseSupport not found)))
+             TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}EventDispatcherSupport],[main],,TOKENPAY_QT_FAIL(lib$QT_LIB_PREFIXEventDispatcherSupport not found)))
+             TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}ThemeSupport],[main],,TOKENPAY_QT_FAIL(lib$QT_LIB_PREFIXThemeSupport not found)))
+             TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}FbSupport],[main],,TOKENPAY_QT_FAIL(lib$QT_LIB_PREFIXFbSupport not found)))
+             TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}DeviceDiscoverySupport],[main],,TOKENPAY_QT_FAIL(lib$QT_LIB_PREFIXDeviceDiscoverySupport not found)))
+             TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}AccessibilitySupport],[main],,TOKENPAY_QT_FAIL(lib$QT_LIB_PREFIXAccessibilitySupport not found)))
              QT_LIBS="$QT_LIBS -lversion -ldwmapi -luxtheme"
            fi
          fi
@@ -419,25 +419,25 @@ AC_DEFUN([_VERGE_QT_FIND_STATIC_PLUGINS],[
 ])
 
 dnl Internal. Find Qt libraries using pkg-config.
-dnl Inputs: verge_qt_want_version (from --with-gui=). The version to check
+dnl Inputs: tokenpay_qt_want_version (from --with-gui=). The version to check
 dnl         first.
-dnl Inputs: $1: If verge_qt_want_version is "auto", check for this version
+dnl Inputs: $1: If tokenpay_qt_want_version is "auto", check for this version
 dnl         first.
 dnl Outputs: All necessary QT_* variables are set.
 dnl Outputs: have_qt_test and have_qt_dbus are set (if applicable) to yes|no.
-AC_DEFUN([_VERGE_QT_FIND_LIBS_WITH_PKGCONFIG],[
+AC_DEFUN([_TOKENPAY_QT_FIND_LIBS_WITH_PKGCONFIG],[
   m4_ifdef([PKG_CHECK_MODULES],[
     QT_LIB_PREFIX=Qt5
     qt5_modules="Qt5Core Qt5Gui Qt5Network Qt5Widgets"
-    VERGE_QT_CHECK([
+    TOKENPAY_QT_CHECK([
       PKG_CHECK_MODULES([QT5], [$qt5_modules], [QT_INCLUDES="$QT5_CFLAGS"; QT_LIBS="$QT5_LIBS" have_qt=yes],[have_qt=no])
 
       if test "x$have_qt" != xyes; then
         have_qt=no
-        VERGE_QT_FAIL([Qt dependencies not found])
+        TOKENPAY_QT_FAIL([Qt dependencies not found])
       fi
     ])
-    VERGE_QT_CHECK([
+    TOKENPAY_QT_CHECK([
       PKG_CHECK_MODULES([QT_TEST], [${QT_LIB_PREFIX}Test], [QT_TEST_INCLUDES="$QT_TEST_CFLAGS"; have_qt_test=yes], [have_qt_test=no])
       if test "x$use_dbus" != xno; then
         PKG_CHECK_MODULES([QT_DBUS], [${QT_LIB_PREFIX}DBus], [QT_DBUS_INCLUDES="$QT_DBUS_CFLAGS"; have_qt_dbus=yes], [have_qt_dbus=no])
@@ -449,63 +449,63 @@ AC_DEFUN([_VERGE_QT_FIND_LIBS_WITH_PKGCONFIG],[
 
 dnl Internal. Find Qt libraries without using pkg-config. Version is deduced
 dnl from the discovered headers.
-dnl Inputs: verge_qt_want_version (from --with-gui=). The version to use.
-dnl         If "auto", the version will be discovered by _VERGE_QT_CHECK_QT5.
+dnl Inputs: tokenpay_qt_want_version (from --with-gui=). The version to use.
+dnl         If "auto", the version will be discovered by _TOKENPAY_QT_CHECK_QT5.
 dnl Outputs: All necessary QT_* variables are set.
 dnl Outputs: have_qt_test and have_qt_dbus are set (if applicable) to yes|no.
-AC_DEFUN([_VERGE_QT_FIND_LIBS_WITHOUT_PKGCONFIG],[
+AC_DEFUN([_TOKENPAY_QT_FIND_LIBS_WITHOUT_PKGCONFIG],[
   TEMP_CPPFLAGS="$CPPFLAGS"
   TEMP_CXXFLAGS="$CXXFLAGS"
   CXXFLAGS="$PIC_FLAGS $CXXFLAGS"
   TEMP_LIBS="$LIBS"
-  VERGE_QT_CHECK([
+  TOKENPAY_QT_CHECK([
     if test "x$qt_include_path" != x; then
       QT_INCLUDES="-I$qt_include_path -I$qt_include_path/QtCore -I$qt_include_path/QtGui -I$qt_include_path/QtWidgets -I$qt_include_path/QtNetwork -I$qt_include_path/QtTest -I$qt_include_path/QtDBus"
       CPPFLAGS="$QT_INCLUDES $CPPFLAGS"
     fi
   ])
 
-  VERGE_QT_CHECK([AC_CHECK_HEADER([QtPlugin],,VERGE_QT_FAIL(QtCore headers missing))])
-  VERGE_QT_CHECK([AC_CHECK_HEADER([QApplication],, VERGE_QT_FAIL(QtGui headers missing))])
-  VERGE_QT_CHECK([AC_CHECK_HEADER([QLocalSocket],, VERGE_QT_FAIL(QtNetwork headers missing))])
+  TOKENPAY_QT_CHECK([AC_CHECK_HEADER([QtPlugin],,TOKENPAY_QT_FAIL(QtCore headers missing))])
+  TOKENPAY_QT_CHECK([AC_CHECK_HEADER([QApplication],, TOKENPAY_QT_FAIL(QtGui headers missing))])
+  TOKENPAY_QT_CHECK([AC_CHECK_HEADER([QLocalSocket],, TOKENPAY_QT_FAIL(QtNetwork headers missing))])
 
-  VERGE_QT_CHECK([
-    if test "x$verge_qt_want_version" = xauto; then
-      _VERGE_QT_CHECK_QT5
-      _VERGE_QT_CHECK_QT58
+  TOKENPAY_QT_CHECK([
+    if test "x$tokenpay_qt_want_version" = xauto; then
+      _TOKENPAY_QT_CHECK_QT5
+      _TOKENPAY_QT_CHECK_QT58
     fi
     QT_LIB_PREFIX=Qt5
   ])
 
-  VERGE_QT_CHECK([
+  TOKENPAY_QT_CHECK([
     LIBS=
     if test "x$qt_lib_path" != x; then
       LIBS="$LIBS -L$qt_lib_path"
     fi
 
     if test "x$TARGET_OS" = xwindows; then
-      AC_CHECK_LIB([imm32],      [main],, VERGE_QT_FAIL(libimm32 not found))
+      AC_CHECK_LIB([imm32],      [main],, TOKENPAY_QT_FAIL(libimm32 not found))
     fi
   ])
 
-  VERGE_QT_CHECK(AC_CHECK_LIB([z] ,[main],,AC_MSG_WARN([zlib not found. Assuming qt has it built-in])))
-  VERGE_QT_CHECK(AC_SEARCH_LIBS([jpeg_create_decompress] ,[qtjpeg jpeg],,AC_MSG_WARN([libjpeg not found. Assuming qt has it built-in])))
-  if test x$verge_cv_qt58 = xno; then
-    VERGE_QT_CHECK(AC_SEARCH_LIBS([png_error] ,[qtpng png],,AC_MSG_WARN([libpng not found. Assuming qt has it built-in])))
-    VERGE_QT_CHECK(AC_SEARCH_LIBS([pcre16_exec], [qtpcre pcre16],,AC_MSG_WARN([libpcre16 not found. Assuming qt has it built-in])))
+  TOKENPAY_QT_CHECK(AC_CHECK_LIB([z] ,[main],,AC_MSG_WARN([zlib not found. Assuming qt has it built-in])))
+  TOKENPAY_QT_CHECK(AC_SEARCH_LIBS([jpeg_create_decompress] ,[qtjpeg jpeg],,AC_MSG_WARN([libjpeg not found. Assuming qt has it built-in])))
+  if test x$tokenpay_cv_qt58 = xno; then
+    TOKENPAY_QT_CHECK(AC_SEARCH_LIBS([png_error] ,[qtpng png],,AC_MSG_WARN([libpng not found. Assuming qt has it built-in])))
+    TOKENPAY_QT_CHECK(AC_SEARCH_LIBS([pcre16_exec], [qtpcre pcre16],,AC_MSG_WARN([libpcre16 not found. Assuming qt has it built-in])))
   else
-    VERGE_QT_CHECK(AC_SEARCH_LIBS([png_error] ,[qtlibpng png],,AC_MSG_WARN([libpng not found. Assuming qt has it built-in])))
-    VERGE_QT_CHECK(AC_SEARCH_LIBS([pcre2_match_16], [qtpcre2 libqtpcre2],,AC_MSG_WARN([libqtpcre2 not found. Assuming qt has it built-in])))
+    TOKENPAY_QT_CHECK(AC_SEARCH_LIBS([png_error] ,[qtlibpng png],,AC_MSG_WARN([libpng not found. Assuming qt has it built-in])))
+    TOKENPAY_QT_CHECK(AC_SEARCH_LIBS([pcre2_match_16], [qtpcre2 libqtpcre2],,AC_MSG_WARN([libqtpcre2 not found. Assuming qt has it built-in])))
   fi
-  VERGE_QT_CHECK(AC_SEARCH_LIBS([hb_ot_tags_from_script] ,[qtharfbuzzng qtharfbuzz harfbuzz],,AC_MSG_WARN([libharfbuzz not found. Assuming qt has it built-in or support is disabled])))
-  VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Core]   ,[main],,VERGE_QT_FAIL(lib${QT_LIB_PREFIX}Core not found)))
-  VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Gui]    ,[main],,VERGE_QT_FAIL(lib${QT_LIB_PREFIX}Gui not found)))
-  VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Network],[main],,VERGE_QT_FAIL(lib${QT_LIB_PREFIX}Network not found)))
-  VERGE_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Widgets],[main],,VERGE_QT_FAIL(lib${QT_LIB_PREFIX}Widgets not found)))
+  TOKENPAY_QT_CHECK(AC_SEARCH_LIBS([hb_ot_tags_from_script] ,[qtharfbuzzng qtharfbuzz harfbuzz],,AC_MSG_WARN([libharfbuzz not found. Assuming qt has it built-in or support is disabled])))
+  TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Core]   ,[main],,TOKENPAY_QT_FAIL(lib${QT_LIB_PREFIX}Core not found)))
+  TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Gui]    ,[main],,TOKENPAY_QT_FAIL(lib${QT_LIB_PREFIX}Gui not found)))
+  TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Network],[main],,TOKENPAY_QT_FAIL(lib${QT_LIB_PREFIX}Network not found)))
+  TOKENPAY_QT_CHECK(AC_CHECK_LIB([${QT_LIB_PREFIX}Widgets],[main],,TOKENPAY_QT_FAIL(lib${QT_LIB_PREFIX}Widgets not found)))
   QT_LIBS="$LIBS"
   LIBS="$TEMP_LIBS"
 
-  VERGE_QT_CHECK([
+  TOKENPAY_QT_CHECK([
     LIBS=
     if test "x$qt_lib_path" != x; then
       LIBS="-L$qt_lib_path"
