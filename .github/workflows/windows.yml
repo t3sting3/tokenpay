@@ -26,6 +26,15 @@ jobs:
           cd depends/
           make HOST=i686-w64-mingw32
           
+      - name: list usr/bin
+        run: cd /usr/bin && ls
+        
+      - name: list usr/local/bin
+        run: cd /usr/local/bin && ls
+        
+      - name: list usr/local
+        run: cd /usr/local/ && ls
+      
       - name: list made depends
         run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/ && ls
         
@@ -71,6 +80,15 @@ jobs:
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
           make HOST=x86_64-w64-mingw32
+          
+      - name: list usr/bin
+        run: cd /usr/bin && ls
+        
+      - name: list usr/local/bin
+        run: cd /usr/local/bin && ls
+        
+      - name: list usr/local
+        run: cd /usr/local/ && ls
           
       - name: list made depends
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/ && ls
