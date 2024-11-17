@@ -1,5 +1,5 @@
-packages:=boost openssl libevent zeromq libseccomp zeromq 
-native_packages := native_ccache
+packages:=boost openssl libevent zeromq libseccomp zeromq
+native_packages := native_ccache native_gperf
 
 qt_native_packages = native_protobuf
 qt_packages = qrencode protobuf zlib icu
