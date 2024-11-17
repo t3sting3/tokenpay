@@ -68,4 +68,11 @@ jobs:
             --libdir=$(pwd)/release/lib
 
       - name: make us a wallet and daemon
-        run: make  
+        run: make
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tpay-ubuntu20
+          path: |
+            ./src/tokenpayd
+            ./src/tokenpay
