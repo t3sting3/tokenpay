@@ -80,8 +80,9 @@ tokenpayd_SOURCES = $(common_SOURCES) \
 		       noui.cpp
 
 tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
-		     ../leveldb/out-static/libleveldb.a \
-		     ../tor/src/core/libtor-app.a \
+	../leveldb/out-static/libleveldb.a \
+    ../db-4.8.30.NC/build_unix/libdb_cxx.a \
+    ../tor/src/core/libtor-app.a \
     ../tor/src/lib/libtor-meminfo.a \
     ../tor/src/lib/libtor-term.a \
     ../tor/src/lib/libtor-osinfo.a \
@@ -120,7 +121,6 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 	../tor/src/ext/ed25519/donna/libed25519_donna.a \
 	../tor/src/ext/ed25519/ref10/libed25519_ref10.a \
 	../tor/src/ext/keccak-tiny/libkeccak-tiny.a \
-			 $(BDB_LIBS) \
 		     $(OPENSSL_LIBS) \
 		     $(LIBEVENT_LIBS) \
 		     $(LIBSECCOMP_LIBS) \
