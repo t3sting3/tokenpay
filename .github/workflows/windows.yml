@@ -20,8 +20,8 @@ jobs:
           sudo apt-get install -y g++-mingw-w64-i686 mingw-w64-i686-dev
           sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
       
-      - name: Add uic path to environment
-        run: echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin" >> $GITHUB_PATH
+      - name: mkdir and add path to environment
+        run: mkdir /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin && echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin" >> $GITHUB_PATH
         
       - name: Build dependencies in the depends folder
         run: |
