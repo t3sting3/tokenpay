@@ -21,7 +21,7 @@ jobs:
           sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
       
       - name: mkdir and add path to environment
-        run: mkdir /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin && echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin" >> $GITHUB_PATH
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin" >> $GITHUB_PATH
         
       - name: Build dependencies in the depends folder
         run: |
