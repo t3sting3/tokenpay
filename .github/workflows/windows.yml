@@ -25,7 +25,10 @@ jobs:
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
           make HOST=i686-w64-mingw32
-          
+
+      - name: Add uic path to environment
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin" >> $GITHUB_PATH
+
       - name: list usr/bin
         run: cd /usr/bin && ls
         
@@ -80,6 +83,9 @@ jobs:
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
           make HOST=x86_64-w64-mingw32
+          
+      - name: Add uic path to environment
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/native/bin" >> $GITHUB_PATH
           
       - name: list usr/bin
         run: cd /usr/bin && ls
