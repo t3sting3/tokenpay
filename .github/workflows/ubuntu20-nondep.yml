@@ -54,3 +54,6 @@ jobs:
             --prefix=$(pwd)/depends/x86_64-linux-gnu \
             --bindir=$(pwd)/release/bin \
             --libdir=$(pwd)/release/lib
+
+      - name: make us a wallet and daemon
+        run: make  
