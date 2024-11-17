@@ -26,6 +26,21 @@ jobs:
           cd depends/
           make HOST=i686-w64-mingw32
           
+      - name: get and untar bdb4.8
+        run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
+        
+      - name: list files
+        run: ls
+        
+      - name: fix atomic
+        run: cd db-4.8.30.NC/build_unix/ && sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' /home/runner/work/tokenpay-linux/tokenpay-linux/db-4.8.30.NC/dbinc/atomic.h 
+        
+      - name: build bdb4.8
+        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --disable-replication --enable-mingw --enable-cxx --prefix=/mingw
+        
+      - name: make and make install 
+        run: cd db-4.8.30.NC/build_unix/ && make && sudo make install
+          
       - name: list usr/bin
         run: cd /usr/bin && ls
         
@@ -80,6 +95,21 @@ jobs:
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
           make HOST=x86_64-w64-mingw32
+          
+      - name: get and untar bdb4.8
+        run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
+        
+      - name: list files
+        run: ls
+        
+      - name: fix atomic
+        run: cd db-4.8.30.NC/build_unix/ && sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' /home/runner/work/tokenpay-linux/tokenpay-linux/db-4.8.30.NC/dbinc/atomic.h 
+        
+      - name: build bdb4.8
+        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --disable-replication --enable-mingw --enable-cxx --prefix=/mingw
+        
+      - name: make and make install 
+        run: cd db-4.8.30.NC/build_unix/ && make && sudo make install
           
       - name: list usr/bin
         run: cd /usr/bin && ls
