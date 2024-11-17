@@ -20,28 +20,28 @@ jobs:
       - name: More depends
         run: sudo apt-get install libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler libqt5webkit5
         
-      - name: start berkdb
+      - name: download and untar berkdb4.8
         run: wget https://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
 
-      - name: go in and make bdb
+      - name: go in and configure bdb4.8
         run: cd db-4.8.30.NC/build_unix && ../dist/configure --enable-cxx
         
-      - name: fix atomic bdb
+      - name: fix atomic bdb compile bug
         run: |
           sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' db-4.8.30.NC/dbinc/atomic.h
 
-      - name: make and sudo make install
-        run: cd db-4.8.30.NC/build_unix && make && make install
+      - name: go in and 'make', then 'make install' bdb4.8
+        run: cd db-4.8.30.NC/build_unix && make && sudo make install
 
-      - name: Link Berkeley DB libraries
+      - name: link Berkeley DB libraries
         run: |
           sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb-4.8.so /usr/lib/libdb-4.8.so && \
           sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb_cxx-4.8.so /usr/lib/libdb_cxx-4.8.so
 
-      - name: autogen.sh
+      - name: autogenerate tokenpay code
         run: ./autogen.sh
 
-      - name: Configure the build
+      - name: configure tokenpay code
         run: |
           ./configure \
             CPPFLAGS="-I/usr/local/BerkeleyDB.4.8/include -O2" \
