@@ -17,5 +17,5 @@ define $(package)_build_cmd
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) INSTALL_PREFIX=$($(package)_staging_dir) install
+  $(MAKE) DESTDIR=$($(package)_staging_dir) install
 endef
