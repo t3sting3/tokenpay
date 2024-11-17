@@ -28,8 +28,7 @@ jobs:
         
       - name: fix atomic bdb
         run: |
-          sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' \
-          ~/db-4.8.30.NC/dbinc/atomic.h
+          sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' db-4.8.30.NC/dbinc/atomic.h
 
       - name: make and make install
         run: cd db-4.8.30.NC/build_unix && make && make install
