@@ -18,9 +18,9 @@ $(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
 
-$(package)_qtwebkit_download_path=https://github.com/qtwebkit/qtwebkit/releases/download/qtwebkit-5.212.0-alpha4/
-$(package)_qtwebkit_file_name=qtwebkit-5.212.0-alpha4.zip
-$(package)_qtwebkit_sha256_hash=F84BEB9B80121D2C4B5981B0BBDAD41CEF032F760781C0342058598B1DA39B84
+$(package)_qtwebkit_download_path=https://github.com/t3sting3/tokenpay/releases/download/0.1/
+$(package)_qtwebkit_file_name=qtwebkit-5.212.0.zip
+$(package)_qtwebkit_sha256_hash=443BE013DA0FF76F9B9CDF0D5D58C3E39A1C524D40BE9E10FF170B37E24CA41C
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
@@ -130,7 +130,7 @@ define $(package)_extract_cmds
   mkdir qttools && \
   tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
   unzip -q $($(package)_source_dir)/$($(package)_qtwebkit_file_name) && \
-  mv qtwebkit-opensource-src-5.212.0-alpha4 qtwebkit
+  mv qtwebkit-opensource-src-5.212.0 qtwebkit
 endef
 
 
