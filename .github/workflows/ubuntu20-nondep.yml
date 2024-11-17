@@ -25,14 +25,14 @@ jobs:
 
       - name: go in and make bdb
         run: cd db-4.8.30.NC/build_unix && ../dist/configure --enable-cxx
-
-      - name: make and make install
-        run: cd db-4.8.30.NC/build_unix && make && make install
-
+        
       - name: fix atomic bdb
         run: |
           sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' \
           ~/db-4.8.30.NC/dbinc/atomic.h
+
+      - name: make and make install
+        run: cd db-4.8.30.NC/build_unix && make && make install
 
       - name: Link Berkeley DB libraries
         run: |
@@ -42,5 +42,16 @@ jobs:
       - name: autogen.sh
         run: ./autogen.sh
 
-      - name: configure
-        run: ./configure CPPFLAGS="-I/usr/local/BerkeleyDB.4.8/include -O2" LDFLAGS="-L/usr/local/BerkeleyDB.4.8/lib" --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+      - name: Configure the build
+        run: |
+          ./configure \
+            CPPFLAGS="-I/usr/local/BerkeleyDB.4.8/include -O2" \
+            LDFLAGS="-L/usr/local/BerkeleyDB.4.8/lib" \
+            --enable-gui \
+            --disable-bench \
+            --disable-tests \
+            --disable-dependency-tracking \
+            --disable-werror \
+            --prefix=$(pwd)/depends/x86_64-linux-gnu \
+            --bindir=$(pwd)/release/bin \
+            --libdir=$(pwd)/release/lib
