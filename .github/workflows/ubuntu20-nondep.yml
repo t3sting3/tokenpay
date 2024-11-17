@@ -14,15 +14,6 @@ jobs:
       - name: Install base dependencies
         run: sudo apt-get install build-essential xutils-dev libicu-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python2
 
-      - name: Set Python 2 as default
-        run: |
-          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
-          sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 2
-          sudo update-alternatives --set python /usr/bin/python2
-
-      - name: Verify Python Version
-        run: python --version  # Should print Python 2.7.x
-
       - name: Build depends
         run: sudo apt install libssl-dev libevent-dev libboost-all-dev asciidoc zlib1g-dev libseccomp-dev libcap-dev libncap-dev obfs4proxy libminiupnpc-dev qt5-default
         
@@ -32,8 +23,11 @@ jobs:
       - name: start berkdb
         run: cd ~ && wget 'http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz' && tar -xzvf db-4.8.30.NC.tar.gz
 		
-      - name: go in and make bdb 4.8
-	    run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx && make && make install
+      - name: go in and make bdb
+        run: cd db-4.8.30.NC/build_unix && ../dist/configure --enable-cxx
+        
+      - name: && make && make install\
+        run: cd db-4.8.30.NC/build_unix && make && make install
         
       - name: fix atomic bdb
         run: sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' ~/db-4.8.30.NC/dbinc/atomic.h
