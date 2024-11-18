@@ -36,10 +36,10 @@ jobs:
         run: cd db-4.8.30.NC/build_unix/ && sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' ../dbinc/atomic.h
         
       - name: build bdb4.8
-        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --disable-replication --enable-mingw --enable-cxx --prefix=/mingw
+        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx --disable-shared --with-pic  --prefix=$BDB_PREFIX
         
       - name: make and make install 
-        run: cd db-4.8.30.NC/build_unix/ && make && sudo make install
+        run: cd db-4.8.30.NC/build_unix/ && sudo make install
           
       - name: list usr/bin
         run: cd /usr/bin && ls
@@ -106,10 +106,10 @@ jobs:
         run: cd db-4.8.30.NC/build_unix/ && sed -i 's/__atomic_compare_exchange/__atomic_compare_exchange_db/g' ../dbinc/atomic.h 
         
       - name: build bdb4.8
-        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --disable-replication --enable-mingw --enable-cxx --prefix=/mingw
+        run: cd db-4.8.30.NC/build_unix/ && ../dist/configure --enable-cxx --disable-shared --with-pic  --prefix=$BDB_PREFIX
         
       - name: make and make install 
-        run: cd db-4.8.30.NC/build_unix/ && make && sudo make install
+        run: cd db-4.8.30.NC/build_unix/ && sudo make install
           
       - name: list usr/bin
         run: cd /usr/bin && ls
