@@ -69,7 +69,7 @@ jobs:
         run: sudo find / -iname qmake
         
       - name: mk db dir and subdir
-        run: mkdir db-4.8.30.NC && cd db-4.8.30.NC && mkdir build_unix && 
+        run: mkdir db-4.8.30.NC && cd db-4.8.30.NC && mkdir build_unix
       
       - name: go in and copy db .a to needed location
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib && cp libdb_cxx.a /home/runner/work/tokenpay/tokenpay/db-4.8.30.NC/build_unix/
