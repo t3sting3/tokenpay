@@ -13,6 +13,8 @@ P2P Port | 8800
 RPC Port | 8801
 TOR Port | 9090
 
+TOR Version 0.4.4
+
 ### Testnet
 
 Specification | Value
