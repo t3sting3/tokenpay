@@ -108,6 +108,7 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
     ../tor/src/lib/libtor-fdio.a \
     ../tor/src/lib/libtor-sandbox.a \
     ../tor/src/lib/libtor-memarea.a \
+	../tor/src/lib/libtor-llharden.a \
     ../tor/src/lib/libtor-intmath.a \
     ../tor/src/lib/libtor-encoding.a \
     ../tor/src/lib/libtor-smartlist-core.a \
@@ -116,6 +117,7 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
     ../tor/src/lib/libtor-string.a \
     ../tor/src/lib/libtor-malloc.a \
 	../tor/src/lib/libtor-ctime.a \
+	../tor/src/lib/libtor-metrics.a \
 	../tor/src/trunnel/libor-trunnel.a \
 	../tor/src/lib/libcurve25519_donna.a \
 	../tor/src/ext/ed25519/donna/libed25519_donna.a \
