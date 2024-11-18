@@ -1,7 +1,7 @@
 packages:=boost openssl libevent zeromq libseccomp zeromq 
 native_packages := native_ccache
 
-qt_native_packages = native_protobuf
+qt_native_packages = native_protobuf native_gperf
 qt_packages = qrencode protobuf zlib icu
 
 qt_x86_64_linux_packages:=qt expat dbus libxcb xcb_proto libXau xorgproto xproto freetype fontconfig libX11 xextproto libXext xtrans libXrender renderproto native_gperf
