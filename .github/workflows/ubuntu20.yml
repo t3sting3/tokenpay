@@ -70,6 +70,9 @@ jobs:
 
       - name: Add uic path to environment
         run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
+        
+      - name: add pkgconfig lib to path
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig" >> $GITHUB_PATH
 
       - name: Verify uic path
         run: which uic
