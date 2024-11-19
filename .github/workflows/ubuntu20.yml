@@ -76,9 +76,6 @@ jobs:
 
       - name: Verify uic path
         run: which uic
-
-      - name: give output of pkg-config --libs Qt5WebKit
-        run: pkg-config --libs Qt5WebKit
         
       - name: mk db dir and subdir
         run: mkdir db-4.8.30.NC && cd db-4.8.30.NC && mkdir build_unix
