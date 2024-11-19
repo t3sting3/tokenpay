@@ -79,6 +79,9 @@ jobs:
         
       - name: list made depends native bin
         run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin && ls
+        
+      - name: Add depends lib path to environment
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/lib" >> $GITHUB_PATH
 
       - name: Auto-generate configuration
         run: ./autogen.sh
