@@ -65,6 +65,7 @@ $(package)_config_opts += -no-egl
 $(package)_config_opts += -no-eglfs
 $(package)_config_opts += -no-feature-style-windowsmobile
 $(package)_config_opts += -no-feature-style-windowsce
+$(package)_config_opts += -no-freetype
 $(package)_config_opts += -no-glib
 $(package)_config_opts += -no-gstreamer
 $(package)_config_opts += -no-iconv
@@ -99,6 +100,7 @@ $(package)_config_opts += -pkg-config
 $(package)_config_opts += -prefix $(host_prefix)
 $(package)_config_opts += -qt-libpng
 $(package)_config_opts += -qt-libjpeg
+$(package)_config_opts += -qt-pcre
 $(package)_config_opts += -system-zlib
 $(package)_config_opts += -reduce-exports
 $(package)_config_opts += -silent
@@ -118,34 +120,16 @@ $(package)_config_opts_linux  = -qt-xkbcommon
 $(package)_config_opts_linux += -qt-xcb
 $(package)_config_opts_linux += -system-freetype
 $(package)_config_opts_linux += -no-sm
-$(package)_config_opts_linux += -no-feature-sessionmanager
+
 $(package)_config_opts_linux += -fontconfig
 $(package)_config_opts_linux += -no-opengl
 
 $(package)_config_opts_arm_linux  = -platform linux-g++ -xplatform $(host)
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
-$(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
-$(package)_config_opts_riscv64_linux = -platform linux-g++ -xplatform bitcoin-linux-g++
 $(package)_config_opts_mingw32  = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
 $(package)_build_env  = QT_RCC_TEST=1
 endef
-
-$(package)_config_opts_mingw32 = -no-opengl
-$(package)_config_opts_mingw32 += -no-dbus
-$(package)_config_opts_mingw32 += -no-freetype
-$(package)_config_opts_mingw32 += -xplatform win32-g++
-$(package)_config_opts_mingw32 += "QMAKE_CFLAGS = '$($(package)_cflags) $($(package)_cppflags)'"
-$(package)_config_opts_mingw32 += "QMAKE_CXX = '$($(package)_cxx)'"
-$(package)_config_opts_mingw32 += "QMAKE_CXXFLAGS = '$($(package)_cxxflags) $($(package)_cppflags)'"
-$(package)_config_opts_mingw32 += "QMAKE_LINK = '$($(package)_cxx)'"
-$(package)_config_opts_mingw32 += "QMAKE_LFLAGS = '$($(package)_ldflags)'"
-$(package)_config_opts_mingw32 += "QMAKE_LIB = '$($(package)_ar) rc'"
-$(package)_config_opts_mingw32 += -device-option CROSS_COMPILE="$(host)-"
-$(package)_config_opts_mingw32 += -pch
-ifneq ($(LTO),)
-$(package)_config_opts_mingw32 += -ltcg
-endif
 
 define $(package)_fetch_cmds
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \

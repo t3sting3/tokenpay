@@ -1,4 +1,4 @@
-packages:=boost openssl libevent zeromq libseccomp zeromq libcap
+packages:=boost openssl libevent zeromq libseccomp libcap
 native_packages := native_ccache
 
 qt_native_packages = native_protobuf native_gperf
@@ -9,8 +9,6 @@ qt_i686_linux_packages:=$(qt_x86_64_linux_packages)
 
 qt_darwin_packages=qt
 qt_mingw32_packages=qt
-
-linux_native_packages := native_gperf
 
 wallet_packages=bdb
 
