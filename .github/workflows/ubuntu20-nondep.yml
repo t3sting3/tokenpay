@@ -38,17 +38,17 @@ jobs:
           sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb-4.8.so /usr/lib/libdb-4.8.so && \
           sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb_cxx-4.8.so /usr/lib/libdb_cxx-4.8.so
 
-      - name: download and untar boost
-        run: wget https://sourceforge.net/projects/boost/files/boost/1.66.0/boost_1_66_0.tar.gz
+      - name: download boost file
+        run: wget https://sourceforge.net/projects/boost/files/boost/1.67.0/boost_1_67_0.tar.gz
       
-      - name: untar boost
-        run: tar xzvf boost_1_66_0.tar.gz
+      - name: untar boost file
+        run: tar xzvf boost_1_67_0.tar.gz
         
-      - name: go in and run bootstrap
-        run: cd boost_1_66_0 && ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
+      - name: go in and run boost bootstrap
+        run: cd boost_1_67_0 && ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
 
-      - name: run b2 
-        run: cd boost_1_66_0 && sudo ./b2 install
+      - name: run boost b2 
+        run: cd boost_1_67_0 && sudo ./b2 install
 
       - name: autogenerate tokenpay code
         run: ./autogen.sh
