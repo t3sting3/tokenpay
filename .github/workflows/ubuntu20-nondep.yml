@@ -45,10 +45,10 @@ jobs:
         run: tar xzvf boost-1.65.1.tar.gz
         
       - name: go in and run boost bootstrap
-        run: cd boost-1.65.1 && ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
+        run: cd boost-boost-1.65.1 && ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
 
       - name: run boost b2 
-        run: cd boost-1.65.1 && sudo ./b2 install
+        run: cd boost-boost-1.65.1 && sudo ./b2 install
 
       - name: autogenerate tokenpay code
         run: ./autogen.sh
