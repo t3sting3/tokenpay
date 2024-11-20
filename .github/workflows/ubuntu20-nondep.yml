@@ -39,7 +39,7 @@ jobs:
           sudo ln -s /usr/local/BerkeleyDB.4.8/lib/libdb_cxx-4.8.so /usr/lib/libdb_cxx-4.8.so
 
       - name: download and untar boost
-        run: wget https://sourceforge.net/projects/boost/files/boost/1.66.0/boost_1_66_0.tar.bz2
+        run: wget https://sourceforge.net/projects/boost/files/boost/1.66.0/
       
       - name: untar boost
         run: tar xzvf boost_1_66_0.tar.gz
