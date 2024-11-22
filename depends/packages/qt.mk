@@ -129,7 +129,7 @@ define $(package)_extract_cmds
   mkdir qttools && \
   tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
   unzip -q $($(package)_source_dir)/$($(package)_qtwebkit_file_name) && \
-  mv qtwebkit-opensource-src-5.212 qtwebkit
+  mv qtwebkit-opensource-src-5.7.1 qtwebkit
 endef
 
 
