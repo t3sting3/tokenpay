@@ -14,11 +14,10 @@ $(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-c
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
 
-
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
 
-$(package)_qtwebkit_download_path=https://download.qt.io/community_releases/5.7/5.7.1/qtwebkit-opensource-src-5.7.1.zip
+$(package)_qtwebkit_download_path=https://download.qt.io/community_releases/5.7/5.7.1/
 $(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.7.1.zip
 $(package)_qtwebkit_sha256_hash=11743998167804916b6ef96dcc921b31db497126bee2b9a76f2f94b8f990edcc
 
