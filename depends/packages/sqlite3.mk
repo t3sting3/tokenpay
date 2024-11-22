@@ -1,24 +1,29 @@
 package=sqlite3
-$(package)_version=3310100
-$(package)_download_path=https://www.sqlite.org/2020/
+$(package)_version=3320100
+$(package)_download_path=https://sqlite.org/2020/
 $(package)_file_name=sqlite-autoconf-$($(package)_version).tar.gz
-$(package)_sha256_hash=62284efebc05a76f909c580ffa5c008a7d22a1287285d68b7825a2b6b51949ae
+$(package)_sha256_hash=486748abfb16abd8af664e3a5f03b228e5f124682b0c942e157644bf6fff7d10
 
 define $(package)_set_vars
-  $(package)_cflags=-Wformat -Wformat-security -fstack-protector -fstack-protector-strong -fPIC
-  $(package)_cxxflags=-std=C++11 -Wformat -Wformat-security -fstack-protector -fstack-protector-strong -fPIC
-  $(package)_config_opts=--prefix=$(host_prefix) --disable-shared
-  $(package)_ldflags=-pie
+$(package)_config_opts=--disable-shared --disable-readline --disable-dynamic-extensions --enable-option-checking
+endef
+
+define $(package)_preprocess_cmds
+  cp -f $(BASEDIR)/config.guess $(BASEDIR)/config.sub .
 endef
 
 define $(package)_config_cmds
-  $($(package)_autoconf) $($(package)_config_opts)
+  $($(package)_autoconf)
 endef
 
 define $(package)_build_cmds
-  $(MAKE)
+  $(MAKE) -j$(JOBS) libsqlite3.la
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) install
+  $(MAKE) DESTDIR=$($(package)_staging_dir) install-libLTLIBRARIES install-includeHEADERS install-pkgconfigDATA
+endef
+
+define $(package)_postprocess_cmds
+  rm lib/*.la
 endef
