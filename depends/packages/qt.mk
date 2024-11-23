@@ -50,7 +50,6 @@ $(package)_config_opts += -bindir $(build_prefix)/bin
 $(package)_config_opts += -no-c++11
 $(package)_config_opts += -openssl-linked
 $(package)_config_opts += -v
-$(package)_config_opts += -static
 $(package)_config_opts += -silent
 $(package)_config_opts += -pkg-config
 $(package)_config_opts += -qt-libpng
