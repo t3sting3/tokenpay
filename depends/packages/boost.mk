@@ -1,8 +1,8 @@
 package=boost
-$(package)_version=1_65_1
-$(package)_download_path=https://archives.boost.io/release/1.65.1/source/
+$(package)_version=1_61_0
+$(package)_download_path=https://archives.boost.io/release/1.61.0/source/
 $(package)_file_name=$(package)_$($(package)_version).tar.bz2
-$(package)_sha256_hash=9807a5d16566c57fd74fb522764e0b134a8bbe6b6e8967b83afefd30dcd3be81
+$(package)_sha256_hash=A547BD06C2FD9A71BA1D169D9CF0339DA7EBF4753849A8F7D6FDB8FEEE99B640
 
 $(package)_compiler=
 ifeq ($(CLANG_ARG),true)
