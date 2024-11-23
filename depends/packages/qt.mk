@@ -120,10 +120,8 @@ $(package)_config_opts_linux  = -qt-xkbcommon
 $(package)_config_opts_linux += -qt-xcb
 $(package)_config_opts_linux += -system-freetype
 $(package)_config_opts_linux += -no-sm
-
 $(package)_config_opts_linux += -fontconfig
 $(package)_config_opts_linux += -no-opengl
-
 $(package)_config_opts_arm_linux  = -platform linux-g++ -xplatform $(host)
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 $(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
@@ -222,16 +220,18 @@ define $(package)_build_cmds
   $(MAKE) -C ../qttranslations && \
   $($(package)_patch_prl_files) \
   $(MAKE) -C ../qwt && \
-  $(MAKE) -C ../qtwebkit
+  $(MAKE) -C ../qtwebkit \
+  export CMAKE_INSTALL_PREFIX=$($(package)_staging_dir) && \
+  ./Tools/Scripts/build-webkit --qt --release --no-geolocation --cmakeargs="-Wno-dev -DCMAKE_PREFIX_PATH=$($(package)_extract_dir)/qtbase -DENABLE_DEVICE_ORIENTATION=OFF -DENABLE_VIDEO=OFF -DENABLE_X11_TARGET=OFF -DUSE_GSTREAMER=OFF -DENABLE_WEB_AUDIO=OFF -DENABLE_GEOLOCATION=OFF -DENABLE_TOUCH_EVENTS=OFF DENABLE_DEVICE_ORIENTATION=OFF -DUSE_THIN_ARCHIVES=OFF -DENABLE_OPENGL=OFF -DUSE_LIBHYPHEN=OFF -DENABLE_XSLT=OFF -DENABLE_SPELLCHECK=OFF -DENABLE_PRINT_SUPPORT=OFF -DENABLE_QT_GESTURE_EVENTS=OFF -DENABLE_SAMPLING_PROFILER=OFF -DENABLE_API_TESTS=OFF -DENABLE_WEBKIT2=OFF -DENABLE_TOOLS=OFF -DENABLE_TEST_SUPPORT=OFF"
 endef
 
 define $(package)_stage_cmds
   $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
   $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
+  $(MAKE) -C qtwebkit INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qwt INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $($(package)_patch_qwt_pc_files) \
-  $(MAKE) -C qtwebkit INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
     cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
   fi
