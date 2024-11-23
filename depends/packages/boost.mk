@@ -2,6 +2,7 @@ package=boost
 $(package)_version=1_61_0
 $(package)_download_path=http://sourceforge.net/projects/boost/files/boost/1.61.0
 $(package)_file_name=$(package)_$($(package)_version).tar.bz2
+$(package)_sha256_hash=A547BD06C2FD9A71BA1D169D9CF0339DA7EBF4753849A8F7D6FDB8FEEE99B640
 $(package)_dependencies=zlib
 
 $(package)_compiler=
