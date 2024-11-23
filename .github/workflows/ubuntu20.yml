@@ -26,6 +26,18 @@ jobs:
       - name: Build depends
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
         
+      - name: Add library path to environment
+        run: |
+          echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib" >> $GITHUB_ENV
+          echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib" >> $GITHUB_PATH
+          echo "export LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LIBRARY_PATH" >> $GITHUB_ENV
+          echo "export LD_LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
+
+      - name: Verify library path
+        run: |
+          echo $LIBRARY_PATH
+          echo $LD_LIBRARY_PATH
+
       - name: find qmake
         run: sudo find / -name qmake 2>/dev/null
         
@@ -37,57 +49,30 @@ jobs:
         
       - name: list usr/local
         run: cd /usr/local/ && ls
-      
-      - name: list made depends
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/ && ls
-        
-      - name: list made depends share
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/share && ls
-        
-      - name: list made depends share pkgconfig
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/share/pkgconfig && ls
-        
-      - name: list made depends include
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include && ls
-        
-      - name: list made depends include boost
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include/boost && ls
+     
+      - name: Add pkg-config path
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig" >> $PKG_CONFIG_PATH
         
       - name: list made depends lib
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib && ls
         
-      - name: list made depends lib pkgconfig
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig && ls
-        
-      - name: list made depends bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/bin && ls
-        
-      - name: list made depends native
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native && ls
-        
-      - name: list made depends native bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin && ls
-
       - name: Add uic path to environment
         run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
         
-      - name: add pkgconfig lib to path
-        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig" >> $GITHUB_PATH
-
       - name: Verify uic path
         run: which uic
         
       - name: mk db dir and subdir
         run: mkdir db-4.8.30.NC && cd db-4.8.30.NC && mkdir build_unix
       
-      - name: go in and copy db .a to needed location
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib && cp libdb_cxx.a /home/runner/work/tokenpay/tokenpay/db-4.8.30.NC/build_unix/
+      - name: Copy db .a to needed location
+        run: cp /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/libdb_cxx.a /home/runner/work/tokenpay/tokenpay/db-4.8.30.NC/build_unix/
 
       - name: Auto generate
         run: ./autogen.sh
 
-      - name: configure
+      - name: Configure project
         run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
         
-      - name: make
+      - name: Compile project
         run: make
