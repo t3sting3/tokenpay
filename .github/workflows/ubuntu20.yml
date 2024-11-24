@@ -26,36 +26,47 @@ jobs:
       - name: Build depends
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
 
-      - name: Add library path to environment
+      - name: Add library paths to environment
         run: |
           echo "LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LIBRARY_PATH" >> $GITHUB_ENV
           echo "LD_LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
           echo "PKG_CONFIG_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
 
-      - name: Verify library paths
-        run: |
-          echo "Library paths:"
-          echo $LIBRARY_PATH
-          echo $LD_LIBRARY_PATH
-          echo $PKG_CONFIG_PATH
+      - name: Add include paths to environment
+        run: echo "CXXFLAGS=-I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include \$CXXFLAGS" >> $GITHUB_ENV
 
       - name: Add binary path to environment
         run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
 
-      - name: Verify binary path
-        run: which uic
+      - name: Verify environment variables
+        run: |
+          echo "LIBRARY_PATH: $LIBRARY_PATH"
+          echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
+          echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
+          echo "CXXFLAGS: $CXXFLAGS"
 
-      - name: mk db dir and subdir
-        run: mkdir db-4.8.30.NC && cd db-4.8.30.NC && mkdir build_unix
+      - name: Verify WebKit library
+        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/libQt5WebKit.so
 
-      - name: Copy db .a to needed location
-        run: cp /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/libdb_cxx.a /home/runner/work/tokenpay/tokenpay/db-4.8.30.NC/build_unix/
+      - name: Verify WebKit include path
+        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include
 
       - name: Auto generate
         run: ./autogen.sh
 
-      - name: Configure project
-        run: CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure --enable-gui --disable-bench --disable-tests --disable-dependency-tracking --disable-werror --prefix=`pwd`/depends/x86_64-linux-gnu --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+      - name: Configure project with explicit flags
+        run: |
+          CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure \
+          --enable-gui \
+          --disable-bench \
+          --disable-tests \
+          --disable-dependency-tracking \
+          --disable-werror \
+          --prefix=`pwd`/depends/x86_64-linux-gnu \
+          --bindir=`pwd`/release/bin \
+          --libdir=`pwd`/release/lib \
+          CXXFLAGS="-I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include" \
+          LDFLAGS="-L/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib"
 
       - name: Compile project
         run: make
