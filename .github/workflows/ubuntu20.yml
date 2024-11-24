@@ -26,37 +26,64 @@ jobs:
       - name: Build depends
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
 
-      - name: Add library paths to environment
+      - name: Add dependency paths to environment
         run: |
-          echo "LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LIBRARY_PATH" >> $GITHUB_ENV
-          echo "LD_LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
           echo "PKG_CONFIG_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
-
-      - name: Add include paths to environment
-        run: echo "CXXFLAGS=-I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include \$CXXFLAGS" >> $GITHUB_ENV
-
-      - name: Add binary path to environment
-        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
+          echo "LD_LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LIBRARY_PATH" >> $GITHUB_ENV
+          echo "CXXFLAGS=-I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include \$CXXFLAGS" >> $GITHUB_ENV
+          echo "LDFLAGS=-L/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib \$LDFLAGS" >> $GITHUB_ENV
+          echo "PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin:\$PATH" >> $GITHUB_ENV
 
       - name: Verify environment variables
         run: |
-          echo "LIBRARY_PATH: $LIBRARY_PATH"
-          echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
           echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
+          echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
+          echo "LIBRARY_PATH: $LIBRARY_PATH"
           echo "CXXFLAGS: $CXXFLAGS"
-
-      - name: Verify WebKit library
-        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/libQt5WebKit.so
-
-      - name: Verify WebKit include path
-        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include
+          echo "LDFLAGS: $LDFLAGS"
+          echo "PATH: $PATH"
+        
+      - name: list made depends
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/ && ls
+        
+      - name: list made depends share
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/share && ls
+        
+      - name: list made depends share pkgconfig
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/share/pkgconfig && ls
+        
+      - name: list made depends include
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include && ls
+        
+      - name: list made depends include boost
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include/boost && ls
+        
+      - name: list made depends lib pkgconfig
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig && ls
+        
+      - name: list made depends bin
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/bin && ls
+        
+      - name: list made depends native
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native && ls
+        
+      - name: list made depends native bin
+        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin && ls
 
       - name: Auto generate
         run: ./autogen.sh
 
-      - name: Configure project with explicit flags
+      - name: Configure project with explicit paths
+        env:
+          PKG_CONFIG_PATH: /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig
+          LIBRARY_PATH: /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
+          LD_LIBRARY_PATH: /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
+          CXXFLAGS: -I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include
+          CPPFLAGS: -I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include
         run: |
-          CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site ./configure \
+          CONFIG_SITE=$PWD/depends/x86_64-linux-gnu/share/config.site \
+          ./configure \
           --enable-gui \
           --disable-bench \
           --disable-tests \
@@ -65,8 +92,13 @@ jobs:
           --prefix=`pwd`/depends/x86_64-linux-gnu \
           --bindir=`pwd`/release/bin \
           --libdir=`pwd`/release/lib \
-          CXXFLAGS="-I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include" \
-          LDFLAGS="-L/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib"
+          PKG_CONFIG="pkg-config"
 
       - name: Compile project
+        env:
+          PKG_CONFIG_PATH: /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig
+          LIBRARY_PATH: /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
+          LD_LIBRARY_PATH: /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
+          CXXFLAGS: -I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include
+          CPPFLAGS: -I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include
         run: make
