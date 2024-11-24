@@ -103,6 +103,7 @@ $(package)_config_opts += -qt-libjpeg
 $(package)_config_opts += -qt-pcre
 $(package)_config_opts += -system-zlib
 $(package)_config_opts += -reduce-exports
+$(package)_config_opts += -no-use-gold-linker
 $(package)_config_opts += -silent
 $(package)_config_opts += -v
 
