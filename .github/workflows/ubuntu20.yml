@@ -97,6 +97,11 @@ jobs:
           echo "CXXFLAGS: $CXXFLAGS"
           echo "CPPFLAGS: $CPPFLAGS"
           echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
+          
+      - name: Verify pkg-config
+        run: |
+          pkg-config --libs Qt5WebKit
+          pkg-config --libs Qt5WebKitWidgets
 
       - name: Verify files in lib directory
         run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
