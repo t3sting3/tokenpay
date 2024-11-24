@@ -11,8 +11,28 @@ jobs:
       - name: Update apt repos
         run: sudo apt-get update
 
-      - name: Install base dependencies
-        run: sudo apt-get install build-essential xutils-dev libicu-dev libtool gperf autotools-dev automake pkg-config bsdmainutils libattr1-dev make automake bison byacc cmake curl g++-multilib binutils-gold bison byacc python2
+      - name: Install essential tools
+        run: |
+          sudo apt-get install -y \
+          build-essential \
+          xutils-dev \
+          libicu-dev \
+          libtool \
+          gperf \
+          autotools-dev \
+          automake \
+          pkg-config \
+          bsdmainutils \
+          libattr1-dev \
+          make \
+          bison \
+          byacc \
+          cmake \
+          curl \
+          g++-multilib \
+          binutils-gold \
+          python2 \
+          coreutils
 
       - name: Set Python 2 as default
         run: |
@@ -23,58 +43,41 @@ jobs:
       - name: Verify Python Version
         run: python --version  # Should print Python 2.7.x
 
-      - name: Build depends
+      - name: Build dependencies
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
 
-      - name: Add dependency paths to environment
+      - name: Add paths to environment
         run: |
-          echo "PKG_CONFIG_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
-          echo "LD_LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
           echo "LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LIBRARY_PATH" >> $GITHUB_ENV
+          echo "LD_LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
           echo "CXXFLAGS=-I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include \$CXXFLAGS" >> $GITHUB_ENV
-          echo "LDFLAGS=-L/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib \$LDFLAGS" >> $GITHUB_ENV
-          echo "PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin:\$PATH" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include \$CPPFLAGS" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
+
+      - name: Add binary paths to PATH
+        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
 
       - name: Verify environment variables
         run: |
-          echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
-          echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
           echo "LIBRARY_PATH: $LIBRARY_PATH"
+          echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
           echo "CXXFLAGS: $CXXFLAGS"
-          echo "LDFLAGS: $LDFLAGS"
-          echo "PATH: $PATH"
-        
-      - name: list made depends
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/ && ls
-        
-      - name: list made depends share
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/share && ls
-        
-      - name: list made depends share pkgconfig
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/share/pkgconfig && ls
-        
-      - name: list made depends include
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include && ls
-        
-      - name: list made depends include boost
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include/boost && ls
-        
-      - name: list made depends lib pkgconfig
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig && ls
-        
-      - name: list made depends bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/bin && ls
-        
-      - name: list made depends native
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native && ls
-        
-      - name: list made depends native bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin && ls
+          echo "CPPFLAGS: $CPPFLAGS"
+          echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
+
+      - name: Verify files in lib directory
+        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
+
+      - name: Verify include files
+        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include
+
+      - name: Verify pkg-config files
+        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig
 
       - name: Auto generate
         run: ./autogen.sh
 
-      - name: Configure project with explicit paths
+      - name: Configure project
         env:
           PKG_CONFIG_PATH: /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig
           LIBRARY_PATH: /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
@@ -91,8 +94,7 @@ jobs:
           --disable-werror \
           --prefix=`pwd`/depends/x86_64-linux-gnu \
           --bindir=`pwd`/release/bin \
-          --libdir=`pwd`/release/lib \
-          PKG_CONFIG="pkg-config"
+          --libdir=`pwd`/release/lib
 
       - name: Compile project
         env:
