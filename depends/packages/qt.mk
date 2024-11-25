@@ -99,7 +99,6 @@ $(package)_config_opts += -no-pch
 $(package)_config_opts += -pkg-config
 $(package)_config_opts += -prefix $(host_prefix)
 $(package)_config_opts += -qt-harfbuzz
-$(package)_config_opts += -javascript-jit
 $(package)_config_opts += -qt-libpng
 $(package)_config_opts += -qt-libjpeg
 $(package)_config_opts += -system-zlib
