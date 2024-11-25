@@ -196,7 +196,6 @@ define $(package)_build_cmds
   $(MAKE) -C ../qttools/src/linguist/lrelease && \
   $(MAKE) -C ../qttranslations && \
   $($(package)_patch_prl_files) \
-  $(MAKE) -C ../qwt && \
   $(MAKE) -C ../qtwebkit
 endef
 
