@@ -50,7 +50,7 @@ jobs:
         run: tar xvf leveldb.tar.gz
         
       - name: make leveldb
-        run: cd leveldb*/ && mkdir -p build 
+        run: cd leveldb && mkdir -p build 
         
       - name: make leveldb
         run: cd leveldb/build && cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
