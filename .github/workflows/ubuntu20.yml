@@ -59,7 +59,7 @@ jobs:
 
       - name: Build LevelDB
         run: |
-          cd leveldb
+          cd leveldb-1.23
           mkdir -p build
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
