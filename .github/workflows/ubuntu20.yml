@@ -1,5 +1,3 @@
-name: Build and Compile
-
 on:
   push:
     branches:
