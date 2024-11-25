@@ -49,11 +49,12 @@ jobs:
       - name: untar leveldb 
         run: tar xvf leveldb.tar.gz
         
-      - name: make leveldb
-        run: cd leveldb && mkdir -p build 
-        
-      - name: make leveldb
-        run: cd leveldb/build && cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
+      - name: make leveldb  
+        run: |
+        cd leveldb
+        mkdir -p build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
 
       - name: Build dependencies
         run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
