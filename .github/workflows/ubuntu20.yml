@@ -1,14 +1,22 @@
+name: Build and Compile
+
 on:
-  push
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   ubuntu20:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Update apt repos
+      - name: Update apt repositories
         run: sudo apt-get update
 
       - name: Install essential tools
@@ -42,27 +50,28 @@ jobs:
 
       - name: Verify Python Version
         run: python --version  # Should print Python 2.7.x
-        
-      - name: download latest leveldb
+
+      - name: Download latest LevelDB
         run: wget https://github.com/google/leveldb/archive/refs/tags/1.23.tar.gz -O leveldb.tar.gz
-        
-      - name: untar leveldb 
+
+      - name: Extract LevelDB
         run: tar xvf leveldb.tar.gz
-        
-      - name: make leveldb  
+
+      - name: Build LevelDB
         run: |
-        cd leveldb
-        mkdir -p build
-        cd build
-        cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
+          cd leveldb
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
 
       - name: Build dependencies
-        run: cd depends/ && make -j4 HOST=x86_64-linux-gnu
-        
-      - name: mk db dir and subdir
-        run: mkdir db-4.8.30.NC && cd db-4.8.30.NC && mkdir build_unix
-        
-      - name: Copy db .a to needed location
+        run: cd depends && make -j4 HOST=x86_64-linux-gnu
+
+      - name: Create database directories
+        run: |
+          mkdir -p db-4.8.30.NC/build_unix
+
+      - name: Copy database static library
         run: cp /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/libdb_cxx.a /home/runner/work/tokenpay/tokenpay/db-4.8.30.NC/build_unix/
         
       - name: list made depends
@@ -98,6 +107,9 @@ jobs:
       - name: list made depends native bin
         run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin && ls -l
 
+      - name: List built dependencies
+        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
+
       - name: Add paths to environment
         run: |
           echo "LIBRARY_PATH=/home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib:\$LIBRARY_PATH" >> $GITHUB_ENV
@@ -116,22 +128,13 @@ jobs:
           echo "CXXFLAGS: $CXXFLAGS"
           echo "CPPFLAGS: $CPPFLAGS"
           echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
-          
+
       - name: Verify pkg-config
         run: |
           pkg-config --libs Qt5WebKit
           pkg-config --libs Qt5WebKitWidgets
 
-      - name: Verify files in lib directory
-        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
-
-      - name: Verify include files
-        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include
-
-      - name: Verify pkg-config files
-        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig
-
-      - name: Auto generate
+      - name: Run autogen script
         run: ./autogen.sh
 
       - name: Configure project
