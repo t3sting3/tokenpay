@@ -12,7 +12,7 @@ $(package)_patches=mac-qmake.conf mingw-uuidof.patch pidlist_absolute.patch fix-
 $(package)_patches+=0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch
 $(package)_patches+=strip_log2f.patch
 $(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-coretext.patch
-$(package)_patches+=fix_mojave_fonts.patch
+$(package)_patches+=fix_mojave_fonts.patch fix_qt_configure.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
@@ -98,6 +98,8 @@ $(package)_config_opts += -optimized-qmake
 $(package)_config_opts += -no-pch
 $(package)_config_opts += -pkg-config
 $(package)_config_opts += -prefix $(host_prefix)
+$(package)_config_opts += -qt-harfbuzz
+$(package)_config_opts += -javascript-jit
 $(package)_config_opts += -qt-libpng
 $(package)_config_opts += -qt-libjpeg
 $(package)_config_opts += -system-zlib
@@ -172,6 +174,7 @@ define $(package)_preprocess_cmds
   cp -f $($(package)_patch_dir)/mac-qmake.conf qtbase/mkspecs/macx-clang-linux/qmake.conf && \
   patch -p1 < $($(package)_patch_dir)/mingw-uuidof.patch && \
   patch -p1 < $($(package)_patch_dir)/pidlist_absolute.patch && \
+  patch -p1 < $($(package)_patch_dir)/fix_qt_configure.patch && \
   patch -p1 < $($(package)_patch_dir)/fix-xcb-include-order.patch && \
   patch -p1 < $($(package)_patch_dir)/fix_qt_pkgconfig.patch && \
   patch -p1 < $($(package)_patch_dir)/fix-cocoahelpers-macos.patch && \
