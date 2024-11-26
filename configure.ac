@@ -45,15 +45,11 @@ AC_CHECK_LIB([pthread], [pthread_self], , [AC_MSG_ERROR([libpthread not found])]
 AC_LANG([C++])
 
 # TODO investigate whether earlier Boost versions will still work.
-BOOST_REQUIRE([1.58])
 AX_BOOST_FILESYSTEM
 AX_BOOST_PROGRAM_OPTIONS
 AX_BOOST_THREAD
 AX_BOOST_CHRONO
 AX_BOOST_SYSTEM
-BOOST_ASIO
-BOOST_DATE_TIME([mt])
-BOOST_IOSTREAMS([mt])
 MACOS_RPATH=""
 AC_ARG_ENABLE([gui], [AS_HELP_STRING([--enable-gui], [Build the Qt GUI wallet])])
 if test "x$enable_gui" = "xyes" ; then
