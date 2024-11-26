@@ -219,7 +219,7 @@ AC_LANG_POP([C++])dnl
         BOOST_CPPFLAGS="-I$boost_cv_inc_path"
         ;;
     esac
-  BOOST_CPPFLAGS="$BOOST_STD $BOOST_CPPFLAGS"
+  BOOST_CPPFLAGS="$BOOST_CPPFLAGS"
   AC_SUBST([BOOST_CPPFLAGS])
   if test x"$boost_cv_inc_path" != xno; then
   AC_DEFINE([HAVE_BOOST], [1],
