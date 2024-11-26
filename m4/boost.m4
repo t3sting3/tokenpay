@@ -154,7 +154,7 @@ m4_pattern_allow([^BOOST_VERSION$])dnl
     # If the user provided a value to --with-boost, use it and only it.
     case $with_boost in #(
       ''|yes) set x '' /opt/local/include /usr/local/include /opt/include \
-                 /usr/include /opt/homebrew/include C:/Boost/include;; #(
+                 /usr/include C:/Boost/include;; #(
       *)      set x "$with_boost/include" "$with_boost";;
     esac
     shift
@@ -216,11 +216,9 @@ AC_LANG_POP([C++])dnl
         BOOST_CPPFLAGS=
         ;;#(
       *)
-        BOOST_CPPFLAGS="-I$boost_cv_inc_path"
+        AC_SUBST([BOOST_CPPFLAGS], ["-I$boost_cv_inc_path"])dnl
         ;;
     esac
-  BOOST_CPPFLAGS="$BOOST_CPPFLAGS"
-  AC_SUBST([BOOST_CPPFLAGS])
   if test x"$boost_cv_inc_path" != xno; then
   AC_DEFINE([HAVE_BOOST], [1],
             [Defined if the requested minimum BOOST version is satisfied])
@@ -445,7 +443,7 @@ for boost_rtopt_ in $boost_rtopt '' -d; do
     boost_tmp_lib=$with_boost
     test x"$with_boost" = x && boost_tmp_lib=${boost_cv_inc_path%/include}
     for boost_ldpath in "$boost_tmp_lib/lib" '' \
-             /opt/local/lib* /opt/homebrew/lib /usr/local/lib* /opt/lib* /usr/lib* \
+             /opt/local/lib* /usr/local/lib* /opt/lib* /usr/lib* \
              "$with_boost" C:/Boost/lib /lib*
     do
       # Don't waste time with directories that don't exist.
@@ -1503,14 +1501,6 @@ if test x$boost_cv_inc_path != xno; then
   # I'm not sure about my test for `il' (be careful: Intel's ICC pre-defines
   # the same defines as GCC's).
   for i in \
-    _BOOST_clang_test(17, 0) \
-    _BOOST_clang_test(16, 0) \
-    _BOOST_clang_test(15, 0) \
-    _BOOST_clang_test(14, 0) \
-    _BOOST_clang_test(13, 0) \
-    _BOOST_clang_test(12, 0) \
-    _BOOST_clang_test(11, 1) \
-    _BOOST_clang_test(11, 0) \
     _BOOST_clang_test(10, 0) \
     _BOOST_clang_test(9, 0) \
     _BOOST_clang_test(8, 0) \
@@ -1529,31 +1519,13 @@ if test x$boost_cv_inc_path != xno; then
     _BOOST_clang_test(3, 2) \
     _BOOST_clang_test(3, 1) \
     _BOOST_clang_test(3, 0) \
-    _BOOST_gcc_test(13, 2) \
-    _BOOST_gcc_test(13, 1) \
-    _BOOST_gcc_test(13, 0) \
-    _BOOST_gcc_test(12, 3) \
-    _BOOST_gcc_test(12, 2) \
-    _BOOST_gcc_test(12, 1) \
-    _BOOST_gcc_test(12, 0) \
-    _BOOST_gcc_test(11, 4) \
-    _BOOST_gcc_test(11, 3) \
-    _BOOST_gcc_test(11, 2) \
-    _BOOST_gcc_test(11, 1) \
-    _BOOST_gcc_test(11, 0) \
-    _BOOST_gcc_test(10, 5) \
-    _BOOST_gcc_test(10, 4) \
-    _BOOST_gcc_test(10, 3) \
     _BOOST_gcc_test(10, 2) \
     _BOOST_gcc_test(10, 1) \
     _BOOST_gcc_test(10, 0) \
-    _BOOST_gcc_test(9, 5) \
-    _BOOST_gcc_test(9, 4) \
     _BOOST_gcc_test(9, 3) \
     _BOOST_gcc_test(9, 2) \
     _BOOST_gcc_test(9, 1) \
     _BOOST_gcc_test(9, 0) \
-    _BOOST_gcc_test(8, 5) \
     _BOOST_gcc_test(8, 4) \
     _BOOST_gcc_test(8, 3) \
     _BOOST_gcc_test(8, 2) \
