@@ -1,4 +1,4 @@
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I build-aux/m4
 
 if OS_WINDOWS_CROSSCOMPILE
 # for leveldb
