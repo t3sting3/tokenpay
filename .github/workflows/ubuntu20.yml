@@ -53,16 +53,12 @@ jobs:
         run: cd depends && make -j4 HOST=x86_64-linux-gnu
         
       - name: Download latest LevelDB
-        run: wget https://github.com/google/leveldb/archive/refs/tags/1.23.tar.gz -O leveldb.tar.gz
-
-      - name: Extract LevelDB
-        run: tar xvf leveldb.tar.gz
+        run: git clone --recurse-submodules https://github.com/google/leveldb.git
 
       - name: Build LevelDB
         run: |
-          cd leveldb-1.23
-          mkdir -p build
-          cd build
+          cd leveldb
+          mkdir -p build && cd build
           cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
 
       - name: Create berkeley db directories
