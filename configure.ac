@@ -2,7 +2,8 @@ AC_INIT([tokenpayd],[1.0.0])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_AUX_DIR([.])
 AM_INIT_AUTOMAKE([foreign 1.13 subdir-objects -Wall -Werror -Wno-portability])
-AC_CONFIG_MACRO_DIRS([m4])
+AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([build-aux/m4])
 AM_PROG_AS
 AM_PROG_AR
 AC_PROG_MKDIR_P
@@ -45,6 +46,11 @@ AC_CHECK_LIB([pthread], [pthread_self], , [AC_MSG_ERROR([libpthread not found])]
 AC_LANG([C++])
 
 # TODO investigate whether earlier Boost versions will still work.
+AX_BOOST_FILESYSTEM
+AX_BOOST_PROGRAM_OPTIONS
+AX_BOOST_THREAD
+AX_BOOST_CHRONO
+AX_BOOST_SYSTEM
 BOOST_REQUIRE([1.58])
 BOOST_SYSTEM([mt])
 BOOST_CHRONO([mt])
