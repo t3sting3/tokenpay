@@ -375,10 +375,15 @@ AC_DEFUN([BOOST_FIND_LIB],
 # doesn't exist but there's -obviously- libboost_thread-mt.dylib).
 AC_DEFUN([_BOOST_FIND_LIBS],
 [Boost_lib=no
-  case "$3" in #(
-    (mt | mt-) boost_mt=-mt; boost_rtopt=;; #(
-    (mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$3" : 'Xmt-*\(.*\)'`;; #(
-    (*) boost_mt=; boost_rtopt=$3;;
+  case "$3" in
+    (mt | mt-) boost_mt=-mt; boost_rtopt=;; 
+    (mt* | mt-*) boost_mt=-mt; boost_rtopt=`expr "X$3" : 'Xmt-*\(.*\)'`;; 
+    (*)
+      boost_mt=; boost_rtopt=$3
+      if test "$host_os" = "mingw32"; then
+        boost_rtopt="${boost_rtopt}_win32"
+      fi
+    ;;
   esac
   if test $enable_static_boost = yes; then
     boost_rtopt="s$boost_rtopt"
