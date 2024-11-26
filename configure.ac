@@ -1,9 +1,8 @@
 AC_INIT([tokenpayd],[1.0.0])
 AC_CONFIG_SRCDIR([src/main.cpp])
-AC_CONFIG_AUX_DIR([.])
-AM_INIT_AUTOMAKE([foreign 1.13 subdir-objects -Wall -Werror -Wno-portability])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
+AM_INIT_AUTOMAKE([foreign 1.13 subdir-objects -Wall -Werror -Wno-portability])
 AM_PROG_AS
 AM_PROG_AR
 AC_PROG_MKDIR_P
