@@ -21,8 +21,8 @@ autoreconf --install --force --warnings=all
 echo "Configure secp256k1 subtree"
 (cd "${srcdir}/src/secp256k1" && ./autogen.sh)
 
-cd ..
-cd tor && ./autogen.sh
+echo "Configure tor subtree"
+(cd .. && cd tor && ./autogen.sh)
 
 
 
