@@ -4,7 +4,7 @@ if OS_LINUX
 AM_LDFLAGS += -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,noexecheap -Wl,-z,nodlopen -Wl,-z,nodump
 else
 if OS_WINDOWS_CROSSCOMPILE
-AM_LDFLAGS += -pthread, -Wl,--dynamicbase -Wl,--nxcompat -Wl,--subsystem,windows
+AM_LDFLAGS += -Wl,--dynamicbase -Wl,--nxcompat -Wl,--subsystem,windows
 else
 if OS_MACOS
 AM_LDFLAGS += $(MACOS_RPATH)
@@ -137,7 +137,6 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 		     $(BOOST_PROGRAM_OPTIONS_LIBS) \
 		     $(BOOST_THREAD_LIBS)
 			 
-
 tokenpayd_CPPFLAGS = $(AM_CPPFLAGS) $(OPENSSL_CFLAGS) $(LIBEVENT_CFLAGS) \
 			$(LIBSECCOMP_CFLAGS) $(LIBCAP_CFLAGS) $(ZLIB_CFLAGS) $(ZSTD_CPPFLAGS) $(LZMA_CPPFLAGS) \
 			$(BOOST_CPPFLAGS) \
