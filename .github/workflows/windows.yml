@@ -88,6 +88,9 @@ jobs:
         
       - name: configure
         run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --enable-gui --prefix=`pwd`/depends/i686-w64-mingw32
+        
+      - name: make
+        run: make -j2
 
   windows64-ubuntu20:
     runs-on: ubuntu-20.04
@@ -173,6 +176,10 @@ jobs:
         
       - name: configure
         run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-gui --prefix=`pwd`/depends/x86_64-w64-mingw32
+      
+      - name: make
+        run: make -j2
+
 
 
 
