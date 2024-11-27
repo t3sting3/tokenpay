@@ -6,7 +6,7 @@ AM_MAKEFLAGS = TARGET_OS=OS_WINDOWS_CROSSCOMPILE
 endif
 
 export CC CXX AR LD
-SUBDIRS = tor leveldb src
+SUBDIRS = tor leveldb src secp256k1
 
 TokenPay.app: all-am
 	mkdir -p TokenPay.app/Contents/{MacOS,Resources}
