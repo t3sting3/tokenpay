@@ -22,7 +22,7 @@ echo "Configure secp256k1 subtree"
 (cd "${srcdir}/src/secp256k1" && ./autogen.sh)
 
 echo "Configure tor subtree"
-(cd .. && cd tor && ./autogen.sh)
+(cd "${srcdir}/secp256k1" && ./autogen.sh)
 
 
 
