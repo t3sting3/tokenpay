@@ -36,6 +36,7 @@ AC_CONFIG_FILES([Makefile src/Makefile])
 PKG_PROG_PKG_CONFIG
 PKG_CHECK_MODULES(OPENSSL, [openssl >= 1.0], [], [AC_MSG_ERROR([OpenSSL 1.1 not found])])
 PKG_CHECK_MODULES(LIBEVENT, [libevent], [], [AC_MSG_ERROR([libevent not found])])
+AX_SUBDIRS_CONFIGURE([src/secp256k1], [[--disable-shared], [--with-pic], [--with-bignum=no], [--enable-module-recovery], [--enable-experimental], [--enable-module-ecdh]])
 AX_SUBDIRS_CONFIGURE([tor], [[--disable-unittests], [--disable-system-torrc], [--disable-systemd], [--disable-asciidoc], [--disable-shared], [--disable-gcc-hardening], [--disable-lzma], [--disable-zstd], [--disable-asciidoc], [--disable-jni], [--disable-system-torrc]])
 PKG_CHECK_MODULES(ZLIB, [zlib], [], [AC_MSG_ERROR([zlib not found])])
 PKG_CHECK_MODULES(ZSTD, [libzstd], [], [AC_MSG_NOTICE([libzstd not found])])
