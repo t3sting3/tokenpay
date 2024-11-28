@@ -9,6 +9,12 @@ $(package)_config_env=AR="$($(package)_ar)" RANLIB="$($(package)_ranlib)" CC="$(
 $(package)_config_opts=--prefix=$(host_prefix) --openssldir=$(host_prefix)/etc/openssl
 $(package)_config_opts+=no-dso
 $(package)_config_opts+=no-shared
+$(package)_config_opts+=no-ssl-trace
+$(package)_config_opts+=no-ssl2
+$(package)_config_opts+=no-ssl3
+$(package)_config_opts+=no-tests
+$(package)_config_opts+=no-unit-test
+$(package)_config_opts+=no-weak-ssl-ciphers
 $(package)_config_opts+=$($(package)_cflags) $($(package)_cppflags)
 $(package)_config_opts_linux=-fPIC -Wa,--noexecstack
 $(package)_config_opts_x86_64_linux=linux-x86_64
