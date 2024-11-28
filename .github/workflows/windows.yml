@@ -82,12 +82,12 @@ jobs:
         
       - name: list made depends native bin
         run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin && ls
-
+        
       - name: Auto-generate configuration
         run: ./autogen.sh
         
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --enable-gui --prefix=`pwd`/depends/i686-w64-mingw32
+        run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --enable-gui --prefix=$(pwd)/depends/i686-w64-mingw32
         
       - name: make
         run: make -j2
@@ -175,9 +175,9 @@ jobs:
         run: ./autogen.sh
         
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-gui --prefix=`pwd`/depends/x86_64-w64-mingw32
+        run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-gui --prefix=$(pwd)/depends/x86_64-w64-mingw32
       
-      - name: make
+      - name: Build dependencies in the depends folder
         run: make -j2
 
 
