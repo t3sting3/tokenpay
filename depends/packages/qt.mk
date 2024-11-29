@@ -4,7 +4,7 @@ $(package)_download_path=http://download.qt.io/official_releases/qt/5.7/$($(pack
 $(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
-$(package)_dependencies=zlib icu native_gperf
+$(package)_dependencies=zlib icu native_gperf openssl
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
@@ -34,9 +34,6 @@ $(package)_patch_glibc_compat = $($(package)_patch_glibc_compat_$(host_os))
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 $(package)_extra_sources += $($(package)_qtwebkit_file_name)
-
-$(package)_ssl_extras_mingw32 =-lwsock32 -lgdi32
-$(package)_ssl_extras = $($(package)_ssl_extras_$(host_os))
 
 #Work around for a mingw issue where the prl files contain .a instead of .dll even though we are a shared build - this causes qwt to link the wrong thing and fail.
 $(package)_patch_prl_files_mingw32 = sed -rie 's|lib(.*?)[.]a|\1.dll|' ../qtbase/lib/*.prl && sed -rie 's|(.*?)[.]a|\1.dll|' ../qtbase/lib/*.prl &&
@@ -85,7 +82,7 @@ $(package)_config_opts += -no-xrender
 $(package)_config_opts += -nomake examples
 $(package)_config_opts += -nomake tests
 $(package)_config_opts += -opensource
-$(package)_config_opts += -no-openssl
+$(package)_config_opts += -openssl-linked
 $(package)_config_opts += -optimized-qmake
 $(package)_config_opts += -no-pch
 $(package)_config_opts += -pkg-config
