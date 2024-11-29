@@ -1,25 +1,21 @@
 PACKAGE=qt
-$(package)_version=5.7.1
-$(package)_download_path=http://download.qt.io/official_releases/qt/5.7/$($(package)_version)/submodules
-$(package)_suffix=opensource-src-$($(package)_version).tar.gz
+$(package)_version=5.9.9
+$(package)_download_path=https://download.qt.io/new_archive/qt/5.9/$($(package)_version)/submodules
+$(package)_suffix=opensource-src-$($(package)_version).tar.xz
 $(package)_file_name=qtbase-$($(package)_suffix)
-$(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
+$(package)_sha256_hash=d5a97381b9339c0fbaf13f0c05d599a5c999dcf94145044058198987183fed65
 $(package)_dependencies=zlib icu native_gperf openssl
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
-$(package)_patches=mac-qmake.conf mingw-uuidof.patch pidlist_absolute.patch fix-xcb-include-order.patch
-$(package)_patches+=0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch
-$(package)_patches+=strip_log2f.patch
-$(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-coretext.patch
-$(package)_patches+=fix_mojave_fonts.patch fix_qt_configure.patch
+$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_mingw_cross_compile.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
-$(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
+$(package)_qttranslations_sha256_hash=f7474f260a1382549720081bf2359a3d425ec3bf7d31976c512834303d30d73b
 
 
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
-$(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
+$(package)_qttools_sha256_hash=fce6e0fd39a40bcef880c669080087dba94af1ec442296222210472e0852bf98
 
 
 $(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6.0
@@ -34,6 +30,9 @@ $(package)_patch_glibc_compat = $($(package)_patch_glibc_compat_$(host_os))
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
 $(package)_extra_sources += $($(package)_qtwebkit_file_name)
+
+$(package)_ssl_extras_mingw32 =-lwsock32 -lgdi32
+$(package)_ssl_extras = $($(package)_ssl_extras_$(host_os))
 
 #Work around for a mingw issue where the prl files contain .a instead of .dll even though we are a shared build - this causes qwt to link the wrong thing and fail.
 $(package)_patch_prl_files_mingw32 = sed -rie 's|lib(.*?)[.]a|\1.dll|' ../qtbase/lib/*.prl && sed -rie 's|(.*?)[.]a|\1.dll|' ../qtbase/lib/*.prl &&
@@ -84,7 +83,7 @@ $(package)_config_opts += -nomake tests
 $(package)_config_opts += -opensource
 $(package)_config_opts += -openssl-linked
 $(package)_config_opts += -optimized-qmake
-$(package)_config_opts += -no-pch
+$(package)_config_opts += -pch
 $(package)_config_opts += -pkg-config
 $(package)_config_opts += -prefix $(host_prefix)
 $(package)_config_opts += -qt-harfbuzz
@@ -172,7 +171,7 @@ define $(package)_preprocess_cmds
   sed -i.old "/updateqm.depends =/d" qttranslations/translations/translations.pro && \
   sed -i.old "s/src_plugins.depends = src_sql src_xml src_network/src_plugins.depends = src_xml src_network/" qtbase/src/src.pro && \
   sed -i.old "s|X11/extensions/XIproto.h|X11/X.h|" qtbase/src/plugins/platforms/xcb/qxcbxsettings.cpp && \
-  sed -i.old 's/if \[ "$$$$XPLATFORM_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/if \[ "$$$$BUILD_ON_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/' qtbase/configure && \
+  sed -i.old -e 's/if \[ "$$$$XPLATFORM_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/if \[ "$$$$BUILD_ON_MAC" = "yes" \]; then xspecvals=$$$$(macSDKify/' -e 's|/bin/pwd|pwd|' qtbase/configure && \
   sed -i.old 's/CGEventCreateMouseEvent(0, kCGEventMouseMoved, pos, 0)/CGEventCreateMouseEvent(0, kCGEventMouseMoved, pos, kCGMouseButtonLeft)/' qtbase/src/plugins/platforms/cocoa/qcocoacursor.mm && \
   sed -i.old "s|type nul|perl -e ''|" qtwebkit/Source/WebCore/DerivedSources.pri && \
   sed -i.old "s|CFG_FRAMEWORK=.*|CFG_FRAMEWORK=no|" qtbase/configure && \
@@ -181,19 +180,22 @@ define $(package)_preprocess_cmds
   cp -f qtbase/mkspecs/macx-clang/Info.plist.app qtbase/mkspecs/macx-clang-linux/ &&\
   cp -f qtbase/mkspecs/macx-clang/qplatformdefs.h qtbase/mkspecs/macx-clang-linux/ &&\
   cp -f $($(package)_patch_dir)/mac-qmake.conf qtbase/mkspecs/macx-clang-linux/qmake.conf && \
-  patch -p1 < $($(package)_patch_dir)/mingw-uuidof.patch && \
-  patch -p1 < $($(package)_patch_dir)/pidlist_absolute.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_qt_configure.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix-xcb-include-order.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_qt_pkgconfig.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix-cocoahelpers-macos.patch && \
-  patch -p1 < $($(package)_patch_dir)/qfixed-coretext.patch && \
-  patch -p1 < $($(package)_patch_dir)/0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_mojave_fonts.patch && \
-  $($(package)_patch_glibc_compat) \
+  cp -r qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/bitcoin-linux-g++ && \
+
+  sed -i.old "s/arm-linux-gnueabi-/$(host)-/g" qtbase/mkspecs/bitcoin-linux-g++/qmake.conf && \
+  patch -p1 -i $($(package)_patch_dir)/fix_qt_pkgconfig.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/fix_configure_mac.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/fix_no_printer.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/fix_limits_header.patch && \
+  patch -p1 -i $($(package)_patch_dir)/fix_mingw_cross_compile.patch && \
+  patch -p1 -i $($(package)_patch_dir)/fix_rcc_determinism.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/xkb-default.patch &&\
   echo "!host_build: QMAKE_CFLAGS     += $($(package)_cflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_CXXFLAGS   += $($(package)_cxxflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_LFLAGS     += $($(package)_ldflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
+  patch -p1 -i $($(package)_patch_dir)/fix_riscv64_arch.patch &&\
+  echo "QMAKE_LINK_OBJECT_MAX = 10" >> qtbase/mkspecs/win32-g++/qmake.conf &&\
+  echo "QMAKE_LINK_OBJECT_SCRIPT = object_script" >> qtbase/mkspecs/win32-g++/qmake.conf &&\
   sed -i.old "s|QMAKE_CFLAGS            = |!host_build: QMAKE_CFLAGS            = $($(package)_cflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_LFLAGS            = |!host_build: QMAKE_LFLAGS            = $($(package)_ldflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_CXXFLAGS          = |!host_build: QMAKE_CXXFLAGS            = $($(package)_cxxflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
@@ -218,6 +220,7 @@ endef
 define $(package)_build_cmds
   $(MAKE) -C src $(addprefix sub-,$($(package)_qt_libs)) && \
   $(MAKE) -C ../qttools/src/linguist/lrelease && \
+  $(MAKE) -C ../qttools/src/linguist/lupdate && \
   $(MAKE) -C ../qttranslations && \
   $($(package)_patch_prl_files) \
   $(MAKE) -C ../qtwebkit
@@ -226,6 +229,7 @@ endef
 define $(package)_stage_cmds
   $(MAKE) -C src INSTALL_ROOT=$($(package)_staging_dir) $(addsuffix -install_subtargets,$(addprefix sub-,$($(package)_qt_libs))) && cd .. && \
   $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
+  $(MAKE) -C qttools/src/linguist/lupdate INSTALL_ROOT=$($(package)_staging_dir) install_target && \
   $(MAKE) -C qttranslations INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   $(MAKE) -C qtwebkit INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
