@@ -51,16 +51,6 @@ jobs:
 
       - name: Build dependencies
         run: cd depends && make -j4 HOST=x86_64-linux-gnu
-      
-      - name: Download latest LevelDB
-        run: git clone https://github.com/google/leveldb.git leveldbsep
-
-      - name: Build LevelDB
-        run: |
-          cd leveldbsep
-          git submodule update --init --recursive
-          mkdir -p build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Release .. && cmake --build .
 
       - name: Create berkeley db directories
         run: |
