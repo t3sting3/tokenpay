@@ -65,9 +65,6 @@ AC_CONFIG_FILES([Makefile src/Makefile])
 PKG_PROG_PKG_CONFIG
 if test x$use_pkgconfig = xyes; then
   : dnl
-  m4_ifdef(
-    [PKG_CHECK_MODULES],
-    [
       PKG_CHECK_MODULES(LIBEVENT, [libevent], [], [AC_MSG_ERROR([libevent not found])])
       PKG_CHECK_MODULES(ZLIB, [zlib], [], [AC_MSG_ERROR([zlib not found])])
       if test x$TARGET_OS = xlinux; then
@@ -96,8 +93,6 @@ if test x$use_pkgconfig = xyes; then
       else
           AC_DEFINE_UNQUOTED([ENABLE_ZMQ],[0],[Define to 1 to enable ZMQ functions])
       fi
-    ]
-  )
 else
   AC_CHECK_HEADER([openssl/crypto.h],,AC_MSG_ERROR(libcrypto headers missing))
   AC_CHECK_LIB([crypto],      [main],CRYPTO_LIBS=-lcrypto, AC_MSG_ERROR(libcrypto missing))
