@@ -8,7 +8,7 @@ $(package)_dependencies=zlib icu
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
-$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_mingw_cross_compile.patch strip_log2f.patch
+$(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_mingw_cross_compile.patch
 
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
@@ -186,13 +186,13 @@ define $(package)_preprocess_cmds
   cp -f qtbase/mkspecs/macx-clang/Info.plist.app qtbase/mkspecs/macx-clang-linux/ && \
   cp -f qtbase/mkspecs/macx-clang/qplatformdefs.h qtbase/mkspecs/macx-clang-linux/ && \
   cp -f $($(package)_patch_dir)/mac-qmake.conf qtbase/mkspecs/macx-clang-linux/qmake.conf && \
-  patch -p1 < $($(package)_patch_dir)/fix_qt_pkgconfig.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_limits_header.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_configure_mac.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_no_printer.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_rcc_determinism.patch && \
-  patch -p1 < $($(package)_patch_dir)/xkb-default.patch && \
-  patch -p1 < $($(package)_patch_dir)/fix_mingw_cross_compile.patch && \
+  patch -p1 -i $($(package)_patch_dir)/fix_qt_pkgconfig.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/fix_configure_mac.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/fix_no_printer.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/fix_limits_header.patch && \
+  patch -p1 -i $($(package)_patch_dir)/fix_mingw_cross_compile.patch && \
+  patch -p1 -i $($(package)_patch_dir)/fix_rcc_determinism.patch &&\
+  patch -p1 -i $($(package)_patch_dir)/xkb-default.patch &&\
   $($(package)_patch_glibc_compat) \
   echo "!host_build: QMAKE_CFLAGS     += $($(package)_cflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_CXXFLAGS   += $($(package)_cxxflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
