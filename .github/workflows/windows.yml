@@ -26,6 +26,9 @@ jobs:
       - name: Add gperf native bin path to environment
         run: echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin" >> $GITHUB_PATH
 
+      - name: remove any previous versions of openssl
+        run: sudo apt purge -y libssl-dev && sudo apt clean && sudo apt autoremove
+
       - name: Build dependencies in the depends folder
         run: |
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
@@ -113,6 +116,9 @@ jobs:
         
       - name: Add gperf native bin path to environment
         run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/native/bin" >> $GITHUB_PATH
+        
+      - name: remove any previous versions of openssl
+        run: sudo apt purge -y libssl-dev && sudo apt clean && sudo apt autoremove
 
       - name: Build dependencies in the depends folder
         run: |
