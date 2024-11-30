@@ -1,8 +1,8 @@
 package=icu4c
 $(package)_version=58.1
-$(package)_download_path=https://sourceforge.net/projects/icu/files/ICU4C/58.1/
-$(package)_file_name=icu4c-58_1-src.tgz
-$(package)_sha256_hash=0EB46BA3746A9C2092C8AD347A29B1A1B4941144772D13A88667A7B11EA30309
+$(package)_download_path=https://github.com/unicode-org/icu/releases/download/release-58-2/
+$(package)_file_name=icu4c-58_2-src.tgz
+$(package)_sha256_hash=2B0A4410153A9B20DE0E20C7D8B66049A72AEF244B53683D0D7521371683DA0C
 $(package)_build_subdir=source
 
 
