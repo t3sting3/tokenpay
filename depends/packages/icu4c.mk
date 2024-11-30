@@ -1,4 +1,4 @@
-package=icu
+package=icu4c
 $(package)_version=58.1
 $(package)_download_path=https://sourceforge.net/projects/icu/files/ICU4C/58.1/
 $(package)_file_name=icu4c-58_1-src.tgz
