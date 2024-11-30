@@ -23,6 +23,8 @@ jobs:
           build-essential \
           xutils-dev \
           libicu-dev \
+          dos2unix \
+          ninja-build \
           libtool \
           gperf \
           autotools-dev \

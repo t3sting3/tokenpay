@@ -5,7 +5,7 @@ $(package)_suffix=opensource-src-$($(package)_version).tar.xz
 $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=d5a97381b9339c0fbaf13f0c05d599a5c999dcf94145044058198987183fed65
 $(package)_dependencies=openssl zlib native_gperf
-$(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
+$(package)_linux_dependencies=freetype fontconfig libxcb libX11 xorgproto libXext dbus
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
 $(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch
@@ -18,21 +18,12 @@ $(package)_qttranslations_sha256_hash=f7474f260a1382549720081bf2359a3d425ec3bf7d
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=fce6e0fd39a40bcef880c669080087dba94af1ec442296222210472e0852bf98
 
-$(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6.0
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
-$(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
-
-$(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
-
-$(package)_patch_glibc_compat_linux = patch -p1 < $($(package)_patch_dir)/strip_log2f.patch &&
-$(package)_patch_glibc_compat = $($(package)_patch_glibc_compat_$(host_os))
+$(package)_qtwebkit_download_path=https://download.qt.io/snapshots/ci/qtwebkit/5.212/latest/src/submodules/qtwebkit-opensource-src-5.212.zip
+$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.212.zip
+$(package)_qtwebkit_sha256_hash=3c418dda16fca454551b8fd92d358ae071d0df0a78ba3285e435364d801b5641
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
-$(package)_extra_sources += $($(package)_qtwebkit_file_name)
-
-$(package)_ssl_extras_mingw32 =-lwsock32 -lgdi32
-$(package)_ssl_extras = $($(package)_ssl_extras_$(host_os))
 
 define $(package)_set_vars
 $(package)_config_opts_release = -release
@@ -113,7 +104,7 @@ define $(package)_fetch_cmds
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_download_file),$($(package)_file_name),$($(package)_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttranslations_file_name),$($(package)_qttranslations_file_name),$($(package)_qttranslations_sha256_hash)) && \
 $(call fetch_file,$(package),$($(package)_download_path),$($(package)_qttools_file_name),$($(package)_qttools_file_name),$($(package)_qttools_sha256_hash)) && \
-$(call fetch_file,$(package),$($(package)_download_path_webkit),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_sha256_hash))
+$(call fetch_file,$(package),$($(package)_qtwebkit_download_path),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_file_name),$($(package)_qtwebkit_sha256_hash))
 endef
 
 define $(package)_extract_cmds
@@ -129,7 +120,8 @@ define $(package)_extract_cmds
   tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttranslations_file_name) -C qttranslations && \
   mkdir qttools && \
   tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
-  mkdir qtwebkit && tar --no-same-owner --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qtwebkit_file_name) -C qtwebkit
+  unzip -q $($(package)_source_dir)/$($(package)_qtwebkit_file_name) && \
+  mv qtwebkit-opensource-src-5.212 qtwebkit
 endef
 
 define $(package)_preprocess_cmds
@@ -175,7 +167,6 @@ define $(package)_config_cmds
   echo "host_build: QT_CONFIG ~= s/system-zlib/zlib" >> mkspecs/qconfig.pri && \
   echo "CONFIG += force_bootstrap" >> mkspecs/qconfig.pri && \
   $(MAKE) sub-src-clean && \
-  cd ../qtwebkit && SQLITE3SRCDIR="../qtbase/src/3rdparty/sqlite" ../qtbase/bin/qmake WebKit.pro -o Makefile && \
   cd ../qttranslations && ../qtbase/bin/qmake qttranslations.pro -o Makefile && \
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd ../.. && \
   cd qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile && \
@@ -187,7 +178,17 @@ define $(package)_build_cmds
   $(MAKE) -C ../qttools/src/linguist/lrelease && \
   $(MAKE) -C ../qttools/src/linguist/lupdate && \
   $(MAKE) -C ../qttranslations && \
-  $(MAKE) -C ../qtwebkit
+  sed -i.old "s/\/native\/bin/\/bin/g" lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake && \
+  sed -i.old "s/\/native\/bin/\/bin/g" lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake && \
+  cd ../qtwebkit && \
+  sed -i.old "s/^add_subdirectory(QtTestBrowser)/#&/" Tools/PlatformQt.cmake && \
+  find . -type f -name *.rb -exec dos2unix {} \; && \
+  find . -type f -name *.asm -exec dos2unix {} \; && \
+  find Source/JavaScriptCore -type f -exec dos2unix {} \; && \
+  find Source/WebCore -type f -exec dos2unix {} \; && \
+  export SQLITE3SRCDIR=$($(package)_extract_dir)/qtbase/src/3rdparty/sqlite && \
+  export CMAKE_INSTALL_PREFIX=$($(package)_staging_dir) && \
+  ./Tools/Scripts/build-webkit --qt --release --no-geolocation --64-bit --cmakeargs="-Wno-dev -DCMAKE_PREFIX_PATH=$($(package)_extract_dir)/qtbase -DENABLE_DEVICE_ORIENTATION=OFF -DENABLE_VIDEO=OFF -DENABLE_X11_TARGET=OFF -DUSE_GSTREAMER=OFF -DENABLE_WEB_AUDIO=OFF -DENABLE_GEOLOCATION=OFF -DENABLE_TOUCH_EVENTS=OFF DENABLE_DEVICE_ORIENTATION=OFF -DUSE_THIN_ARCHIVES=OFF -DENABLE_OPENGL=OFF -DUSE_LIBHYPHEN=OFF -DENABLE_XSLT=OFF -DENABLE_SPELLCHECK=OFF -DENABLE_PRINT_SUPPORT=OFF -DENABLE_QT_GESTURE_EVENTS=OFF -DENABLE_SAMPLING_PROFILER=OFF -DENABLE_API_TESTS=OFF -DENABLE_WEBKIT2=OFF -DENABLE_TOOLS=OFF -DENABLE_TEST_SUPPORT=OFF"
 endef
 
 define $(package)_stage_cmds
@@ -198,7 +199,9 @@ define $(package)_stage_cmds
   $(MAKE) -C qtwebkit INSTALL_ROOT=$($(package)_staging_dir) install_subtargets && \
   if `test -f qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a`; then \
     cp qtbase/src/plugins/platforms/xcb/xcb-static/libxcb-static.a $($(package)_staging_prefix_dir)/lib; \
-  fi
+  fi && \
+  cd qtwebkit/WebKitBuild/Release && \
+  ninja install
 endef
 
 define $(package)_postprocess_cmds
