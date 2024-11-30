@@ -53,6 +53,7 @@ $(package)_config_opts += -no-freetype
 $(package)_config_opts += -no-glib
 $(package)_config_opts += -no-gstreamer
 $(package)_config_opts += -no-iconv
+$(package)_config_opts += -no-icu
 $(package)_config_opts += -no-kms
 $(package)_config_opts += -no-linuxfb
 $(package)_config_opts += -no-libudev
