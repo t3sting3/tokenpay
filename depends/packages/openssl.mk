@@ -15,7 +15,6 @@ $(package)_config_opts+=no-dso
 $(package)_config_opts+=no-dtls1
 $(package)_config_opts+=no-ec_nistp_64_gcc_128
 $(package)_config_opts+=no-engine
-$(package)_config_opts+=no-static_engine
 $(package)_config_opts+=no-gost
 $(package)_config_opts+=no-heartbeats
 $(package)_config_opts+=no-idea
@@ -64,7 +63,7 @@ define $(package)_config_cmds
 endef
 
 define $(package)_build_cmds
-  $(MAKE) -j1 build_libs libcrypto.pc libssl.pc openssl.pc\
+  $(MAKE) -j$(JOBS) build_libs libcrypto.pc libssl.pc openssl.pc\
 endef
 
 define $(package)_stage_cmds
@@ -75,4 +74,3 @@ endef
 define $(package)_postprocess_cmds
   rm -rf share bin etc
 endef
-
