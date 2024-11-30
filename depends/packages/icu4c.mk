@@ -1,6 +1,6 @@
 package=icu
 $(package)_version=58.1
-$(package)_download_path=https://sourceforge.net/projects/icu/files/ICU4C/58.1/icu4c-58_1-src.tgz/download
+$(package)_download_path=https://sourceforge.net/projects/icu/files/ICU4C/58.1/
 $(package)_file_name=icu4c-58_1-src.tgz
 $(package)_sha256_hash=0EB46BA3746A9C2092C8AD347A29B1A1B4941144772D13A88667A7B11EA30309
 $(package)_build_subdir=source
