@@ -42,7 +42,7 @@ define $(package)_set_vars
 $(package)_config_opts_release = -release
 $(package)_config_opts_debug = -debug
 $(package)_config_opts += -bindir $(build_prefix)/bin
-$(package)_config_opts += -c++std c++1z
+$(package)_config_opts += -c++std c++11
 $(package)_config_opts += -confirm-license
 $(package)_config_opts += -dbus-runtime
 $(package)_config_opts += -hostprefix $(build_prefix)
@@ -101,7 +101,6 @@ $(package)_config_opts += -no-feature-textodfwriter
 $(package)_config_opts += -no-feature-udpsocket
 $(package)_config_opts += -no-feature-wizard
 $(package)_config_opts += -no-feature-xml
-$(package)_config_opts += -Wno-deprecated-copy
 
 ifneq ($(build_os),darwin)
 $(package)_config_opts_darwin = -xplatform macx-clang-linux
