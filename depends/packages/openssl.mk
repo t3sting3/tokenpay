@@ -60,8 +60,7 @@ define $(package)_preprocess_cmds
 endef
 
 define $(package)_config_cmds
-  WINDRES=$($(host_os)_WINDRES) ./Configure $($(package)_config_opts) && \
-  $(MAKE) depend
+  WINDRES=$($(host_os)_WINDRES) ./Configure $($(package)_config_opts)
 endef
 
 define $(package)_build_cmds
@@ -76,3 +75,4 @@ endef
 define $(package)_postprocess_cmds
   rm -rf share bin etc
 endef
+
