@@ -9,7 +9,7 @@ $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext l
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
 $(package)_patches=fix_qt_pkgconfig.patch mac-qmake.conf fix_limits_header.patch fix_configure_mac.patch fix_no_printer.patch fix_rcc_determinism.patch fix_riscv64_arch.patch xkb-default.patch fix_mingw_cross_compile.patch
-
+$(package)_patches+=strip_log2f.patch
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=f7474f260a1382549720081bf2359a3d425ec3bf7d31976c512834303d30d73b
