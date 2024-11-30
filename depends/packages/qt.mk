@@ -89,7 +89,6 @@ $(package)_config_opts += -no-feature-lcdnumber
 $(package)_config_opts += -no-feature-pdf
 $(package)_config_opts += -no-feature-printer
 $(package)_config_opts += -no-feature-printdialog
-$(package)_config_opts += -no-feature-concurrent
 $(package)_config_opts += -no-feature-statemachine
 $(package)_config_opts += -no-feature-syntaxhighlighter
 $(package)_config_opts += -no-feature-textbrowser
