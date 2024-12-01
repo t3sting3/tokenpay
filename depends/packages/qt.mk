@@ -71,7 +71,6 @@ $(package)_config_opts += -system-zlib
 $(package)_config_opts += -static
 $(package)_config_opts += -silent
 $(package)_config_opts += -v
-$(package)_config_opts += -xml
 
 ifneq ($(build_os),darwin)
 $(package)_config_opts_darwin = -xplatform macx-clang-linux
