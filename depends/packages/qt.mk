@@ -71,6 +71,7 @@ $(package)_config_opts += -system-zlib
 $(package)_config_opts += -static
 $(package)_config_opts += -silent
 $(package)_config_opts += -v
+$(package)_config_opts += -xml
 
 ifneq ($(build_os),darwin)
 $(package)_config_opts_darwin = -xplatform macx-clang-linux
@@ -82,16 +83,14 @@ $(package)_config_opts_darwin += -device-option MAC_TARGET=$(host)
 $(package)_config_opts_darwin += -device-option MAC_LD64_VERSION=$(LD64_VERSION)
 endif
 
-$(package)_config_opts_linux  = -qt-xkbcommon
-$(package)_config_opts_linux += -qt-xcb
-$(package)_config_opts_linux += -system-freetype
-$(package)_config_opts_linux += -no-sm
-$(package)_config_opts_linux += -fontconfig
-$(package)_config_opts_linux += -no-opengl
-$(package)_config_opts_arm_linux  = -platform linux-g++ -xplatform $(host)
+$(package)_config_opts_arm_linux += -platform linux-g++ -xplatform bitcoin-linux-g++
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
+$(package)_config_opts_x86_64_linux = -xplatform linux-g++-64
+$(package)_config_opts_aarch64_linux = -xplatform linux-aarch64-gnu-g++
+$(package)_config_opts_riscv64_linux = -platform linux-g++ -xplatform bitcoin-linux-g++
 $(package)_config_opts_mingw32  = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
 $(package)_build_env  = QT_RCC_TEST=1
+$(package)_build_env += QT_RCC_SOURCE_DATE_OVERRIDE=1
 endef
 
 define $(package)_fetch_cmds
