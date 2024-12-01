@@ -19,9 +19,9 @@ $(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d
 $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
 
-$(package)_qtwebkit_download_path=https://download.qt.io/snapshots/ci/qtwebkit/5.212/latest/src/submodules/qtwebkit-opensource-src-5.212.zip
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.212.zip
-$(package)_qtwebkit_sha256_hash=3c418dda16fca454551b8fd92d358ae071d0df0a78ba3285e435364d801b5641
+$(package)_qtwebkit_download_path=https://download.qt.io/snapshots/ci/qtwebkit/dev/latest/src/submodules/
+$(package)_qtwebkit_file_name=qtwebkit-opensource-src-dev.zip
+$(package)_qtwebkit_sha256_hash=d9aad8f34358b84b92cc2fce78d779a30feae514eb56d8b6ac9eebeb68f2ae88
 
 $(package)_extra_sources  = $($(package)_qttranslations_file_name)
 $(package)_extra_sources += $($(package)_qttools_file_name)
@@ -131,7 +131,7 @@ define $(package)_extract_cmds
   mkdir qttools && \
   tar --strip-components=1 -xf $($(package)_source_dir)/$($(package)_qttools_file_name) -C qttools && \
   unzip -q $($(package)_source_dir)/$($(package)_qtwebkit_file_name) && \
-  mv qtwebkit-opensource-src-5.212 qtwebkit
+  mv qtwebkit-opensource-src-dev qtwebkit
 endef
 
 
