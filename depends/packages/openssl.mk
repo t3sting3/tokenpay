@@ -1,4 +1,3 @@
-
 package=openssl
 $(package)_version=1.1.1k
 $(package)_download_path=https://www.openssl.org/source
@@ -69,7 +68,7 @@ endef
 
 define $(package)_build_cmds
   sed -i.old 's/INSTALL_PROGRAMS=apps\/openssl/INSTALL_PROGRAMS=/g' Makefile && \
-  $(MAKE) -j1 build_libs
+  $(MAKE) -j1 build_libs libcrypto.pc libssl.pc openssl.pc
 endef
 
 define $(package)_stage_cmds
