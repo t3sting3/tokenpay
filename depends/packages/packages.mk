@@ -1,4 +1,4 @@
-packages:=boost openssl libevent zeromq libseccomp libcap
+packages:=boost openssl libevent zeromq libseccomp libcap icu4c
 native_packages := native_ccache
 
 qt_native_packages = native_protobuf native_gperf
