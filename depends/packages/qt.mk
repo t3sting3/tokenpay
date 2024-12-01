@@ -88,7 +88,6 @@ $(package)_config_opts_linux += -qt-xcb
 $(package)_config_opts_linux += -system-freetype
 $(package)_config_opts_linux += -no-feature-sessionmanager
 $(package)_config_opts_linux += -fontconfig
-$(package)_config_opts_linux += -no-opengl
 $(package)_config_opts_linux += -dbus-runtime
 
 $(package)_config_opts_arm_linux += -platform linux-g++ -xplatform bitcoin-linux-g++
