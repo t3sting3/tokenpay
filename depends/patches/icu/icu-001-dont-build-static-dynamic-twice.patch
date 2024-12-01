@@ -1,4 +1,3 @@
-
 Don't build object files twice
 
 When passed --enable-static and --enable-shared, icu will generate
