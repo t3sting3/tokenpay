@@ -65,7 +65,7 @@ AC_CONFIG_FILES([Makefile src/Makefile])
 PKG_PROG_PKG_CONFIG
 if test x$use_pkgconfig = xyes; then
   : dnl
-  m4_ifdef(
+  m4_pattern_allow(
     [PKG_CHECK_MODULES],
     [
       PKG_CHECK_MODULES(LIBEVENT, [libevent], [], [AC_MSG_ERROR([libevent not found])])
