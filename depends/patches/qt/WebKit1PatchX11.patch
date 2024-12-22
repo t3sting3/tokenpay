@@ -1,0 +1,11 @@
+--- old/qtwebkit/Source/WebKit/WebKit1.pri	2024-12-21 18:48:25.479847810 +0800
++++ new/qtwebkit/Source/WebKit/WebKit1.pri	2024-12-21 18:49:02.407214234 +0800
+@@ -18,7 +18,7 @@
+ 
+ contains(CONFIG, texmap): DEFINES += WTF_USE_TEXTURE_MAPPER=1
+ 
+-use?(PLUGIN_BACKEND_XLIB): PKGCONFIG += x11
++#use?(PLUGIN_BACKEND_XLIB): PKGCONFIG += x11
+ 
+ QT += network
+ 

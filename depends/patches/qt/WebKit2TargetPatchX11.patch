@@ -1,0 +1,11 @@
+--- old/qtwebkit/Source/WebKit2/Target.pri	2024-12-21 18:49:43.094516380 +0800
++++ new/qtwebkit/Source/WebKit2/Target.pri	2024-12-21 18:49:50.402391067 +0800
+@@ -953,7 +953,7 @@
+ 
+ use?(PLUGIN_BACKEND_XLIB) {
+     DEFINES += XP_UNIX
+-    PKGCONFIG += x11
++#    PKGCONFIG += x11
+     DEFINES += MOZ_X11
+ }
+ 

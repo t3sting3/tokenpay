@@ -1,0 +1,11 @@
+--- old/qtwebkit/Source/widgetsapi.pri	2024-12-21 18:50:03.970158427 +0800
++++ new/qtwebkit/Source/widgetsapi.pri	2024-12-21 18:50:17.033934446 +0800
+@@ -33,7 +33,7 @@
+ 
+ contains(CONFIG, texmap): DEFINES += WTF_USE_TEXTURE_MAPPER=1
+ 
+-use?(PLUGIN_BACKEND_XLIB): PKGCONFIG += x11
++#use?(PLUGIN_BACKEND_XLIB): PKGCONFIG += x11
+ 
+ QT += network widgets widgets-private
+ have?(QTPRINTSUPPORT): QT += printsupport

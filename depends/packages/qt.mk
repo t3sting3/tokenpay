@@ -1,6 +1,6 @@
 PACKAGE=qt
 $(package)_version=5.7.1
-$(package)_download_path=http://download.qt.io/official_releases/qt/5.7/$($(package)_version)/submodules
+$(package)_download_path=http://download.qt.io/new_archive/qt/5.7/$($(package)_version)/submodules
 $(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
@@ -13,6 +13,11 @@ $(package)_patches+=0007-Include-intrin.h-for-declaration-of-_mm_mfence.patch
 $(package)_patches+=strip_log2f.patch
 $(package)_patches+=fix_qt_pkgconfig.patch fix-cocoahelpers-macos.patch qfixed-coretext.patch
 $(package)_patches+=fix_mojave_fonts.patch fix_qt_configure.patch
+$(package)_patches += makegrammar.patch
+$(package)_patches += WebKit1PatchX11.patch
+$(package)_patches += WebKit2TargetPatchX11.patch
+$(package)_patches += widgetsapiPatchX11.patch
+
 
 $(package)_qttranslations_file_name=qttranslations-$($(package)_suffix)
 $(package)_qttranslations_sha256_hash=3a15aebd523c6d89fb97b2d3df866c94149653a26d27a00aac9b6d3020bc5a1d
@@ -22,9 +27,9 @@ $(package)_qttools_file_name=qttools-$($(package)_suffix)
 $(package)_qttools_sha256_hash=22d67de915cb8cd93e16fdd38fa006224ad9170bd217c2be1e53045a8dd02f0f
 
 
-$(package)_download_path_webkit=http://download.qt.io/community_releases/5.6/5.6.0
-$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.6.0.tar.gz
-$(package)_qtwebkit_sha256_hash=8b3411cca15ff8b83e38fdf9d2f9113b81413980026e80462e06c95c3dcea056
+$(package)_download_path_webkit=http://download.qt.io/community_releases/5.7/5.7.1
+$(package)_qtwebkit_file_name=qtwebkit-opensource-src-5.7.1.tar.gz
+$(package)_qtwebkit_sha256_hash=1a26dc2a71f7854dd0cc4d153653c0287bb7c57e32c16b55c9f51f12ebce7675
 
 $(package)_ldflags_linux += -Wl,--wrap=log2f -Wl,--wrap=powf
 
@@ -118,6 +123,8 @@ $(package)_config_opts_linux += -no-opengl
 $(package)_config_opts_arm_linux  = -platform linux-g++ -xplatform $(host)
 $(package)_config_opts_i686_linux  = -xplatform linux-g++-32
 $(package)_config_opts_mingw32  = -no-opengl -xplatform win32-g++ -device-option CROSS_COMPILE="$(host)-"
+$(package)_cppflags += $(shell pkg-config --cflags libxml-2.0)
+$(package)_cppflags += $(shell pkg-config --cflags libxslt)
 $(package)_build_env  = QT_RCC_TEST=1
 endef
 
@@ -175,7 +182,11 @@ define $(package)_preprocess_cmds
   sed -i.old "s|QMAKE_CFLAGS            = |!host_build: QMAKE_CFLAGS            = $($(package)_cflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_LFLAGS            = |!host_build: QMAKE_LFLAGS            = $($(package)_ldflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_CXXFLAGS          = |!host_build: QMAKE_CXXFLAGS            = $($(package)_cxxflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
-  sed -i.old "s|debug_and_release|release|g" qtbase/mkspecs/win32-g++/qmake.conf
+  sed -i.old "s|debug_and_release|release|g" qtbase/mkspecs/win32-g++/qmake.conf && \
+  patch -p1 < $($(package)_patch_dir)/makegrammar.patch && \
+  patch -p1 < $($(package)_patch_dir)/WebKit1PatchX11.patch && \
+  patch -p1 < $($(package)_patch_dir)/WebKit2TargetPatchX11.patch && \
+  patch -p1 < $($(package)_patch_dir)/widgetsapiPatchX11.patch
 endef
 
 define $(package)_config_cmds
@@ -187,7 +198,7 @@ define $(package)_config_cmds
   echo "host_build: QT_CONFIG ~= s/system-zlib/zlib" >> mkspecs/qconfig.pri && \
   echo "CONFIG += force_bootstrap" >> mkspecs/qconfig.pri && \
   $(MAKE) sub-src-clean && \
-  cd ../qtwebkit && SQLITE3SRCDIR="../qtbase/src/3rdparty/sqlite" ../qtbase/bin/qmake WebKit.pro -o Makefile && \
+  cd ../qtwebkit && ls -la && SQLITE3SRCDIR="../qtbase/src/3rdparty/sqlite" ../qtbase/bin/qmake WebKit.pro -o Makefile && \
   cd ../qttranslations && ../qtbase/bin/qmake qttranslations.pro -o Makefile && \
   cd translations && ../../qtbase/bin/qmake translations.pro -o Makefile && cd .. &&\
   cd ../qttools/src/linguist/lrelease/ && ../../../../qtbase/bin/qmake lrelease.pro -o Makefile
