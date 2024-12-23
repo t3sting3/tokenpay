@@ -216,6 +216,7 @@ jobs:
       - name: Configure project
         run: |
           CONFIG_SITE=`pwd` \
+          LDFLAGS="-Wl,--disable-new-dtags -Wl,-rpath,'\$\$ORIGIN/libs'" \
           ./configure \
           --enable-gui \
           --disable-bench \
@@ -232,12 +233,14 @@ jobs:
       - name: Package release
         run: |
           mkdir -p release/libs
-          cp tokenpay release/
-          cp tokenpayd release/
-          for lib in $(ldd tokenpay tokenpayd | grep "$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib" | awk '{print $3}'); do
+          cp ./src/tokenpay release/
+          cp ./src/tokenpayd release/
+          for lib in $(ldd release/tokenpay release/tokenpayd | grep "$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib" | awk '{print $3}'); do
             cp "$lib" release/libs/
           done
           tar -czvf tokenpay-release.tar.gz -C release .
+
+        
 
       - name: upload artifact
         uses: actions/upload-artifact@v3

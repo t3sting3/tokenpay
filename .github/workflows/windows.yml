@@ -141,7 +141,7 @@ jobs:
       - name: Build dependencies in the depends folder
         if: steps.cache-depends.outputs.cache-hit != 'true'
         run: |
-          PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
+          echo "PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')" >> $GITHUB_ENV
           cd depends/
           make HOST=i686-w64-mingw32
 
@@ -361,7 +361,7 @@ jobs:
 
       - name: Build dependencies in the depends folder
         run: |
-          PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
+          echo "PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')" >> $GITHUB_ENV
           cd depends/
           make HOST=x86_64-w64-mingw32
 
