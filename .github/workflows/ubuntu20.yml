@@ -238,9 +238,8 @@ jobs:
           for lib in $(ldd release/tokenpay release/tokenpayd | grep "$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib" | awk '{print $3}'); do
             cp "$lib" release/libs/
           done
+          cp /lib/x86_64-linux-gnu/libwebp.so.6 release/libs/
           tar -czvf tokenpay-release.tar.gz -C release .
-
-        
 
       - name: upload artifact
         uses: actions/upload-artifact@v3
