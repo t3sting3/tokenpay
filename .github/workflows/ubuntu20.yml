@@ -148,43 +148,43 @@ jobs:
         run: cp $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib/libdb_cxx.a $GITHUB_WORKSPACE/db-4.8.30.NC/build_unix/
         
       - name: list made depends
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/ && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/ && ls -l
         
       - name: list made depends share
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/share && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/share && ls -l
         
       - name: list made depends share pkgconfig
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/share/pkgconfig && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/share/pkgconfig && ls -l
         
       - name: list made depends include
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/include && ls -l
         
       - name: list made depends include QtWebKit
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include/QtWebKit && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/include/QtWebKit && ls -l
         
       - name: list made depends include QtWebKit/5.7.1
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include/QtWebKit/5.7.1 && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/include/QtWebKit/5.7.1 && ls -l
         
       - name: list made depends include QtCore
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include/QtCore && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/include/QtCore && ls -l
         
       - name: list made depends include boost
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/include/boost && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/include/boost && ls -l
 
       - name: list made depends lib pkgconfig
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib/pkgconfig && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib/pkgconfig && ls -l
         
       - name: list made depends bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/bin && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/bin && ls -l
         
       - name: list made depends native
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/native && ls -l
         
       - name: list made depends native bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/native/bin && ls -l
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/native/bin && ls -l
 
       - name: List built dependencies
-        run: ls -l /home/runner/work/tokenpay/tokenpay/depends/x86_64-linux-gnu/lib
+        run: ls -l $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib
 
       - name: Add paths to environment
         run: |
@@ -227,7 +227,7 @@ jobs:
           --libdir=`pwd`/release/lib
 
       - name: Compile project
-        run: make -j2
+        run: make -j4
 
       - name: Package release
         run: |

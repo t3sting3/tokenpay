@@ -10,6 +10,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Restore depends cache
+        id: cache-depends
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            depends/built
+            depends/sources
+            depends/work
+            depends/i686-w64-mingw32
+          key: win32-depends-${{ runner.os }}-${{ hashFiles('depends/packages/*') }}
+          restore-keys: |
+            win32-depends-${{ runner.os }}-${{ hashFiles('depends/packages/*') }}-
+            win32-depends-${{ runner.os }}-
+
       - name: Install base tools
         run: |
           sudo apt-get update
@@ -21,19 +35,126 @@ jobs:
           sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-posix
           
       - name: create native bin location
+        if: steps.cache-depends.outputs.cache-hit != 'true'
         run: cd depends && mkdir i686-w64-mingw32 && cd i686-w64-mingw32 && mkdir native && cd native && mkdir bin
+
+      - name: Install essential tools
+        run: |
+          sudo apt-get install -y \
+          build-essential \
+          xutils-dev \
+          libicu-dev \
+          dos2unix \
+          ninja-build \
+          libtool \
+          gperf \
+          autotools-dev \
+          automake \
+          pkg-config \
+          bsdmainutils \
+          libattr1-dev \
+          make \
+          bison \
+          byacc \
+          cmake \
+          curl \
+          ruby \
+          flex \
+          g++-multilib \
+          libevent-dev \
+          binutils-gold \
+          python2 \
+          coreutils \
+          libleveldb-dev \
+          libsqlite3-dev \
+          libwebp-dev \
+          libxml2-dev \
+          libxslt1-dev \
+          xserver-xorg-dev \
+          xorg-dev \
+          libpulse-dev \
+          libfontconfig1-dev \
+          libfreetype6-dev \
+          libx11-dev \
+          libx11-xcb-dev \
+          libxext-dev \
+          libxfixes-dev \
+          libxi-dev \
+          libxrender-dev \
+          libxcb1-dev \
+          libxcb-glx0-dev \
+          libxcb-keysyms1-dev \
+          libxcb-image0-dev \
+          libxcb-shm0-dev \
+          libxcb-icccm4-dev \
+          libxcb-sync-dev \
+          libxcb-xfixes0-dev \
+          libxcb-shape0-dev \
+          libxcb-randr0-dev \
+          libxcb-render-util0-dev \
+          libxcb-xinerama0-dev \
+          libxkbcommon-dev \
+          libxkbcommon-x11-dev \
+          xserver-xorg-dev \
+          xorg-dev \
+          libxrender-dev \
+          libxrandr-dev \
+          libxt-dev \
+          libxcb-xinerama0 \
+          libxcb-xinerama0-dev
+
+      - name: Set Python 2 as default
+        run: |
+          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+          sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 2
+          sudo update-alternatives --set python /usr/bin/python2
+          echo "$(dirname $(readlink -f $(which python)))" >> $GITHUB_PATH
+
+      - name: Verify Python Version
+        run: python --version
+
+      - name: Install and update autoconf to 2.71
+        run: |
+          wget https://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.gz
+          tar -xzf autoconf-2.71.tar.gz
+          cd autoconf-2.71
+          # Install to a local directory to avoid system conflicts
+          ./configure --prefix=$HOME/.local
+          make
+          make install
+          # Add the local bin to PATH
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          # Verify the version
+          $HOME/.local/bin/autoconf --version
+
+
+
+      - name: Fix sqlite3
+        run: echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
         
       - name: Add gperf native bin path to environment
-        run: echo "/home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin" >> $GITHUB_PATH
+        run: echo "$GITHUB_WORKSPACE/depends/i686-w64-mingw32/native/bin" >> $GITHUB_PATH
 
       - name: remove any previous versions of openssl
         run: sudo apt purge -y libssl-dev && sudo apt clean && sudo apt autoremove
 
       - name: Build dependencies in the depends folder
+        if: steps.cache-depends.outputs.cache-hit != 'true'
         run: |
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
           make HOST=i686-w64-mingw32
+
+      - name: Save depends cache
+        if: steps.cache-depends.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            depends/built
+            depends/sources
+            depends/work
+            depends/i686-w64-mingw32
+          key: win32-depends-${{ runner.os }}-${{ hashFiles('depends/packages/*') }}
           
       - name: get and untar bdb4.8
         run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
@@ -60,40 +181,40 @@ jobs:
         run: cd /usr/local/ && ls
       
       - name: list made depends
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/ && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/ && ls -al
         
       - name: list made depends share
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/share && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/share && ls -al
         
       - name: list made depends include
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/include && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/include && ls -al
         
       - name: list made depends include boost
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/include/boost && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/include/boost && ls -al
         
       - name: list made depends include openssl
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/include/openssl && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/include/openssl && ls -al
         
       - name: list made depends include QtCore
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/include/QtCore && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/include/QtCore && ls -al
         
       - name: list made depends include QtWebKit
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/include/QtWebKit && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/include/QtWebKit && ls -al
         
       - name: list made depends lib
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/lib && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/lib && ls -al
         
       - name: list made depends lib pkgconfig
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/lib/pkgconfig && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/lib/pkgconfig && ls -al
         
       - name: list made depends bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/bin && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/bin && ls -al
         
       - name: list made depends native
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/native && ls -al
         
       - name: list made depends native bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/i686-w64-mingw32/native/bin && ls -al
+        run: cd $GITHUB_WORKSPACE/depends/i686-w64-mingw32/native/bin && ls -al
         
       - name: Auto-generate configuration
         run: ./autogen.sh
@@ -110,6 +231,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Restore depends cache
+        id: cache-depends
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            depends/built
+            depends/sources
+            depends/work
+            depends/x86_64-w64-mingw32
+          key: win64-depends-${{ runner.os }}-${{ hashFiles('depends/packages/*') }}
+          restore-keys: |
+            win64-depends-${{ runner.os }}-${{ hashFiles('depends/packages/*') }}-
+            win64-depends-${{ runner.os }}-
+
       - name: Install base tools
         run: |
           sudo apt-get update
@@ -121,10 +256,105 @@ jobs:
           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
           
       - name: create native bin location
+        if: steps.cache-depends.outputs.cache-hit != 'true'
         run: cd depends && mkdir x86_64-w64-mingw32 && cd x86_64-w64-mingw32 && mkdir native && cd native && mkdir bin
+
+      - name: Install essential tools
+        run: |
+          sudo apt-get install -y \
+          build-essential \
+          xutils-dev \
+          libicu-dev \
+          dos2unix \
+          ninja-build \
+          libtool \
+          gperf \
+          autotools-dev \
+          automake \
+          pkg-config \
+          bsdmainutils \
+          libattr1-dev \
+          make \
+          bison \
+          byacc \
+          cmake \
+          curl \
+          ruby \
+          flex \
+          g++-multilib \
+          libevent-dev \
+          binutils-gold \
+          python2 \
+          coreutils \
+          libleveldb-dev \
+          libsqlite3-dev \
+          libwebp-dev \
+          libxml2-dev \
+          libxslt1-dev \
+          xserver-xorg-dev \
+          xorg-dev \
+          libpulse-dev \
+          libfontconfig1-dev \
+          libfreetype6-dev \
+          libx11-dev \
+          libx11-xcb-dev \
+          libxext-dev \
+          libxfixes-dev \
+          libxi-dev \
+          libxrender-dev \
+          libxcb1-dev \
+          libxcb-glx0-dev \
+          libxcb-keysyms1-dev \
+          libxcb-image0-dev \
+          libxcb-shm0-dev \
+          libxcb-icccm4-dev \
+          libxcb-sync-dev \
+          libxcb-xfixes0-dev \
+          libxcb-shape0-dev \
+          libxcb-randr0-dev \
+          libxcb-render-util0-dev \
+          libxcb-xinerama0-dev \
+          libxkbcommon-dev \
+          libxkbcommon-x11-dev \
+          xserver-xorg-dev \
+          xorg-dev \
+          libxrender-dev \
+          libxrandr-dev \
+          libxt-dev \
+          libxcb-xinerama0 \
+          libxcb-xinerama0-dev
+
+      - name: Set Python 2 as default
+        run: |
+          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+          sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 2
+          sudo update-alternatives --set python /usr/bin/python2
+          echo "$(dirname $(readlink -f $(which python)))" >> $GITHUB_PATH
+
+      - name: Verify Python Version
+        run: python --version
+
+      - name: Install and update autoconf to 2.71
+        run: |
+          wget https://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.gz
+          tar -xzf autoconf-2.71.tar.gz
+          cd autoconf-2.71
+          # Install to a local directory to avoid system conflicts
+          ./configure --prefix=$HOME/.local
+          make
+          make install
+          # Add the local bin to PATH
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          # Verify the version
+          $HOME/.local/bin/autoconf --version
+
+
+
+      - name: Fix sqlite3
+        run: echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
         
       - name: Add gperf native bin path to environment
-        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/native/bin" >> $GITHUB_PATH
+        run: echo "$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/native/bin" >> $GITHUB_PATH
         
       - name: remove any previous versions of openssl
         run: sudo apt purge -y libssl-dev && sudo apt clean && sudo apt autoremove
@@ -134,6 +364,17 @@ jobs:
           PATH=$(echo "$PATH" | sed -e 's/:\/mnt.*//g')
           cd depends/
           make HOST=x86_64-w64-mingw32
+
+      - name: Save depends cache
+        if: steps.cache-depends.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            depends/built
+            depends/sources
+            depends/work
+            depends/x86_64-w64-mingw32
+          key: win64-depends-${{ runner.os }}-${{ hashFiles('depends/packages/*') }}
           
       - name: get and untar bdb4.8
         run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
@@ -157,34 +398,34 @@ jobs:
         run: cd /usr/local/ && ls
           
       - name: list made depends
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/ && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/ && ls
         
       - name: list made depends share
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/share && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/share && ls
         
       - name: list made depends include
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/include && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/include && ls
         
       - name: list made depends include boost
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/include/boost && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/include/boost && ls
         
       - name: list made depends lib
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/lib && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/lib && ls
         
       - name: list made depends lib pkgconfig
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/lib/pkgconfig && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/lib/pkgconfig && ls
         
       - name: list made depends bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/bin && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/bin && ls
         
       - name: list made depends native
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/native && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/native && ls
         
       - name: list made depends native bin
-        run: cd /home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/native/bin && ls
+        run: cd $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/native/bin && ls
         
       - name: Add depends lib path to environment
-        run: echo "/home/runner/work/tokenpay/tokenpay/depends/x86_64-w64-mingw32/lib" >> $GITHUB_PATH
+        run: echo "$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/lib" >> $GITHUB_PATH
 
       - name: Auto-generate configuration
         run: ./autogen.sh
@@ -194,8 +435,3 @@ jobs:
       
       - name: make
         run: make -j2
-
-
-
-
-
