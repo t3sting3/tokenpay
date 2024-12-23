@@ -227,11 +227,20 @@ jobs:
           --libdir=`pwd`/release/lib
 
       - name: Compile project
-        run: make
+        run: make -j2
 
-      - uses: actions/upload-artifact@v4
+      - name: Package release
+        run: |
+          mkdir -p release/libs
+          cp tokenpay release/
+          cp tokenpayd release/
+          for lib in $(ldd tokenpay tokenpayd | grep "$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib" | awk '{print $3}'); do
+            cp "$lib" release/libs/
+          done
+          tar -czvf tokenpay-release.tar.gz -C release .
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: tpay-ubuntu20
-          path: |
-            ./src/tokenpayd
-            ./src/tokenpay
+          name: tokenpay-release
+          path: tokenpay-release.tar.gz
