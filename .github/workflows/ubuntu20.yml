@@ -190,6 +190,8 @@ jobs:
         run: |
           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
           chmod +x linuxdeploy-x86_64.AppImage
+          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
           LINUXDEPLOY_OUTPUT_APP_NAME="tokenpay"
           mkdir -p AppDir/usr/bin
           cp ./tokenpay.desktop AppDir/
@@ -201,6 +203,7 @@ jobs:
           cp src/qt/res/icons/tokenpay.png AppDir/usr/share/icons/hicolor/256x256/apps/
           ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
+            --plugin qt \
             --icon-file src/qt/res/icons/tokenpay.png \
             --output appimage
 
