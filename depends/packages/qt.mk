@@ -217,8 +217,6 @@ define $(package)_stage_cmds
   cp qtbase/bin/qmake* $($(package)_staging_prefix_dir)/native/bin/ && \
   mkdir -p $($(package)_staging_prefix_dir)/plugins/sqldrivers && \
   mkdir -p $($(package)_staging_prefix_dir)/plugins/printsupport && \
-  cp src/plugins/sqldrivers/*.so $($(package)_staging_prefix_dir)/plugins/sqldrivers/ && \
-  cp src/plugins/printsupport/*.so $($(package)_staging_prefix_dir)/plugins/printsupport/ && \
   mkdir -p $($(package)_staging_prefix_dir)/plugins/platforms && \
   mkdir -p $($(package)_staging_prefix_dir)/plugins/bearer && \
   $(MAKE) -C qttools/src/linguist/lrelease INSTALL_ROOT=$($(package)_staging_dir) install_target && \
