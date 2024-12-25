@@ -208,4 +208,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: tokenpay.AppImage
-          path: tokenpay-x86_64.AppImage
+          path: TokenPay_Wallet-x86_64.AppImage
