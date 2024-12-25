@@ -192,8 +192,13 @@ jobs:
           chmod +x linuxdeploy-x86_64.AppImage
           LINUXDEPLOY_OUTPUT_APP_NAME="tokenpay"
           mkdir -p AppDir/usr/bin
+          cp ./tokenpay.desktop AppDir/
           cp ./src/tokenpay AppDir/usr/bin/
           cp ./src/tokenpayd AppDir/usr/bin/
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+          cp ./tokenpay.desktop AppDir/usr/share/applications/
+          cp src/qt/res/icons/tokenpay.png AppDir/usr/share/icons/hicolor/256x256/apps/
           ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
             --icon-file src/qt/res/icons/tokenpay.png \
