@@ -124,6 +124,7 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 	../tor/src/ext/ed25519/donna/libed25519_donna.a \
 	../tor/src/ext/ed25519/ref10/libed25519_ref10.a \
 	../tor/src/ext/keccak-tiny/libkeccak-tiny.a \
+			 -ldb_cxx \
 		     $(OPENSSL_LIBS) \
 		     $(LIBEVENT_LIBS) \
 		     $(LIBSECCOMP_LIBS) \
@@ -319,6 +320,7 @@ tokenpay_LDADD = $(tokenpayd_LDADD) $(QT5_LIBS) $(QT5WEBKIT_LIBS)
 tokenpay_CPPFLAGS = $(tokenpayd_CPPFLAGS) $(QT5_CFLAGS) $(QT5WEBKIT_CFLAGS) -DQT_DISABLE_DEPRECATED_BEFORE=0
 tokenpay_LDFLAGS = $(tokenpayd_LDFLAGS) $(QT5_LDFLAGS) $(QT5WEBKIT_LDFLAGS)
 tokenpay_LIBTOOLFLAGS = $(tokenpayd_LIBTOOLFLAGS)
+
 
 if OS_MACOS
   tokenpay_SOURCES += qt/moc_macnotificationhandler.cpp \

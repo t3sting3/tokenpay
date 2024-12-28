@@ -97,15 +97,22 @@ if test "x$enable_gui" = "xyes" ; then
     else
       QT5_CFLAGS="-I$with_qt5/include"
       QT5_LDFLAGS="-L$with_qt5/lib"
-      QT5_LIBS="-lQtCore -lQtGui -lQtWidgets -lQtNetwork"
+      QT5_LIBS="-lQt5Core -lQt5Gui -lQt5Widgets -lQt5Network"
     fi
     AC_SUBST([QT5_CFLAGS])
     AC_SUBST([QT5_LDFLAGS])
     AC_SUBST([QT5_LIBS])
+    if test "x$build_windows" = "xyes"; then
+    MOC="$with_qt5/native/bin/moc"
+    UIC="$with_qt5/native/bin/uic"
+    RCC="$with_qt5/native/bin/rcc"
+    LRELEASE="$with_qt5/native/bin/lrelease"
+    else
     MOC="$with_qt5/bin/moc"
     UIC="$with_qt5/bin/uic"
     RCC="$with_qt5/bin/rcc"
     LRELEASE="$with_qt5/bin/lrelease"
+    fi
     AC_SUBST([MOC])
     AC_SUBST([UIC])
     AC_SUBST([RCC])
@@ -138,7 +145,7 @@ if test "x$enable_gui" = "xyes" ; then
     else
       QT5WEBKIT_CFLAGS="-I$with_qt5webkit/include"
       QT5WEBKIT_LDFLAGS="-L$with_qt5webkit/lib"
-      QT5WEBKIT_LIBS="-lQtWebKit -lQtWebKitWidgets"
+      QT5WEBKIT_LIBS="-lQt5WebKit -lQt5WebKitWidgets"
     fi
     AC_SUBST([QT5WEBKIT_CFLAGS])
     AC_SUBST([QT5WEBKIT_LDFLAGS])
