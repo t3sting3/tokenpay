@@ -5,6 +5,8 @@
 [submodule "tor"]
 	path = tor
 	url = https://gitlab.torproject.org/tpo/core/tor
+	
 [submodule "leveldb"]
 	path = leveldb
-	url = https://github.com/google/leveldb
+	url = https://github.com/ReynardoEW/leveldb
+
