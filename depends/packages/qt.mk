@@ -4,7 +4,7 @@ $(package)_download_path=http://download.qt.io/new_archive/qt/5.7/$($(package)_v
 $(package)_suffix=opensource-src-$($(package)_version).tar.gz
 $(package)_file_name=qtbase-$($(package)_suffix)
 $(package)_sha256_hash=95f83e532d23b3ddbde7973f380ecae1bac13230340557276f75f2e37984e410
-$(package)_dependencies=pcre libpng icu harfbuzz native_gperf
+$(package)_dependencies=openssl icu native_gperf
 $(package)_linux_dependencies=freetype fontconfig libxcb libX11 xproto libXext libXrender renderproto
 $(package)_build_subdir=qtbase
 $(package)_qt_libs=corelib network widgets gui plugins testlib sql concurrent printsupport
@@ -172,7 +172,7 @@ define $(package)_preprocess_cmds
   echo "QMAKE_LFLAGS     += $($(package)_ldflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   sed -i.old "s|QMAKE_CFLAGS            = |QMAKE_CFLAGS            = $($(package)_cflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_LFLAGS            = |QMAKE_LFLAGS            = $($(package)_ldflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
-  sed -i.old "s|QMAKE_CXXFLAGS          = |QMAKE_CXXFLAGS            = $($(package)_cxxflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf
+  sed -i.old "s|QMAKE_CXXFLAGS          = |QMAKE_CXXFLAGS            = $($(package)_cxxflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   patch -p1 < $($(package)_patch_dir)/makegrammar.patch && \
   patch -p1 < $($(package)_patch_dir)/WebKit1PatchX11.patch && \
   patch -p1 < $($(package)_patch_dir)/WebKit2TargetPatchX11.patch && \
