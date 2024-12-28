@@ -123,6 +123,10 @@ jobs:
       - name: Fix sqlite3
         run: echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
 
+      - name: Fix ICU
+        run: echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
+
+
       - name: Build dependencies
         if: steps.cache-depends.outputs.cache-hit != 'true'
         run: cd depends && make -j4 HOST=x86_64-linux-gnu
