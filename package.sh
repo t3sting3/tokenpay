@@ -9,8 +9,6 @@ fi
 # create output dir
 rm -rf $OUTPUT_DIR
 mkdir -p $OUTPUT_DIR
-# create plugins dir inside OUTPUT_DIR
-mkdir -p $OUTPUT_DIR/plugins
 # define system dlls to exclude (to ignore)
 EXCLUDED_DLLS="CRYPT32.dll|IPHLPAPI.DLL|MSWSOCK.dll|SHLWAPI.dll|KERNEL32.dll|USER32.dll|GDI32.dll|ADVAPI32.dll|SHELL32.dll|WS2_32.dll|ole32.dll|COMCTL32.dll|msvcrt.dll"
 # define additional dlls to copy
@@ -95,7 +93,7 @@ done
 
 # copy plugins from depends/$HOST/plugins
 if [[ -d "$DEPEND_DIR/$HOST/plugins" ]]; then
-    cp -r -u "$DEPEND_DIR/$HOST/plugins/"* $OUTPUT_DIR/plugins/
+    cp -r -u "$DEPEND_DIR/$HOST/plugins/"* $OUTPUT_DIR/
     echo "copied plugins from $DEPEND_DIR/$HOST/plugins to $OUTPUT_DIR/"
 else
     echo "warning: no plugins directory found in custom depend dir"
