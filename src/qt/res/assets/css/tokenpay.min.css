@@ -113,7 +113,7 @@ td {
 
 .light-red,
 .syncing {
-    color: #3057A4
+    color: #ffffff
 }
 
 #tooltip:after {
@@ -862,7 +862,7 @@ progress::-webkit-progress-bar {
 progress::-webkit-progress-value {
     border-radius: 50px;
     box-tokenpay: inset 0 1px 1px 0 rgba(255, 255, 255, .4);
-    background: #3057A4;
+    background: #ffffff;
     background-size: 25px 14px, 100% 100%, 100% 100%;
     -webkit-animation: animateprogress 5s linear 0 infinite;
     animation: animateprogress 5s linear 0 infinite
@@ -1031,7 +1031,7 @@ progress::-webkit-progress-value {
 
 .heading-selected {
     margin: 0;
-    color: #3057A4;
+    color: #ffffff;
 }
 
 .heading-deselected {
@@ -1409,7 +1409,7 @@ a.clearbtn
 {
     background: white !important;
     border: 2px solid !important;
-    color: #3057A4 !important;
+    color: #ffffff !important;
 }
 .answer a
 {

@@ -1388,7 +1388,7 @@ button:focus {
 	color: #061953;
 }
 #balances tr td:nth-child(2) {
-	color: #3057A4;
+	color: #ffffff;
 }
 #balances tr:last-child {
 	border-bottom-left-radius: 5px;
@@ -2552,7 +2552,7 @@ hr.dotted {
     padding-left: 35px !important;
     padding-top: 20px;
     padding-bottom: 20px;
-    color:#3057A4;
+    color:#ffffff;
     text-transform: uppercase;
 }
 
@@ -2895,8 +2895,8 @@ fieldset[disabled] .btn-warning:hover {
 .btn-danger,
 .btn-danger:focus {
     color: #fff;
-    background-color: #3057A4;
-    border-color: #3057A4
+    background-color: #ffffff;
+    border-color: #ffffff
 }
 
 .btn-danger.active,
@@ -2949,10 +2949,10 @@ fieldset[disabled] .btn-danger:hover {
 
 .btn-default,
 .btn-default:focus {
-    /*color: #3057A4;*/
+    /*color: #ffffff;*/
     color:black;
     background-color: #fff;
-    /*border-color: #3057A4*/
+    /*border-color: #ffffff*/
 }
 form .clearfix {
 	background: #fff;
@@ -5823,7 +5823,7 @@ fieldset[disabled] .form-control {
     position: absolute;
     left: 0;
     background-color: #F0F1F3;
-    border: 1px solid #3057A4;
+    border: 1px solid #ffffff;
 
 }
 
@@ -5972,7 +5972,7 @@ fieldset[disabled] .form-control {
 }
 
 .checkbox.check-danger input[type=checkbox]:checked+label:before {
-    border-color: #3057A4
+    border-color: #ffffff
 }
 
 .checkbox.check-info input[type=checkbox]:checked+label:before {
@@ -10328,8 +10328,8 @@ only screen and (min-device-pixel-ratio:2) {
 }
 .center-div .btn {
     color: #fff;
-    background-color: #3057A4;
-    border-color: #3057A4;
+    background-color: #ffffff;
+    border-color: #ffffff;
 }
 .btn {
 	-webkit-border-radius: 0px;
@@ -10357,7 +10357,7 @@ select {
     border: 1px solid #D6DAE3;
 }
 label.control-label {
-	color: #3057A4;
+	color: #ffffff;
 }
 .panel-title>p>i.fa {
     margin-right: 10px;
@@ -10375,7 +10375,7 @@ label.control-label {
 .checkbox.check-danger input[type=checkbox]:checked+label:before,
 .radio.radio-primary input[type=radio]:checked+label:before,
 .radio.radio-success input[type=radio]:checked+label:before {
-    border-color: #3057A4;
+    border-color: #ffffff;
 }
 
 .checkbox input[type=checkbox]:checked+label:before,
@@ -10440,7 +10440,7 @@ h3.balanceCount
 span.units
 {
     font-size: 26px;
-    color:#3057A4;
+    color:#ffffff;
 }
 .regular-radio {
     display: none;
@@ -10468,7 +10468,7 @@ span.units
     width: 8px;
 }
 .regular-radio:checked + label:after {
-    background: none repeat scroll 0 0 #3057A4;
+    background: none repeat scroll 0 0 #ffffff;
     border-radius: 50px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3) inset;
     content: " ";
