@@ -20,7 +20,7 @@ mkdir -p $OUTPUT_DIR/plugins
 EXCLUDED_DLLS="CRYPT32.dll|IPHLPAPI.DLL|MSWSOCK.dll|SHLWAPI.dll|KERNEL32.dll|USER32.dll|GDI32.dll|ADVAPI32.dll|SHELL32.dll|WS2_32.dll|ole32.dll|COMCTL32.dll|msvcrt.dll"
 
 # define additional dlls to copy
-ADDITIONAL_DLLS=("icudt58.dll" "icuuc58.dll" "icuin58.dll" "Qt5PrintSupport.dll" "Qt5Sql.dll")
+ADDITIONAL_DLLS=("icudt58.dll" "icuuc58.dll" "icuin58.dll" "Qt5PrintSupport.dll" "Qt5Sql.dll", "libwinpthread-1.dll")
 
 echo "packaging for host: $HOST"
 
