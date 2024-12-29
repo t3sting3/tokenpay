@@ -223,6 +223,16 @@ jobs:
       - name: make
         run: make -j2
 
+      - name: package
+        run: |
+          HOST=i686-w64-mingw32 ./package.sh
+      
+      - name: upload folder package to artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: x86
+          path: package
+
   windows64-ubuntu20:
     runs-on: ubuntu-20.04
 
@@ -430,6 +440,18 @@ jobs:
         
       - name: configure
         run: CONFIG_SITE=$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/share/config.site PKG_CONFIG_PATH="$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/lib/pkgconfig" LIBS="-lws2_32 -lcrypt32 -liphlpapi" CPPFLAGS="$(find $GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/include/Qt* -type d | sed 's/^/-I/' | tr '\n' ' ') -I$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/include" LDFLAGS="-L$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/lib" ./configure --enable-gui --with-qt5=$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/ --with-qt5webkit=$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/ --prefix=
+
+
+      - name: package
+        run: |
+          HOST=x86_64-w64-mingw32 ./package.sh
+
+      - name: upload folder package to artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: x86_64
+          path: package
+
 
       - name: make
         run: make -j2
