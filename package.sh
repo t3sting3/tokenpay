@@ -39,13 +39,24 @@ for exe in $OUTPUT_DIR/*.exe; do
     for dep in $deps; do
         echo "searching for: $dep"
 
-        # search system dirs first, including the gcc directory
-        dep_path=$(find /usr/lib/$HOST /usr/$HOST/lib /usr/lib/gcc/$HOST/*-posix/ -type d -name "*-posix" -exec find {} -name "$dep" -print -quit)
+        # search system dirs first (excluding gcc directories)
+        dep_path=$(find /usr/lib/$HOST /usr/$HOST/lib -name "$dep" -print -quit)
 
         if [[ -n "$dep_path" ]]; then
             echo "found in system path: $dep_path"
         else
             echo "not found in system path"
+        fi
+
+        # now search gcc dirs, specifically -posix subdirs
+        if [[ -z "$dep_path" ]]; then
+            dep_path=$(find /usr/lib/gcc/$HOST/*-posix/ -type f -name "$dep" -print -quit)
+
+            if [[ -n "$dep_path" ]]; then
+                echo "found in gcc -posix dir: $dep_path"
+            else
+                echo "not found in gcc -posix dir"
+            fi
         fi
 
         # fallback to custom depend dir if needed
