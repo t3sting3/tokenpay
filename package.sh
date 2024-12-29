@@ -40,7 +40,7 @@ for exe in $OUTPUT_DIR/*.exe; do
         echo "searching for: $dep"
 
         # search system dirs first, including the gcc directory
-        dep_path=$(find /usr/lib/$HOST /usr/x86_64-w64-mingw32/lib /usr/i686-w64-mingw32/lib /usr/lib/gcc/x86_64-w64-mingw32/10-posix/ -name "$dep" -print -quit)
+        dep_path=$(find /usr/lib/$HOST /usr/$HOST/lib /usr/lib/gcc/$HOST/10-posix/ -name "$dep" -print -quit)
 
         if [[ -n "$dep_path" ]]; then
             echo "found in system path: $dep_path"
