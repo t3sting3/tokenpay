@@ -373,6 +373,10 @@ jobs:
             depends/work
             depends/x86_64-w64-mingw32
           key: win64-depends-${{ runner.os }}-${{ hashFiles('depends/packages/*') }}
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: always()
           
       - name: get and untar bdb4.8
         run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
