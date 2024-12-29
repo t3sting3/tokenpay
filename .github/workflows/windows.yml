@@ -225,7 +225,7 @@ jobs:
 
       - name: package
         run: |
-          HOST=i686-w64-mingw32 ./package.sh
+          sudo HOST=i686-w64-mingw32 ./package.sh
       
       - name: upload folder package to artifact
         uses: actions/upload-artifact@v4
@@ -447,7 +447,7 @@ jobs:
 
       - name: package
         run: |
-          HOST=x86_64-w64-mingw32 ./package.sh
+          sudo HOST=x86_64-w64-mingw32 ./package.sh
 
       - name: upload folder package to artifact
         uses: actions/upload-artifact@v4

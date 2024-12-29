@@ -89,4 +89,7 @@ else
     echo "warning: no plugins directory found in custom depend dir"
 fi
 
+# strip executables
+$HOST-strip $OUTPUT_DIR/*.exe
+
 echo "packaged app in $OUTPUT_DIR"
