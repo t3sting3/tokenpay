@@ -113,6 +113,10 @@ jobs:
       - name: Verify Python Version
         run: python --version
 
+      - name: tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: always()
+
       - name: Install and update autoconf to 2.71
         run: |
           wget https://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.gz
