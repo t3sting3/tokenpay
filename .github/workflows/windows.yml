@@ -218,14 +218,14 @@ jobs:
         run: ./autogen.sh
         
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site \
-            PKG_CONFIG_PATH="$PWD/depends/i686-w64-mingw32/lib/pkgconfig" \
+        run: CONFIG_SITE=`pwd`/depends/i686-w64-mingw32/share/config.site \
+            PKG_CONFIG_PATH="`pwd`/depends/i686-w64-mingw32/lib/pkgconfig" \
             LIBS="-lws2_32 -lcrypt32 -liphlpapi" \
-            CPPFLAGS="$(find $PWD/depends/i686-w64-mingw32/include/Qt* -type d | sed 's/^/-I/' | tr '\n' ' ') -I$PWD/depends/i686-w64-mingw32/include" \
-            LDFLAGS="-L$PWD/depends/i686-w64-mingw32/lib" \
+            CPPFLAGS="$(find `pwd`/depends/i686-w64-mingw32/include/Qt* -type d | sed 's/^/-I/' | tr '\n' ' ') -I`pwd`/depends/i686-w64-mingw32/include" \
+            LDFLAGS="-L`pwd`/depends/i686-w64-mingw32/lib" \
             ./configure --enable-gui \
-            --with-qt5=$PWD/depends/i686-w64-mingw32/ \
-            --with-qt5webkit=$PWD/depends/i686-w64-mingw32/ \
+            --with-qt5=`pwd`/depends/i686-w64-mingw32/ \
+            --with-qt5webkit=`pwd`/depends/i686-w64-mingw32/ \
             --prefix=
 
       - name: make
@@ -437,14 +437,14 @@ jobs:
         run: ./autogen.sh
         
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site \
-            PKG_CONFIG_PATH="$PWD/depends/x86_64-w64-mingw32/lib/pkgconfig" \
+        run: CONFIG_SITE=`pwd`/depends/x86_64-w64-mingw32/share/config.site \
+            PKG_CONFIG_PATH="$GITHUB_WORKSPACE/depends/x86_64-w64-mingw32/lib/pkgconfig" \
             LIBS="-lws2_32 -lcrypt32 -liphlpapi" \
-            CPPFLAGS="$(find $PWD/depends/x86_64-w64-mingw32/include/Qt* -type d | sed 's/^/-I/' | tr '\n' ' ') -I$PWD/depends/x86_64-w64-mingw32/include" \
-            LDFLAGS="-L$PWD/depends/x86_64-w64-mingw32/lib" \
+            CPPFLAGS="$(find `pwd`/depends/x86_64-w64-mingw32/include/Qt* -type d | sed 's/^/-I/' | tr '\n' ' ') -I`pwd`/depends/x86_64-w64-mingw32/include" \
+            LDFLAGS="-L`pwd`/depends/x86_64-w64-mingw32/lib" \
             ./configure --enable-gui \
-            --with-qt5=$PWD/depends/x86_64-w64-mingw32/ \
-            --with-qt5webkit=$PWD/depends/x86_64-w64-mingw32/ \
+            --with-qt5=`pwd`/depends/x86_64-w64-mingw32/ \
+            --with-qt5webkit=`pwd`/depends/x86_64-w64-mingw32/ \
             --prefix=
 
       - name: make
