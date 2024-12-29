@@ -131,7 +131,6 @@ tokenpayd_LDADD = ../leveldb/out-static/libmemenv.a \
 		     $(LIBCAP_LIBS) \
 		     $(ZLIB_LIBS) \
 		     $(ZSTD_LIBS) \
-		     $(LZMA_LIBS) \
 		     $(BOOST_SYSTEM_LIBS) \
 		     $(BOOST_CHRONO_LIBS) \
 		     $(BOOST_FILESYSTEM_LIBS) \
