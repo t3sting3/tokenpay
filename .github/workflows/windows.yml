@@ -127,8 +127,6 @@ jobs:
           # Verify the version
           $HOME/.local/bin/autoconf --version
 
-
-
       - name: Fix sqlite3
         run: echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
         
@@ -220,7 +218,7 @@ jobs:
         run: ./autogen.sh
         
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --enable-gui --prefix=/
+        run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site PKG_CONFIG_PATH="$PWD/depends/i686-w64-mingw32/lib/pkgconfig" LIBS="-lws2_32 -lcrypt32 -liphlpapi" CPPFLAGS="-I$PWD/depends/i686-w64-mingw32/include" LDFLAGS="-L$PWD/depends/i686-w64-mingw32/lib" ./configure --enable-gui --with-qt5=$PWD/depends/i686-w64-mingw32/ --with-qt5webkit=$PWD/depends/i686-w64-mingw32/ --prefix=
         
       - name: make
         run: make -j2
@@ -431,7 +429,7 @@ jobs:
         run: ./autogen.sh
         
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site ./configure --enable-gui --prefix=
+        run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site PKG_CONFIG_PATH="$PWD/depends/x86_64-w64-mingw32/lib/pkgconfig" LIBS="-lws2_32 -lcrypt32 -liphlpapi" CPPFLAGS="-I$PWD/depends/x86_64-w64-mingw32/include" LDFLAGS="-L$PWD/depends/x86_64-w64-mingw32/lib" ./configure --enable-gui --with-qt5=$PWD/depends/x86_64-w64-mingw32/ --with-qt5webkit=$PWD/depends/x86_64-w64-mingw32/ --prefix=
       
       - name: make
         run: make -j2
