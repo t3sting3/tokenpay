@@ -84,7 +84,7 @@ td {
 }
 
 .page-sidebar .sidebar-menu .menu-items>li ul.sub-menu>li:hover>.icon-thumbnail {
-    color: #1481c3
+    color: #000000
 }
 
 .panel.panel-default {
@@ -1331,7 +1331,7 @@ nav.navbar .navigate a{
     border-radius: 1px;
 }
 #total-big {
-	color:#3057A4;
+	color:#000000;
 }
 svg.svg-icon
 {
