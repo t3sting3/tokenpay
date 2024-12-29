@@ -218,8 +218,16 @@ jobs:
         run: ./autogen.sh
         
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site PKG_CONFIG_PATH="$PWD/depends/i686-w64-mingw32/lib/pkgconfig" LIBS="-lws2_32 -lcrypt32 -liphlpapi" CPPFLAGS="-I$PWD/depends/i686-w64-mingw32/include" LDFLAGS="-L$PWD/depends/i686-w64-mingw32/lib" ./configure --enable-gui --with-qt5=$PWD/depends/i686-w64-mingw32/ --with-qt5webkit=$PWD/depends/i686-w64-mingw32/ --prefix=
-        
+        run: CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site \
+            PKG_CONFIG_PATH="$PWD/depends/i686-w64-mingw32/lib/pkgconfig" \
+            LIBS="-lws2_32 -lcrypt32 -liphlpapi" \
+            CPPFLAGS="$(find $PWD/depends/i686-w64-mingw32/include/Qt* -type d | sed 's/^/-I/' | tr '\n' ' ') -I$PWD/depends/i686-w64-mingw32/include" \
+            LDFLAGS="-L$PWD/depends/i686-w64-mingw32/lib" \
+            ./configure --enable-gui \
+            --with-qt5=$PWD/depends/i686-w64-mingw32/ \
+            --with-qt5webkit=$PWD/depends/i686-w64-mingw32/ \
+            --prefix=
+
       - name: make
         run: make -j2
 
@@ -373,10 +381,6 @@ jobs:
             depends/work
             depends/x86_64-w64-mingw32
           key: win64-depends-${{ runner.os }}-${{ hashFiles('depends/packages/*') }}
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        if: always()
           
       - name: get and untar bdb4.8
         run: wget http://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz && tar -xzvf db-4.8.30.NC.tar.gz
@@ -433,7 +437,15 @@ jobs:
         run: ./autogen.sh
         
       - name: configure
-        run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site PKG_CONFIG_PATH="$PWD/depends/x86_64-w64-mingw32/lib/pkgconfig" LIBS="-lws2_32 -lcrypt32 -liphlpapi" CPPFLAGS="-I$PWD/depends/x86_64-w64-mingw32/include" LDFLAGS="-L$PWD/depends/x86_64-w64-mingw32/lib" ./configure --enable-gui --with-qt5=$PWD/depends/x86_64-w64-mingw32/ --with-qt5webkit=$PWD/depends/x86_64-w64-mingw32/ --prefix=
-      
+        run: CONFIG_SITE=$PWD/depends/x86_64-w64-mingw32/share/config.site \
+            PKG_CONFIG_PATH="$PWD/depends/x86_64-w64-mingw32/lib/pkgconfig" \
+            LIBS="-lws2_32 -lcrypt32 -liphlpapi" \
+            CPPFLAGS="$(find $PWD/depends/x86_64-w64-mingw32/include/Qt* -type d | sed 's/^/-I/' | tr '\n' ' ') -I$PWD/depends/x86_64-w64-mingw32/include" \
+            LDFLAGS="-L$PWD/depends/x86_64-w64-mingw32/lib" \
+            ./configure --enable-gui \
+            --with-qt5=$PWD/depends/x86_64-w64-mingw32/ \
+            --with-qt5webkit=$PWD/depends/x86_64-w64-mingw32/ \
+            --prefix=
+
       - name: make
         run: make -j2
