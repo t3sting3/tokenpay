@@ -74,7 +74,7 @@ jobs:
             --libdir=$(pwd)/release/lib
 
       - name: Build wallet and daemon
-        run: make
+        run: make -j4
       
       - uses: actions/upload-artifact@v4
         with:

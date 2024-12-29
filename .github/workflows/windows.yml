@@ -221,7 +221,7 @@ jobs:
         run: CONFIG_SITE=$GITHUB_WORKSPACE/depends/i686-w64-mingw32/share/config.site PKG_CONFIG_PATH="$GITHUB_WORKSPACE/depends/i686-w64-mingw32/lib/pkgconfig" LIBS="-lws2_32 -lcrypt32 -liphlpapi" CPPFLAGS="$(find $GITHUB_WORKSPACE/depends/i686-w64-mingw32/include/Qt* -type d | sed 's/^/-I/' | tr '\n' ' ') -I$GITHUB_WORKSPACE/depends/i686-w64-mingw32/include" LDFLAGS="-L$GITHUB_WORKSPACE/depends/i686-w64-mingw32/lib" ./configure --enable-gui --with-qt5=$GITHUB_WORKSPACE/depends/i686-w64-mingw32/ --with-qt5webkit=$GITHUB_WORKSPACE/depends/i686-w64-mingw32/ --prefix=
 
       - name: make
-        run: make -j2
+        run: make -j4
 
       - name: package
         run: |
@@ -454,4 +454,4 @@ jobs:
 
 
       - name: make
-        run: make -j2
+        run: make -j4
