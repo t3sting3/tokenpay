@@ -249,7 +249,7 @@ body.dashboard .page-container {
 
 .page-sidebar {
     width: 280px;
-    background-color: #ffffff;
+    background-color: #3158A7;
     left: -210px;
     position: fixed;
     top: 0;
@@ -288,8 +288,8 @@ body.dashboard .page-container {
     display: block;
     height: 60px;
     line-height: 60px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #ffffff;
+    background-color: #3158A7;
+    border-bottom: 1px solid #3158A7;
     color: #fff;
     width: 100%;
     padding-left: 11px;
@@ -537,7 +537,7 @@ body.dashboard .page-container {
     display: none;
     list-style: none;
     clear: both;
-    background-color: #ffffff;
+    background-color: #3158A7;
     padding: 0 0 10px
 }
 
@@ -569,7 +569,7 @@ body.dashboard .page-container {
     height: 30px;
     line-height: 30px;
     margin: 0 0 0 8px;
-    background-color: #ffffff;
+    background-color: #3158A7;
     font-size: 14px
 }
 
@@ -655,7 +655,7 @@ body.dashboard .page-container {
 }
 
 .quickview-wrapper .nav-tabs {
-    background-color: #ffffff;
+    background-color: #3158A7;
     position: relative;
     padding: 0 15px;
     height: 40px
