@@ -1,0 +1,213 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ubuntu20:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Restore depends cache
+        id: cache-depends
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            depends/built
+            depends/sources
+            depends/work
+            depends/x86_64-linux-gnu
+          key: ${{ runner.os }}-depends-${{ hashFiles('depends/packages/*') }}
+          restore-keys: |
+            ${{ runner.os }}-depends-
+
+      - name: Update apt repositories
+        run: sudo apt-get update
+
+      - name: Install essential tools
+        run: |
+          sudo apt-get install -y \
+          build-essential \
+          xutils-dev \
+          libicu-dev \
+          dos2unix \
+          ninja-build \
+          libtool \
+          gperf \
+          autotools-dev \
+          automake \
+          pkg-config \
+          bsdmainutils \
+          libattr1-dev \
+          make \
+          bison \
+          byacc \
+          cmake \
+          curl \
+          ruby \
+          flex \
+          g++-multilib \
+          libevent-dev \
+          binutils-gold \
+          python2 \
+          coreutils \
+          libleveldb-dev \
+          libsqlite3-dev \
+          libwebp-dev \
+          libxml2-dev \
+          libxslt1-dev \
+          xserver-xorg-dev \
+          xorg-dev \
+          libpulse-dev \
+          libfontconfig1-dev \
+          libfreetype6-dev \
+          libx11-dev \
+          libx11-xcb-dev \
+          libxext-dev \
+          libxfixes-dev \
+          libxi-dev \
+          libxrender-dev \
+          libxcb1-dev \
+          libxcb-glx0-dev \
+          libxcb-keysyms1-dev \
+          libxcb-image0-dev \
+          libxcb-shm0-dev \
+          libxcb-icccm4-dev \
+          libxcb-sync-dev \
+          libxcb-xfixes0-dev \
+          libxcb-shape0-dev \
+          libxcb-randr0-dev \
+          libxcb-render-util0-dev \
+          libxcb-xinerama0-dev \
+          libxkbcommon-dev \
+          libxkbcommon-x11-dev \
+          xserver-xorg-dev \
+          xorg-dev \
+          libxrender-dev \
+          libxrandr-dev \
+          libxt-dev \
+          libxcb-xinerama0 \
+          libxcb-xinerama0-dev
+
+      - name: Set Python 2 as default
+        run: |
+          sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+          sudo update-alternatives --install /usr/bin/python python /usr/bin/python2 2
+          sudo update-alternatives --set python /usr/bin/python2
+          echo "$(dirname $(readlink -f $(which python)))" >> $GITHUB_PATH
+        #makesure python2 is default
+
+      - name: Verify Python Version
+        run: python --version  # Should print Python 2.7.x
+
+      - name: Install and update autoconf to 2.71
+        run: |
+          wget https://ftp.gnu.org/gnu/autoconf/autoconf-2.71.tar.gz
+          tar -xzf autoconf-2.71.tar.gz
+          cd autoconf-2.71
+          # Install to a local directory to avoid system conflicts
+          ./configure --prefix=$HOME/.local
+          make
+          make install
+          # Add the local bin to PATH
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          # Verify the version
+          $HOME/.local/bin/autoconf --version
+
+      - name: Fix sqlite3
+        run: echo "PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
+
+      - name: Fix ICU
+        run: echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
+
+
+      - name: Build dependencies
+        if: steps.cache-depends.outputs.cache-hit != 'true'
+        run: cd depends && make -j4 HOST=x86_64-linux-gnu
+
+      # Save the depends cache after building
+      - name: Save depends cache
+        if: steps.cache-depends.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            depends/built
+            depends/sources
+            depends/work
+            depends/x86_64-linux-gnu
+          key: ${{ runner.os }}-depends-${{ hashFiles('depends/packages/*') }}
+
+      - name: Create berkeley db directories
+        run: |
+          mkdir -p db-4.8.30.NC/build_unix
+
+      - name: Copy database static library
+        run: cp $GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib/libdb_cxx.a $GITHUB_WORKSPACE/db-4.8.30.NC/build_unix/
+
+      - name: Add paths to environment
+        run: |
+          echo "LIBRARY_PATH=$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib:\$LIBRARY_PATH" >> $GITHUB_ENV
+          echo "LD_LIBRARY_PATH=$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib:\$LD_LIBRARY_PATH" >> $GITHUB_ENV
+          echo "CXXFLAGS=-I$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/include" >> $GITHUB_ENV
+          echo "CPPFLAGS=-I$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/include" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/lib/pkgconfig:\$PKG_CONFIG_PATH" >> $GITHUB_ENV
+
+      - name: Add binary paths to PATH
+        run: echo "$GITHUB_WORKSPACE/depends/x86_64-linux-gnu/native/bin" >> $GITHUB_PATH
+
+      - name: Verify environment variables
+        run: |
+          echo "LIBRARY_PATH: $LIBRARY_PATH"
+          echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
+          echo "CXXFLAGS: $CXXFLAGS"
+          echo "CPPFLAGS: $CPPFLAGS"
+          echo "PKG_CONFIG_PATH: $PKG_CONFIG_PATH"
+
+      - name: Run autogen script
+        run: ./autogen.sh
+
+      - name: Configure project
+        run: |
+          CONFIG_SITE=`pwd` \
+          LDFLAGS="-Wl,--disable-new-dtags -Wl,-rpath,'\$\$ORIGIN/libs'" \
+          ./configure \
+          --enable-gui \
+          --disable-bench \
+          --disable-tests \
+          --disable-dependency-tracking \
+          --disable-werror \
+          --prefix=`pwd`/depends/x86_64-linux-gnu \
+          --bindir=`pwd`/release/bin \
+          --libdir=`pwd`/release/lib
+
+      - name: Compile project
+        run: make -j4
+
+      - name: Create AppImage
+        run: |
+          wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+          chmod +x linuxdeploy-x86_64.AppImage
+          wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+          chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
+          mkdir -p AppDir/usr/bin
+          cp ./src/tokenpayd AppDir/usr/bin/
+          mkdir -p AppDir/usr/share/applications
+          mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+          cp ./tokenpay.desktop AppDir/usr/share/applications/
+          cp src/qt/res/icons/tokenpay.png AppDir/usr/share/icons/hicolor/256x256/apps/
+          ./linuxdeploy-x86_64.AppImage \
+            --appdir AppDir \
+            --icon-file src/qt/res/icons/tokenpay.png \
+            --output appimage
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tokenpay-cli.AppImage
+          path: TokenPay_cli-x86_64.AppImage
