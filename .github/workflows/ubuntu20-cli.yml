@@ -196,12 +196,15 @@ jobs:
           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
           chmod +x linuxdeploy-plugin-qt-x86_64.AppImage
           mkdir -p AppDir/usr/bin
-          cp ./src/tokenpayd AppDir/usr/bin/
+          cp ./tokenpay.desktop AppDir/
+          cp ./src/tokenpay AppDir/usr/bin/
           mkdir -p AppDir/usr/share/applications
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+          cp ./tokenpay.desktop AppDir/usr/share/applications/
           cp src/qt/res/icons/tokenpay.png AppDir/usr/share/icons/hicolor/256x256/apps/
           ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
+            --plugin qt \
             --icon-file src/qt/res/icons/tokenpay.png \
             --output appimage
 
