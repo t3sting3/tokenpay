@@ -208,5 +208,5 @@ jobs:
       - name: upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: tokenpay-cli.AppImage
+          name: tokenpayd.AppImage
           path: TokenPay_cli-x86_64.AppImage
