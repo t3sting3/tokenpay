@@ -200,7 +200,7 @@ jobs:
           cp ./src/tokenpayd AppDir/usr/bin/  # Only copy tokenpayd binary
           mkdir -p AppDir/usr/share/applications
           mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
-          cp ./tokenpay.desktop AppDir/usr/share/applications/
+          cp ./tokenpayd.desktop AppDir/usr/share/applications/
           cp src/qt/res/icons/tokenpay.png AppDir/usr/share/icons/hicolor/256x256/apps/
           ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
