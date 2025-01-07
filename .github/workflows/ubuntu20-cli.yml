@@ -204,7 +204,6 @@ jobs:
           cp src/qt/res/icons/tokenpay.png AppDir/usr/share/icons/hicolor/256x256/apps/
           ./linuxdeploy-x86_64.AppImage \
             --appdir AppDir \
-            --plugin qt \
             --icon-file src/qt/res/icons/tokenpay.png \
             --output appimage
 
