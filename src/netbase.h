@@ -37,7 +37,7 @@ enum Network
 class CNetAddr
 {
     protected:
-        unsigned char ip[16]; // in network byte order
+        unsigned char ip[41]; // in network byte order
 
     public:
         CNetAddr();

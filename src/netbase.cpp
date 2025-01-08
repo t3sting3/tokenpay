@@ -613,10 +613,10 @@ bool CNetAddr::SetSpecial(const std::string &strName)
 {
     if (strName.size()>6 && strName.substr(strName.size() - 6, 6) == ".onion") {
         std::vector<unsigned char> vchAddr = DecodeBase32(strName.substr(0, strName.size() - 6).c_str());
-        if (vchAddr.size() != 16-sizeof(pchOnionCat))
+        if (vchAddr.size() != 41-sizeof(pchOnionCat))
             return false;
         memcpy(ip, pchOnionCat, sizeof(pchOnionCat));
-        for (unsigned int i=0; i<16-sizeof(pchOnionCat); i++)
+        for (unsigned int i = 0; i < 41 - sizeof(pchOnionCat); i++)
             ip[i + sizeof(pchOnionCat)] = vchAddr[i];
         return true;
     }
@@ -842,7 +842,7 @@ enum Network CNetAddr::GetNetwork() const
 std::string CNetAddr::ToStringIP() const
 {
     if (IsTor())
-        return EncodeBase32(&ip[6], 10) + ".onion";
+        return EncodeBase32(&ip[6], 35) + ".onion";
     if (IsI2P())
         return EncodeBase32(&ip[6], 10) + ".oc.b32.i2p";
     CService serv(*this, 0);
@@ -870,17 +870,17 @@ std::string CNetAddr::ToString() const
 
 bool operator==(const CNetAddr& a, const CNetAddr& b)
 {
-    return (memcmp(a.ip, b.ip, 16) == 0);
+    return (memcmp(a.ip, b.ip, 41) == 0);
 }
 
 bool operator!=(const CNetAddr& a, const CNetAddr& b)
 {
-    return (memcmp(a.ip, b.ip, 16) != 0);
+    return (memcmp(a.ip, b.ip, 41) != 0);
 }
 
 bool operator<(const CNetAddr& a, const CNetAddr& b)
 {
-    return (memcmp(a.ip, b.ip, 16) < 0);
+    return (memcmp(a.ip, b.ip, 41) < 0);
 }
 
 bool CNetAddr::GetInAddr(struct in_addr* pipv4Addr) const
@@ -974,7 +974,7 @@ std::vector<unsigned char> CNetAddr::GetGroup() const
 
 uint64_t CNetAddr::GetHash() const
 {
-    uint256 hash = Hash(&ip[0], &ip[16]);
+    uint256 hash = Hash(&ip[0], &ip[41]);
     uint64_t nRet;
     memcpy(&nRet, &hash, sizeof(nRet));
     return nRet;
@@ -1188,8 +1188,8 @@ bool CService::GetSockAddr(struct sockaddr* paddr, socklen_t *addrlen) const
 std::vector<unsigned char> CService::GetKey() const
 {
      std::vector<unsigned char> vKey;
-     vKey.resize(18);
-     memcpy(&vKey[0], ip, 16);
+     vKey.resize(43);
+     memcpy(&vKey[0], ip, 41);
      vKey[16] = port / 0x100;
      vKey[17] = port & 0x0FF;
      return vKey;
