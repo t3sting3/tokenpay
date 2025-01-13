@@ -17,17 +17,30 @@ jobs:
           brew install qt@5
           brew install --quiet automake berkeley-db@4 miniupnpc gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb
       
-      - name: Brew install boost from our homebrew deps
-        run: curl -LO https://archives.boost.io/release/1.65.1/source/boost_1_65_1.tar.bz2
-        
-      - name: tar boost
-        run: tar -xvzf boost_1_65_1.tar.bz2
+      - name: Download Boost 1.65.1
+        run: |
+          curl -L https://archives.boost.io/release/1.65.1/source/boost_1_65_1.tar.bz2 -o boost_1_65_1.tar.bz2
+          tar -xjf boost_1_65_1.tar.bz2
+
+      - name: Bootstrap Boost Build
+        working-directory: boost_1_65_1
+        run: ./bootstrap.sh
+
+      - name: Build Boost
+        working-directory: boost_1_65_1
+        run: |
+          ./b2 toolset=clang cxxflags="-std=c++11" variant=release link=static threading=multi address-model=64 --build-dir=build
+
+      - name: Install Boost (Optional)
+        working-directory: boost_1_65_1
+        run: |
+          ./b2 install --prefix=boost_install
         
       - name: List available Xcode versions
         run: ls /Applications | grep Xcode
         
       - name: Select Xcode version
-        run: sudo xcode-select -s '/Applications/Xcode_14.1.0.app/Contents/Developer'
+        run: sudo xcode-select -s /Applications/Xcode_14.1.0.app
       
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4 boost1651
