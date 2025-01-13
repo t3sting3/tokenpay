@@ -23,25 +23,25 @@ jobs:
           brew install qt@5
           brew install --quiet automake berkeley-db@4 miniupnpc gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb
       
-      - name: Download Boost 1.67.0
+      - name: Download Boost 1.68.0
         run: |
-          curl -L https://archives.boost.io/release/1.67.0/source/boost_1_67_0.tar.bz2 -o boost_1_67_0.tar.bz2
-          tar -xjf boost_1_67_0.tar.bz2
+          curl -L https://archives.boost.io/release/1.68.0/source/boost_1_68_0.tar.bz2 -o boost_1_68_0.tar.bz2
+          tar -xjf boost_1_68_0.tar.bz2
 
       - name: Bootstrap Boost
         run: |
-          cd boost_1_67_0
+          cd boost_1_68_0
           ./bootstrap.sh --with-toolset=gcc
           
       - name: Build Boost
         run: |
-          cd boost_1_67_0
+          cd boost_1_68_0
           ./b2 --prefix=./boost_install_dir install
           
       - name: Print Bootstrap Log if Failed
         if: failure()
         run: |
-          cat boost_1_67_0/bootstrap.log
+          cat boost_1_68_0/bootstrap.log
       
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
