@@ -24,7 +24,7 @@ jobs:
 
       - name: Bootstrap Boost Build
         working-directory: boost_1_65_1
-        run: ./bootstrap.sh
+        run: ./bootstrap.sh --with-toolset=gcc
 
       - name: Build Boost
         working-directory: boost_1_65_1
