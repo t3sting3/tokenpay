@@ -27,12 +27,6 @@ jobs:
         run: |
           curl -L https://archives.boost.io/release/1.67.0/source/boost_1_67_0.tar.bz2 -o boost_1_67_0.tar.bz2
           tar -xjf boost_1_67_0.tar.bz2
-          
-      - name: Download and replace b2
-        run: |
-          curl -L -o b2 https://github.com/boostorg/build/releases/download/4.9.4/b2
-          chmod +x b2
-          mv b2 boost_1_67_0/tools/build/src/engine/b2
 
       - name: Bootstrap Boost
         run: |
