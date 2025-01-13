@@ -27,7 +27,7 @@ jobs:
         run: git clone --recursive https://github.com/boostorg/boost.git
         
       - name: get branch  
-        run: cd boost && git checkout boost-1.65.1
+        run: cd boost && git clean  -d  -f . && git checkout boost-1.65.1
         
       - name: make boost
         run: cd boost && ./bootstrap.sh
@@ -38,7 +38,7 @@ jobs:
       - name: Print Bootstrap Log if Failed
         if: failure()
         run: |
-          cat boost_1_68_0/bootstrap.log
+          cat boost/bootstrap.log
       
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
