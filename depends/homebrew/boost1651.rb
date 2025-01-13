@@ -4,7 +4,10 @@ class Boost1651 < Formula
   url "https://archives.boost.io/release/1.65.1/source/boost_1_65_1.tar.bz2"
   sha256 "9807a5d16566c57fd74fb522764e0b134a8bbe6b6e8967b83afefd30dcd3be81"
   revision 1
-  head "https://github.com/boostorg/boost.git"
+  
+  keg_only :versioned_formula
+
+  depends_on "icu4c@76"
 
   option "with-icu4c", "Build regexp engine with icu support"
   option "without-single", "Disable building single-threading variant"
