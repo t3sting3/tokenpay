@@ -34,7 +34,7 @@ jobs:
           chmod +x b2
           mv b2 boost_1_66_0/tools/build/src/engine/b2
 
-      - name: Build Boost
+      - name: Bootstrap Boost
         run: |
           cd boost_1_66_0
           ./bootstrap.sh --with-toolset=gcc
@@ -47,7 +47,7 @@ jobs:
       - name: Print Bootstrap Log if Failed
         if: failure()
         run: |
-          cat boost_1_66_09/bootstrap.log
+          cat boost_1_66_0/bootstrap.log
       
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4 boost1651
