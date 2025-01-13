@@ -20,15 +20,11 @@ class Boost1651 < Formula
    def install
     # Force boost to compile with the desired compiler
     open("user-config.jam", "a") do |file|
-      if OS.mac?
-        file.write "using darwin : : #{ENV.cxx} ;\n"
-      else
-        file.write "using gcc : : #{ENV.cxx} ;\n"
-      end
+      file.write "using darwin : : #{ENV.cxx} ;\n"
     end
 
     # libdir should be set by --prefix but isn't
-    icu4c_prefix = Formula["icu4c@76"].opt_prefix
+    icu4c_prefix = Formula["icu4c"].opt_prefix
     bootstrap_args = %W[
       --prefix=#{prefix}
       --libdir=#{lib}
@@ -45,6 +41,8 @@ class Boost1651 < Formula
     bootstrap_args << "--without-libraries=#{without_libraries.join(",")}"
 
     # layout should be synchronized with boost-python and boost-mpi
+    #
+    # --no-cmake-config should be dropped if possible in next version
     args = %W[
       --prefix=#{prefix}
       --libdir=#{lib}
@@ -52,6 +50,7 @@ class Boost1651 < Formula
       -j#{ENV.make_jobs}
       --layout=tagged-1.66
       --user-config=user-config.jam
+      --no-cmake-config
       -sNO_LZMA=1
       -sNO_ZSTD=1
       install
@@ -62,15 +61,30 @@ class Boost1651 < Formula
     # Boost is using "clang++ -x c" to select C compiler which breaks C++14
     # handling using ENV.cxx14. Using "cxxflags" and "linkflags" still works.
     args << "cxxflags=-std=c++14"
-    args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++" if ENV.compiler == :clang
+    if ENV.compiler == :clang
+      args << "cxxflags=-stdlib=libc++" << "linkflags=-stdlib=libc++"
+    end
 
     system "./bootstrap.sh", *bootstrap_args
     system "./b2", "headers"
     system "./b2", *args
   end
 
+  def caveats
+    s = ""
+    # ENV.compiler doesn't exist in caveats. Check library availability
+    # instead.
+    if Dir["#{lib}/libboost_log*"].empty?
+      s += <<~EOS
+        Building of Boost.Log is disabled because it requires newer GCC or Clang.
+      EOS
+    end
+
+    s
+  end
+
   test do
-    (testpath/"test.cpp").write <<~CPP
+    (testpath/"test.cpp").write <<~EOS
       #include <boost/algorithm/string.hpp>
       #include <string>
       #include <vector>
@@ -88,8 +102,8 @@ class Boost1651 < Formula
         assert(strVec[1]=="b");
         return 0;
       }
-    CPP
-    system ENV.cxx, "-I#{Formula["boost@1.76"].opt_include}", "test.cpp", "-std=c++14", "-o", "test"
+    EOS
+    system ENV.cxx, "test.cpp", "-std=c++14", "-stdlib=libc++", "-o", "test"
     system "./test"
   end
 end
