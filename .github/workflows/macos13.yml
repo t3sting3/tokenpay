@@ -20,7 +20,7 @@ jobs:
       - name: Download Boost 1.65.1
         run: |
           curl -L http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.bz2 -o boost_1_59_0.tar.bz2
-          tar -xjf boost_1_65_1.tar.bz2
+          tar -xjf boost_1_59_0.tar.bz2
 
       - name: Bootstrap Boost Build
         working-directory: boost_1_59_0
