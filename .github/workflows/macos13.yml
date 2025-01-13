@@ -21,7 +21,7 @@ jobs:
         run: curl -LO https://archives.boost.io/release/1.65.1/source/boost_1_65_1.tar.bz2
         
       - name: tar boost
-        run: tar -xvzf boost_1_65_1.tar.gz
+        run: tar -xvzf boost_1_65_1.tar.bz2
         
       - name: xcode select
         run: sudo gem install xcode-install && xcversion list
