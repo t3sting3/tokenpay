@@ -27,7 +27,7 @@ jobs:
         run: ls /Applications | grep Xcode
         
       - name: Select Xcode version
-        run: sudo xcode-select -s '/Applications/Xcode_12.1.app/Contents/Developer'
+        run: sudo xcode-select -s '/Applications/Xcode_14.1.0.app/Contents/Developer'
       
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4 boost1651
