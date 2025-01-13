@@ -16,8 +16,15 @@ jobs:
           brew install --quiet python@3 || brew link --overwrite python@3
           brew install qt@5
           brew install --quiet automake berkeley-db@4 miniupnpc gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb
+      
       - name: Brew install boost from our homebrew deps
-        run: curl -L https://raw.githubusercontent.com/t3sting3/tokenpay/refs/heads/main/depends/homebrew/boost1651.rb > boost1651.rb && brew install boost1651.rb 
+        run: curl -LO https://archives.boost.io/release/1.65.1/source/boost_1_65_1.tar.bz2
+        
+      - name: tar boost
+        run: tar -xvzf boost_1_65_1.tar.gz
+        
+      - name: xcode select
+        run: sudo gem install xcode-install && xcversion list
       
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4 boost1651
