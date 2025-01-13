@@ -27,7 +27,7 @@ jobs:
         run: git clone --recursive https://github.com/boostorg/boost.git
         
       - name: get branch  
-        run: cd boost && git clean  -d  -f . && git checkout boost-1.65.1
+        run: cd boost && git checkout -f boost-1.65.1
         
       - name: make boost
         run: cd boost && ./bootstrap.sh
