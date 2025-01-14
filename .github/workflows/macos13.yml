@@ -28,7 +28,7 @@ jobs:
       
       
       - name: git clone boost from official github
-        run: ggit clone --recursive https://github.com/boostorg/boost.git
+        run: git clone --recursive https://github.com/boostorg/boost.git
         
       - name: get branch  
         run: cd boost && git checkout -f boost-1.65.1
