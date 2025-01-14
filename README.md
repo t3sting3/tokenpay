@@ -13,7 +13,10 @@ P2P Port | 8800
 RPC Port | 8801
 TOR Port | 9090
 
-TOR Version 0.4.4
+TOR Version 0.4.9.1
+(a789ab32f2191f191370f614cccd4f80bfc7e59b)
+https://gitlab.torproject.org/tpo/core/tor/-/commit/a789ab32f2191f191370f614cccd4f80bfc7e59b
+***
 
 ### Testnet
 
