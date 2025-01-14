@@ -23,8 +23,12 @@ jobs:
           brew install qt@5
           brew install --quiet automake berkeley-db@4 miniupnpc gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb
       
-      - name: download and untar boost
-        run: git clone https://github.com/boostorg/boost.git
+      - name: handle line endings
+        run: git config --global core.autocrlf input
+      
+      
+      - name: git clone boost from official github
+        run: ggit clone --recursive https://github.com/boostorg/boost.git
         
       - name: get branch  
         run: cd boost && git checkout -f boost-1.65.1
