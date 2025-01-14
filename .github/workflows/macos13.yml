@@ -30,10 +30,10 @@ jobs:
         run: git clone --single-branch --branch boost-1.65.1 https://github.com/boostorg/boost.git
         
       - name: git submodule update --init --recursive --remote --no-fetch --depth=1
-        run: cd boost && git submodule update --init  --recursive --remote --no-fetch --depth=1
+        run: cd boost && git submodule update
         
       - name: bootstrap
-        run: cd boost && ./bootstrap.sh
+        run: cd boost && ./bootstrap.sh --with-toolset=clang
         
       - name: submodule update
         run: cd boost && git submodule update --init libs/config
