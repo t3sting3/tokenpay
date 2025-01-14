@@ -30,9 +30,6 @@ jobs:
       - name: git clone boost from official github
         run: git clone --single-branch --branch boost-1.65.1 https://github.com/boostorg/boost.git
         
-      - name: git submodule update --init --recursive --remote --no-fetch --depth=1
-        run: cd boost && git submodule update --init
-        
       - name: bootstrap
         run: cd boost && ./bootstrap.sh
         
