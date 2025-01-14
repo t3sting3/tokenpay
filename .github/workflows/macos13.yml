@@ -37,7 +37,7 @@ jobs:
         run: cd boost && ./bootstrap.sh
       
       - name: b2
-        run: ./b2 --prefix=./boost_install_dir install
+        run: cd boost && ./b2 --prefix=./boost_install_dir install
         
       - name: Print Bootstrap Log if Failed
         if: failure()
