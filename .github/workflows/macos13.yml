@@ -27,10 +27,7 @@ jobs:
         run: git config --global core.autocrlf input
       
       - name: git clone boost from official github
-        run: git clone --single-branch --branch boost-1.65.1 https://github.com/boostorg/build && git branch
-        
-      - name: git submodule update --init --recursive --remote --no-fetch --depth=1
-        run: cd build && git submodule update --init  --recursive --remote --no-fetch
+        run: git clone https://github.com/boostorg/build && git checkout boost-1.65.1
         
       - name: bootstrap
         run: cd build && git branch && ./bootstrap.sh
