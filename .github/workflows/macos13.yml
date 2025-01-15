@@ -27,13 +27,13 @@ jobs:
         run: git config --global core.autocrlf input
       
       - name: git clone boost from official github
-        run: git clone --single-branch --branch boost-1.65.1 https://github.com/boostorg/build
+        run: git clone --single-branch --branch boost-1.65.1 https://github.com/boostorg/build && git branch
         
       - name: git submodule update --init --recursive --remote --no-fetch --depth=1
         run: cd build && git submodule update --init  --recursive --remote --no-fetch
         
       - name: bootstrap
-        run: cd build && ./bootstrap.sh
+        run: cd build && git branch && ./bootstrap.sh
       
       - name: b2
         run: cd build && ./b2 install
@@ -41,7 +41,7 @@ jobs:
       - name: Print Bootstrap Log if Failed
         if: failure()
         run: |
-          cat boost/bootstrap.log
+          cat build/bootstrap.log
       
       - name: Brew link dependencies
         run: brew link qt@5 berkeley-db@4
