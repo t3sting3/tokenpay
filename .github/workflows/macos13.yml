@@ -27,7 +27,7 @@ jobs:
         run: git config --global core.autocrlf input
       
       - name: git clone boost from official github
-        run: git clone https://github.com/boostorg/build && git checkout boost-1.65.1
+        run: git clone https://github.com/boostorg/build && git checkout 5f7550d13e42de89b841e0d3c2e3e09f51ced40b
         
       - name: bootstrap
         run: cd build && git branch && ./bootstrap.sh
