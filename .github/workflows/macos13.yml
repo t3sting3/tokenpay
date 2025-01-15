@@ -27,19 +27,16 @@ jobs:
         run: git config --global core.autocrlf input
       
       - name: git clone boost from official github
-        run: git clone --single-branch --branch boost-1.65.1 https://github.com/boostorg/boost.git
+        run: git clone --single-branch --branch boost-1.65.1 https://github.com/boostorg/build
         
       - name: git submodule update --init --recursive --remote --no-fetch --depth=1
-        run: cd boost && git submodule update --init  --recursive --remote --no-fetch --depth=1
+        run: cd build && git submodule update --init  --recursive --remote --no-fetch
         
       - name: bootstrap
-        run: cd boost && ./bootstrap.sh
-        
-      - name: submodule update
-        run: cd boost && git submodule update --init libs/config
+        run: cd build && ./bootstrap.sh
       
       - name: b2
-        run: cd boost && ./b2 install
+        run: cd build && ./b2 install
         
       - name: Print Bootstrap Log if Failed
         if: failure()
