@@ -87,7 +87,7 @@ jobs:
 
       - name: Patch boost
         run: |
-          cd boost_1_65_1 && cp ../boost.patch . && patch -p0 < boost.patch
+          cd boost_1_65_1 && cp ../patch/boost.patch . && patch -p0 < boost.patch
 
       - name: bootstrap
         run: cd boost_1_65_1 && git branch && ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
@@ -114,6 +114,10 @@ jobs:
 
       - name: make
         run: make -j4
+
+      - name: Setup tmate session
+        if: always()
+        uses: mxschmitt/action-tmate@v3
 
       - name: make .dmg
         run: make deploy
