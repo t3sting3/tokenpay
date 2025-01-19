@@ -125,7 +125,19 @@ jobs:
           install_name_tool -add_rpath /usr/local/lib TokenPay.app/Contents/MacOS/TokenPay
           install_name_tool -change QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets /usr/local/opt/qt@5/lib/QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets TokenPay.app/Contents/MacOS/TokenPay
           install_name_tool -change QtWebKit.framework/Versions/5/QtWebKit /usr/local/opt/qt@5/lib/QtWebKit.framework/Versions/5/QtWebKit TokenPay.app/Contents/MacOS/TokenPay
-          macdeployqt TokenPay.app -dmg
+          # Retry used to workaround macos-13 runner bug. Can be removed when bug is fixed or we update to macos-14:
+          # https://github.com/actions/runner-images/issues/7522
+          for i in {1..10}; do
+            if macdeployqt TokenPay.app -dmg; then
+              echo "Successfully created DMG on attempt $i"
+              break
+            elif [[ $i -eq 10 ]]; then
+              echo "Failed to create DMG after $i attempts"
+              exit 1
+            else
+              echo "Failed to create DMG on attempt $i, retrying"
+            fi
+          done
 
       - uses: actions/upload-artifact@v4
         with:
