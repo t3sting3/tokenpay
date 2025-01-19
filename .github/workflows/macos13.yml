@@ -21,7 +21,7 @@ jobs:
           # A workaround for "The `brew link` step did not complete successfully" error.
           brew install --quiet python@3 || brew link --overwrite python@3
           brew install qt@5
-          brew install --quiet automake berkeley-db@4 miniupnpc gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb
+          brew install --quiet automake berkeley-db@4 miniupnpc gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install --formula protobuf261.rb
           brew install conan@1
           echo "/usr/local/opt/conan@1/bin" >> $GITHUB_PATH
       
@@ -120,7 +120,16 @@ jobs:
         uses: mxschmitt/action-tmate@v3
 
       - name: make .dmg
-        run: make deploy
+        run: |
+          mkdir -p TokenPay.app/Contents/{MacOS,Resources}
+          cp Info.plist TokenPay.app/Contents/
+          cp src/qt/res/icons/tokenpay.icns TokenPay.app/Contents/Resources
+          cp src/tokenpay TokenPay.app/Contents/MacOS/TokenPay
+          echo "APPL????" > TokenPay.app/Contents/PkgInfo
+          install_name_tool -add_rpath /usr/local/lib TokenPay.app/Contents/MacOS/TokenPay
+          install_name_tool -change QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets /usr/local/opt/qt@5/lib/QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets TokenPay.app/Contents/MacOS/TokenPay
+          install_name_tool -change QtWebKit.framework/Versions/5/QtWebKit /usr/local/opt/qt@5/lib/QtWebKit.framework/Versions/5/QtWebKit TokenPay.app/Contents/MacOS/TokenPay
+          macdeployqt TokenPay.app -dmg
 
       - uses: actions/upload-artifact@v4
         with:
