@@ -73,7 +73,7 @@ jobs:
 
       - name: Fix Berkeley DB compile
         run: |
-          cp patches/bdb_clang.diff db-4.8.30.NC
+          cp patch/bdb_clang.diff db-4.8.30.NC
           cd db-4.8.30.NC && patch -p0 < bdb_clang.diff
 
       - name: Build and install Berkeley DB 4.8
