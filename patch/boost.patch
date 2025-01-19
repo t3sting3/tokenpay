@@ -1,0 +1,23 @@
+--- tools/build/src/engine/build.sh     2025-01-16 10:09:07
++++ tools/build/src/engine/build.sh.patched     2025-01-16 10:11:20
+@@ -154,7 +154,7 @@
+     ;;
+
+     darwin)
+-    BOOST_JAM_CC=cc
++    BOOST_JAM_CC="cc -Wno-error=implicit-function-declaration"
+     ;;
+
+     intel-darwin)
+	 
+--- tools/build/src/engine/build.jam    2025-01-16 10:12:13
++++ tools/build/src/engine/build.jam.patched    2025-01-16 10:11:45
+@@ -206,7 +206,7 @@
+     -I$(--python-include) -I$(--extra-include)
+     : -L$(--python-lib[1]) -l$(--python-lib[2]) ;
+ ## MacOSX Darwin, using GCC 2.9.x, 3.x
+-toolset darwin cc :  "-o " : -D
++toolset darwin cc :  "-Wno-error=implicit-function-declaration -o " : -D
+     :
+     [ opt --release : -Wl,-x -O3 -finline-functions ]
+     [ opt --debug : -g -O0 -fno-inline -pg ]

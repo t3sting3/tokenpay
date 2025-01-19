@@ -22,18 +22,78 @@ jobs:
           brew install --quiet python@3 || brew link --overwrite python@3
           brew install qt@5
           brew install --quiet automake berkeley-db@4 miniupnpc gperf qrencode librsvg && curl -L https://raw.githubusercontent.com/vergecurrency/protobuf261/master/protobuf261.rb > protobuf261.rb && brew install protobuf261.rb
+          brew install conan@1
+          echo "/usr/local/opt/conan@1/bin" >> $GITHUB_PATH
       
+      - name: clone qt5webkit
+        run: |
+          git clone https://code.qt.io/qt/qtwebkit.git
+          cd qtwebkit && git checkout 5.212 && sed -i '' 's|libjpeg-turbo/2.0.5@qtproject/stable|libjpeg-turbo/2.0.5|g' Tools/qt/conanfile.py
+      
+      - name: Check QtWebKit Cache
+        id: cache-check
+        uses: actions/cache/restore@v3
+        with:
+          path: qtwebkit_compiled/
+          key: ${{ runner.os }}-qtwebkit-${{ hashFiles('qtwebkit/Tools/qt/build-qtwebkit-conan.py')}}
+          restore-keys: |
+            ${{ runner.os }}-qtwebkit-5.212-
+
+      - name: build qtwebkit
+        if: steps.cache-check.outputs.cache-hit != 'true'
+        run: |
+          cd qtwebkit/Tools/qt
+          ./build-qtwebkit-conan.py --qt=/usr/local/opt/qt@5/ --install_prefix=../../qtwebkit_compiled --install
+      
+      - name: Save QtWebKit Cache
+        if: steps.cache-check.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: qtwebkit_compiled/
+          key: ${{ runner.os }}-qtwebkit-${{ hashFiles('qtwebkit/Tools/qt/build-qtwebkit-conan.py')}}
+
+      - name: Copy compiled QtWebKit to qt@5
+        if: steps.cache-check.outputs.cache-hit
+        run: cp -rf qtwebkit_compiled/ /usr/local/opt/qt\@5/
+
+      - name: set compiler flags
+        run: |
+          echo "CFLAGS=-Wno-error=implicit-function-declaration" >> $GITHUB_ENV
+
       - name: handle line endings
         run: git config --global core.autocrlf input
       
-      - name: git clone boost from official github
-        run: git clone https://github.com/boostorg/build.git && cd build && git fetch --tags && git checkout boost-1.65.1
-        
+      - name: Download and extract Berkeley DB 4.8
+        run: |
+          wget https://download.oracle.com/berkeley-db/db-4.8.30.NC.tar.gz
+          tar -xzvf db-4.8.30.NC.tar.gz
+
+      - name: Configure Berkeley DB 4.8
+        run: cd db-4.8.30.NC/build_unix && ../dist/configure --enable-cxx
+
+      - name: Fix Berkeley DB compile
+        run: |
+          cp patches/bdb_clang.diff db-4.8.30.NC
+          cd db-4.8.30.NC && patch -p0 < bdb_clang.diff
+
+      - name: Build and install Berkeley DB 4.8
+        run: cd db-4.8.30.NC/build_unix && make && sudo make install
+
+      - name: Download Boost file
+        run: wget https://archives.boost.io/release/1.65.1/source/boost_1_65_1.tar.bz2
+
+      - name: Extract Boost file
+        run: tar -xjvf boost_1_65_1.tar.bz2
+
+      - name: Patch boost
+        run: |
+          cd boost_1_65_1 && cp ../boost.patch . && patch -p0 < boost.patch
+
       - name: bootstrap
-        run: cd build && git branch && ./bootstrap.sh
-      
+        run: cd boost_1_65_1 && git branch && ./bootstrap.sh --prefix=/usr/local --with-libraries=chrono,date_time,iostreams,filesystem,program_options,system,thread,test
+
       - name: b2
-        run: cd build && ./b2 install
+        run: cd boost_1_65_1 && sudo ./b2 install toolset=clang
         
       - name: Print Bootstrap Log if Failed
         if: failure()
@@ -50,7 +110,7 @@ jobs:
         run: ./autogen.sh
 
       - name: configure
-        run: ./configure --disable-tests --disable-dependency-tracking --disable-werror --with-gui --bindir=`pwd`/release/bin --libdir=`pwd`/release/lib
+        run: PKG_CONFIG_PATH="/usr/local/opt/openssl@1.1/lib/pkgconfig:/usr/local/opt/qt@5/lib/pkgconfig:$PKG_CONFIG_PATH" CPPFLAGS="-I/usr/local/opt/qt@5/lib/QtWebKit.framework/Headers" LDFLAGS="-F/usr/local/opt/qt@5/lib" BDB_CFLAGS="-I/usr/local/opt/berkeley-db@4/include" BDB_LIBS="-L/usr/local/opt/berkeley-db@4/lib -ldb_cxx-4.8" OPENSSL_CFLAGS="-I/usr/local/opt/openssl@1.1/include" OPENSSL_LIBS="-L/usr/local/opt/openssl@1.1/lib -lssl -lcrypto" ./configure --disable-tests --disable-dependency-tracking --disable-werror --enable-gui --with-qt5=/usr/local/opt/qt@5 --bindir=$(pwd)/release/bin --libdir=$(pwd)/release/lib --with-qt5webkit="/usr/local/opt/qt@5/" --with-openssl-dir=/usr/local/opt/openssl@1.1
 
       - name: make
         run: make -j4

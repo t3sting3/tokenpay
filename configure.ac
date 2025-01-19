@@ -83,6 +83,13 @@ BOOST_ASIO
 BOOST_DATE_TIME([mt])
 BOOST_IOSTREAMS([mt])
 MACOS_RPATH=""
+
+AC_ARG_WITH([openssl-dir],
+  [AS_HELP_STRING([--with-openssl-dir=DIR], [Specify the directory where OpenSSL is installed])],
+  [openssl_dir=$withval],
+  [openssl_dir="/usr/local/ssl"])  # Default path
+AC_SUBST([openssl_dir])
+
 AC_ARG_ENABLE([gui], [AS_HELP_STRING([--enable-gui], [Build the Qt GUI wallet])])
 if test "x$enable_gui" = "xyes" ; then
   AC_ARG_WITH([qt5], [AS_HELP_STRING([--with-qt5], [Manually specify the path to a stand-alone Qt5 installation (pkg-config will be used if not set). This has no effect if --enable-gui is not also specified.])], [
@@ -195,8 +202,10 @@ AC_SUBST([MACOS_RPATH])
 AM_CONDITIONAL([ENABLE_GUI], [test "$enable_gui" = "yes"])
 
 AX_SUBDIRS_CONFIGURE([src/secp256k1], [[--disable-shared], [--with-pic], [--with-bignum=no], [--enable-module-recovery], [--enable-experimental], [--enable-module-ecdh]])
-AX_SUBDIRS_CONFIGURE([tor], [[--disable-unittests], [--disable-system-torrc], [--disable-systemd], [--disable-asciidoc], [--disable-shared], [--disable-gcc-hardening], [--disable-lzma], [--disable-zstd], [--disable-asciidoc], [--disable-jni], [--disable-system-torrc]])
-
+AX_SUBDIRS_CONFIGURE([tor], [[--disable-unittests], [--disable-system-torrc], [--disable-systemd], 
+  [--disable-asciidoc], [--disable-shared], [--disable-gcc-hardening], [--disable-lzma], 
+  [--disable-zstd], [--disable-asciidoc], [--disable-jni], [--disable-system-torrc], 
+  [--with-openssl-dir=${openssl_dir}]])
 AC_OUTPUT
 
 dnl Taken from https://wiki.debian.org/RpathIssue
