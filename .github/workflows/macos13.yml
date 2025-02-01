@@ -115,6 +115,9 @@ jobs:
       - name: make
         run: make -j4
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: make .dmg
         run: |
           mkdir -p TokenPay.app/Contents/{MacOS,Resources}
