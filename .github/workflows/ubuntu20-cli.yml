@@ -206,7 +206,7 @@ jobs:
             --output appimage
 
       - name: upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tokenpayd.AppImage
           path: TokenPay_Daemon-x86_64.AppImage

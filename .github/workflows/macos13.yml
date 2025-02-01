@@ -120,10 +120,13 @@ jobs:
 
       - name: make .dmg
         run: |
-          mkdir -p TokenPay.app/Contents/{MacOS,Resources}
+          mkdir -p TokenPay.app/Contents/{MacOS,Resources,Frameworks}
+          macdeployqt TokenPay.app
           cp Info.plist TokenPay.app/Contents/
           cp src/qt/res/icons/tokenpay.icns TokenPay.app/Contents/Resources
           cp src/tokenpay TokenPay.app/Contents/MacOS/TokenPay
+          cp -rp /usr/local/opt/qt@5/lib/QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets TokenPay.app/Contents/Frameworks/QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets
+          cp -rp /usr/local/opt/qt@5/lib/QtWebKit.framework/Versions/5/QtWebKit TokenPay.app/Contents/Frameworks/QtWebKit.framework/Versions/5/QtWebKit
           echo "APPL????" > TokenPay.app/Contents/PkgInfo
           install_name_tool -add_rpath /usr/local/lib TokenPay.app/Contents/MacOS/TokenPay
           install_name_tool -change QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets /usr/local/opt/qt@5/lib/QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets TokenPay.app/Contents/MacOS/TokenPay
