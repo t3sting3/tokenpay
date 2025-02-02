@@ -115,26 +115,19 @@ jobs:
       - name: make
         run: make -j4
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-
       - name: make .dmg
         run: |
           mkdir -p TokenPay.app/Contents/{MacOS,Resources,Frameworks}
-          macdeployqt TokenPay.app
           cp Info.plist TokenPay.app/Contents/
           cp src/qt/res/icons/tokenpay.icns TokenPay.app/Contents/Resources
           cp src/tokenpay TokenPay.app/Contents/MacOS/TokenPay
-          cp -rp /usr/local/opt/qt@5/lib/QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets TokenPay.app/Contents/Frameworks/QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets
-          cp -rp /usr/local/opt/qt@5/lib/QtWebKit.framework/Versions/5/QtWebKit TokenPay.app/Contents/Frameworks/QtWebKit.framework/Versions/5/QtWebKit
           echo "APPL????" > TokenPay.app/Contents/PkgInfo
           install_name_tool -add_rpath /usr/local/lib TokenPay.app/Contents/MacOS/TokenPay
-          install_name_tool -change QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets /usr/local/opt/qt@5/lib/QtWebKitWidgets.framework/Versions/5/QtWebKitWidgets TokenPay.app/Contents/MacOS/TokenPay
-          install_name_tool -change QtWebKit.framework/Versions/5/QtWebKit /usr/local/opt/qt@5/lib/QtWebKit.framework/Versions/5/QtWebKit TokenPay.app/Contents/MacOS/TokenPay
+          for f in /usr/local/opt/qt@5/lib/*.framework; do ln -s "$f" /Library/Frameworks/; done
           # Retry used to workaround macos-13 runner bug. Can be removed when bug is fixed or we update to macos-14:
           # https://github.com/actions/runner-images/issues/7522
           for i in {1..10}; do
-            if macdeployqt TokenPay.app -dmg; then
+            if ./macdeployqtplus TokenPay.app -dmg; then
               echo "Successfully created DMG on attempt $i"
               break
             elif [[ $i -eq 10 ]]; then
