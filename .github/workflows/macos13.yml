@@ -123,7 +123,7 @@ jobs:
           cp src/tokenpay TokenPay.app/Contents/MacOS/TokenPay
           echo "APPL????" > TokenPay.app/Contents/PkgInfo
           install_name_tool -add_rpath /usr/local/lib TokenPay.app/Contents/MacOS/TokenPay
-          for f in /usr/local/opt/qt@5/lib/*.framework; do ln -s "$f" /Library/Frameworks/; done
+          for f in /usr/local/opt/qt@5/lib/*.framework; do sudo ln -s "$f" /Library/Frameworks/; done
           # Retry used to workaround macos-13 runner bug. Can be removed when bug is fixed or we update to macos-14:
           # https://github.com/actions/runner-images/issues/7522
           for i in {1..10}; do
