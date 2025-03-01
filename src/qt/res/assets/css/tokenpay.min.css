@@ -20,39 +20,39 @@ td {
 @font-face {
     font-family: "Open Sans";
     font-weight: 300;
-    src: url(qrc:///assets/fonts/OpenSans/OpenSans-Light.ttf)
+    src: url(.././fonts/OpenSans/OpenSans-Light.ttf)
 }
 
 @font-face {
     font-family: "Open Sans";
     font-weight: 300;
-    src: url(qrc:///assets/fonts/OpenSans/OpenSans-LightItalic.ttf);
+    src: url(.././fonts/OpenSans/OpenSans-LightItalic.ttf);
     font-style: italic
 }
 
 @font-face {
     font-family: "Open Sans";
     font-weight: 400;
-    src: url(qrc:///assets/fonts/OpenSans/OpenSans-Regular.ttf)
+    src: url(.././fonts/OpenSans/OpenSans-Regular.ttf)
 }
 
 @font-face {
     font-family: "Open Sans";
     font-weight: 400;
-    src: url(qrc:///assets/fonts/OpenSans/OpenSans-Italic.ttf);
+    src: url(.././fonts/OpenSans/OpenSans-Italic.ttf);
     font-style: italic
 }
 
 @font-face {
     font-family: "Open Sans";
     font-weight: 700;
-    src: url(qrc:///assets/fonts/OpenSans/OpenSans-Bold.ttf)
+    src: url(.././fonts/OpenSans/OpenSans-Bold.ttf)
 }
 
 @font-face {
     font-family: "Open Sans";
     font-weight: 700;
-    src: url(qrc:///assets/fonts/OpenSans/OpenSans-BoldItalic.ttf);
+    src: url(.././fonts/OpenSans/OpenSans-BoldItalic.ttf);
     font-style: italic
 }
 
@@ -74,7 +74,7 @@ td {
 
 .page-content-wrapper {
     background: #F0F1F3;
-	background-image: url(qrc:///assets/img/bkg.png);
+	background-image: url(../../assets/img/bkg.png);
 	background-repeat: no-repeat;
 	background-size: cover;
 }
@@ -267,7 +267,7 @@ button {
 
 .select-drop-down {
     appearance: none;
-    background: url(qrc:///assets/icons/chevron.png) 95% no-repeat #F1F4F9;
+    background: url(../../assets/icons/chevron.png) 95% no-repeat #F1F4F9;
     border: 1px solid #D6DAE3;
 	-webkit-border-radius: 0px;
     -moz-border-radius: 0px;
@@ -277,7 +277,7 @@ button {
 
 .select-drop-down-chat {
     appearance: none;
-    background: url(qrc:///assets/icons/chevron.png) 95% no-repeat #fff;
+    background: url(../../assets/icons/chevron.png) 95% no-repeat #fff;
     border: 1px solid rgba(0, 0, 0, .07)
 }
 
@@ -289,7 +289,7 @@ button {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: url(qrc:///assets/icons/chevron.png) 95% no-repeat #F0F1F3;
+    background: url(../../assets/icons/chevron.png) 95% no-repeat #F0F1F3;
     border: 1px solid rgba(0, 0, 0, .07)
 }
 
@@ -602,7 +602,7 @@ background-color: #F1F4F9;
     z-index: 0;
     overflow: hidden;
 	background: #F0F1F3;
-    background-image: url(qrc:///assets/img/bkg.png);
+    background-image: url(../../assets/img/bkg.png);
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -1272,8 +1272,8 @@ progress::-webkit-progress-value {
 
 @font-face {
     font-family: footable;
-    src: url(qrc:///assets/fonts/Footable/footable.eot);
-    src: url(qrc:///assets/fonts/Footable/footable.eot?#iefix) format('embedded-opentype'), url(qrc:///assets/fonts/Footable/footable.woff) format('woff'), url(qrc:///assets/fonts/Footable/Footable/footable.ttf) format('truetype'), url(qrc:///assets/fonts/Footable/footable.svg#footable) format('svg');
+    src: url(../../assets/fonts/Footable/footable.eot);
+    src: url(../../assets/fonts/Footable/footable.eot) format('embedded-opentype'), url(../../assets/fonts/Footable/footable.woff) format('woff'), url(../../assets/fonts/Footable/Footable/footable.ttf) format('truetype'), url(../../assets/fonts/Footable/footable.svg) format('svg');
     font-weight: 400;
     font-style: normal
 }
@@ -1281,7 +1281,7 @@ progress::-webkit-progress-value {
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     @font-face {
         font-family: footable;
-        src: url(qrc:///assets/fonts/Footable/footable.svg#footable) format('svg');
+        src: url(../../assets/fonts/Footable/footable.svg) format('svg');
         font-weight: 400;
         font-style: normal
     }
@@ -1361,11 +1361,11 @@ li#quickview-private-tab a:active, li#quickview-group-tab a:active, li#quickview
 }
 @font-face {
     font-family: 'icomoon';
-    src:  url('qrc:///assets/fonts/icomoon/icomoon.eot?8k7nyk');
-    src:  url('qrc:///assets/fonts/icomoon/icomoon.eot?8k7nyk#iefix') format('embedded-opentype'),
-    url('qrc:///assets/fonts/icomoon/icomoon.ttf?8k7nyk') format('truetype'),
-    url('qrc:///assets/fonts/icomoon/icomoon.woff?8k7nyk') format('woff'),
-    url('qrc:///assets/fonts/icomoon/icomoon.svg?8k7nyk#icomoon') format('svg');
+    src:  url('../../assets/fonts/icomoon/icomoon.eot');
+    src:  url('../../assets/fonts/icomoon/icomoon.eot') format('embedded-opentype'),
+    url('../../assets/fonts/icomoon/icomoon.ttf') format('truetype'),
+    url('../../assets/fonts/icomoon/icomoon.woff') format('woff'),
+    url('../../assets/fonts/icomoon/icomoon.svg') format('svg');
     font-weight: normal;
     font-style: normal;
 }
